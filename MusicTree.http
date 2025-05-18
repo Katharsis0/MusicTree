@@ -1,0 +1,6 @@
+@MusicTree_HostAddress = http://localhost:5102
+
+GET {{MusicTree_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
