@@ -3,9 +3,17 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <IntrospectionStateNumber>760</IntrospectionStateNumber>
+      <Grants>1||-9223372036854775808|c|G
+1||10|c|G
+1||10|C|G
+1||10|T|G
+4||-9223372036854775808|c|G
+4||10|c|G
+4||10|C|G
+4||10|T|G</Grants>
+      <IntrospectionStateNumber>770</IntrospectionStateNumber>
       <ServerVersion>17.4</ServerVersion>
-      <StartupTime>1747700435</StartupTime>
+      <StartupTime>1747712252</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -1400,7 +1408,7 @@ true posixrules
 13283||10|C|G
 13283||-9223372036854775808|U|G
 13283||10|U|G</Grants>
-      <IntrospectionStateNumber>760</IntrospectionStateNumber>
+      <IntrospectionStateNumber>770</IntrospectionStateNumber>
       <ObjectId>16389</ObjectId>
       <OwnerName>musictree_admin</OwnerName>
     </database>
@@ -4834,8 +4842,8 @@ true posixrules
     <schema id="266" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>760</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2025-05-20.02:25:27</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>770</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2025-05-20.17:14:25</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>531</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4847,14 +4855,14 @@ true posixrules
       <OwnerName>musictree_admin</OwnerName>
     </table>
     <table id="268" parent="266" name="GenreRelations">
-      <ObjectId>16419</ObjectId>
-      <StateNumber>759</StateNumber>
+      <ObjectId>16467</ObjectId>
+      <StateNumber>769</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>musictree_admin</OwnerName>
     </table>
     <table id="269" parent="266" name="Genres">
-      <ObjectId>16402</ObjectId>
-      <StateNumber>757</StateNumber>
+      <ObjectId>16436</ObjectId>
+      <StateNumber>768</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>musictree_admin</OwnerName>
     </table>
@@ -4915,56 +4923,73 @@ true posixrules
       <StateNumber>755</StateNumber>
       <UnderlyingIndexId>16400</UnderlyingIndexId>
     </key>
-    <column id="278" parent="268" name="GenreId">
+    <check id="278" parent="268" name="GenreRelations_Influence_check">
+      <ColNames>Influence</ColNames>
+      <ObjectId>16472</ObjectId>
+      <Predicate>(&quot;Influence&quot; &gt;= 1) AND (&quot;Influence&quot; &lt;= 10)</Predicate>
+      <StateNumber>769</StateNumber>
+    </check>
+    <check id="279" parent="268" name="GenreRelations_MGPC_check">
+      <ColNames>MGPC</ColNames>
+      <ObjectId>16473</ObjectId>
+      <Predicate>(&quot;MGPC&quot; &gt;= (0)::double precision) AND (&quot;MGPC&quot; &lt;= (1)::double precision)</Predicate>
+      <StateNumber>769</StateNumber>
+    </check>
+    <column id="280" parent="268" name="GenreId">
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <StateNumber>759</StateNumber>
+      <StateNumber>769</StateNumber>
       <StoredType>text|0s</StoredType>
       <TypeId>25</TypeId>
     </column>
-    <column id="279" parent="268" name="RelatedGenreId">
+    <column id="281" parent="268" name="RelatedGenreId">
       <NotNull>1</NotNull>
       <Position>2</Position>
-      <StateNumber>759</StateNumber>
+      <StateNumber>769</StateNumber>
       <StoredType>text|0s</StoredType>
       <TypeId>25</TypeId>
     </column>
-    <column id="280" parent="268" name="Influence">
+    <column id="282" parent="268" name="Influence">
+      <DefaultExpression>5</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>3</Position>
-      <StateNumber>759</StateNumber>
+      <StateNumber>769</StateNumber>
       <StoredType>integer|0s</StoredType>
       <TypeId>23</TypeId>
     </column>
-    <column id="281" parent="268" name="MGPC">
+    <column id="283" parent="268" name="MGPC">
+      <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>4</Position>
-      <StateNumber>759</StateNumber>
+      <StateNumber>769</StateNumber>
       <StoredType>real|0s</StoredType>
       <TypeId>700</TypeId>
     </column>
-    <foreign-key id="282" parent="268" name="FK_GenreRelations_Genres_GenreId">
+    <foreign-key id="284" parent="268" name="GenreRelations_GenreId_fkey">
       <ColNames>GenreId</ColNames>
-      <ObjectId>16426</ObjectId>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16478</ObjectId>
       <OnDelete>restrict</OnDelete>
-      <StateNumber>759</StateNumber>
+      <StateNumber>769</StateNumber>
       <RefKeyColPositions>1</RefKeyColPositions>
-      <RefTableId>16402</RefTableId>
+      <RefTableId>16436</RefTableId>
     </foreign-key>
-    <foreign-key id="283" parent="268" name="FK_GenreRelations_Genres_RelatedGenreId">
+    <foreign-key id="285" parent="268" name="GenreRelations_RelatedGenreId_fkey">
       <ColNames>RelatedGenreId</ColNames>
-      <ObjectId>16431</ObjectId>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16483</ObjectId>
       <OnDelete>restrict</OnDelete>
-      <StateNumber>759</StateNumber>
+      <StateNumber>769</StateNumber>
       <RefKeyColPositions>1</RefKeyColPositions>
-      <RefTableId>16402</RefTableId>
+      <RefTableId>16436</RefTableId>
     </foreign-key>
-    <index id="284" parent="268" name="PK_GenreRelations">
+    <index id="286" parent="268" name="GenreRelations_pkey">
       <ColNames>GenreId
 RelatedGenreId</ColNames>
-      <ObjectId>16424</ObjectId>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16476</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>759</StateNumber>
+      <StateNumber>769</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
       <CollationIds>100
@@ -4974,180 +4999,246 @@ default</CollationNames>
       <CollationParentNames>pg_catalog
 pg_catalog</CollationParentNames>
     </index>
-    <key id="285" parent="268" name="PK_GenreRelations">
-      <ObjectId>16425</ObjectId>
+    <key id="287" parent="268" name="GenreRelations_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16477</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>759</StateNumber>
-      <UnderlyingIndexId>16424</UnderlyingIndexId>
+      <StateNumber>769</StateNumber>
+      <UnderlyingIndexId>16476</UnderlyingIndexId>
     </key>
-    <column id="286" parent="269" name="Id">
+    <check id="288" parent="269" name="Genres_AvrgDuration_check">
+      <ColNames>AvrgDuration</ColNames>
+      <ObjectId>16452</ObjectId>
+      <Predicate>(&quot;AvrgDuration&quot; &gt;= 0) AND (&quot;AvrgDuration&quot; &lt;= 3600)</Predicate>
+      <StateNumber>768</StateNumber>
+    </check>
+    <check id="289" parent="269" name="Genres_Bpm_check">
+      <ColNames>Bpm</ColNames>
+      <ObjectId>16448</ObjectId>
+      <Predicate>(&quot;Bpm&quot; &gt;= 0) AND (&quot;Bpm&quot; &lt;= 250)</Predicate>
+      <StateNumber>768</StateNumber>
+    </check>
+    <check id="290" parent="269" name="Genres_BpmLower_check">
+      <ColNames>BpmLower</ColNames>
+      <ObjectId>16446</ObjectId>
+      <Predicate>(&quot;BpmLower&quot; &gt;= 0) AND (&quot;BpmLower&quot; &lt;= 250)</Predicate>
+      <StateNumber>768</StateNumber>
+    </check>
+    <check id="291" parent="269" name="Genres_BpmUpper_check">
+      <ColNames>BpmUpper</ColNames>
+      <ObjectId>16447</ObjectId>
+      <Predicate>(&quot;BpmUpper&quot; &gt;= 0) AND (&quot;BpmUpper&quot; &lt;= 250)</Predicate>
+      <StateNumber>768</StateNumber>
+    </check>
+    <check id="292" parent="269" name="Genres_CompasMetric_check">
+      <ColNames>CompasMetric</ColNames>
+      <ObjectId>16451</ObjectId>
+      <Predicate>(&quot;CompasMetric&quot; &gt;= 0) AND (&quot;CompasMetric&quot; &lt;= 8)</Predicate>
+      <StateNumber>768</StateNumber>
+    </check>
+    <check id="293" parent="269" name="Genres_GenreTipicalMode_check">
+      <ColNames>GenreTipicalMode</ColNames>
+      <ObjectId>16449</ObjectId>
+      <Predicate>(&quot;GenreTipicalMode&quot; &gt;= (0)::double precision) AND (&quot;GenreTipicalMode&quot; &lt;= (1)::double precision)</Predicate>
+      <StateNumber>768</StateNumber>
+    </check>
+    <check id="294" parent="269" name="Genres_Key_check">
+      <ColNames>Key</ColNames>
+      <ObjectId>16445</ObjectId>
+      <Predicate>(&quot;Key&quot; &gt;= &apos;-1&apos;::integer) AND (&quot;Key&quot; &lt;= 11)</Predicate>
+      <StateNumber>768</StateNumber>
+    </check>
+    <check id="295" parent="269" name="Genres_Volume_check">
+      <ColNames>Volume</ColNames>
+      <ObjectId>16450</ObjectId>
+      <Predicate>(&quot;Volume&quot; &gt;= &apos;-60&apos;::integer) AND (&quot;Volume&quot; &lt;= 0)</Predicate>
+      <StateNumber>768</StateNumber>
+    </check>
+    <column id="296" parent="269" name="Id">
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
       <StoredType>text|0s</StoredType>
       <TypeId>25</TypeId>
     </column>
-    <column id="287" parent="269" name="Name">
+    <column id="297" parent="269" name="Name">
       <NotNull>1</NotNull>
       <Position>2</Position>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
       <StoredType>varchar(30)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="288" parent="269" name="Description">
+    <column id="298" parent="269" name="Description">
       <Position>3</Position>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
       <StoredType>varchar(1000)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="289" parent="269" name="IsSubgenre">
+    <column id="299" parent="269" name="IsSubgenre">
       <NotNull>1</NotNull>
       <Position>4</Position>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
       <StoredType>boolean|0s</StoredType>
       <TypeId>16</TypeId>
     </column>
-    <column id="290" parent="269" name="ParentGenreId">
+    <column id="300" parent="269" name="ParentGenreId">
       <Position>5</Position>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
       <StoredType>text|0s</StoredType>
       <TypeId>25</TypeId>
     </column>
-    <column id="291" parent="269" name="ClusterId">
+    <column id="301" parent="269" name="ClusterId">
       <Position>6</Position>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
       <StoredType>text|0s</StoredType>
       <TypeId>25</TypeId>
     </column>
-    <column id="292" parent="269" name="GenreTipicalMode">
+    <column id="302" parent="269" name="Key">
+      <DefaultExpression>&apos;-1&apos;::integer</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>7</Position>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="303" parent="269" name="BpmLower">
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+      <StateNumber>768</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="304" parent="269" name="BpmUpper">
+      <NotNull>1</NotNull>
+      <Position>9</Position>
+      <StateNumber>768</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="305" parent="269" name="Bpm">
+      <DefaultExpression>120</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>10</Position>
+      <StateNumber>768</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="306" parent="269" name="Color">
+      <Position>11</Position>
+      <StateNumber>768</StateNumber>
+      <StoredType>varchar(7)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="307" parent="269" name="GenreCreationYear">
+      <Position>12</Position>
+      <StateNumber>768</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="308" parent="269" name="GenreOriginCountry">
+      <Position>13</Position>
+      <StateNumber>768</StateNumber>
+      <StoredType>varchar(100)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="309" parent="269" name="GenreTipicalMode">
+      <NotNull>1</NotNull>
+      <Position>14</Position>
+      <StateNumber>768</StateNumber>
       <StoredType>real|0s</StoredType>
       <TypeId>700</TypeId>
     </column>
-    <column id="293" parent="269" name="Bpm">
+    <column id="310" parent="269" name="Volume">
+      <DefaultExpression>&apos;-20&apos;::integer</DefaultExpression>
       <NotNull>1</NotNull>
-      <Position>8</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>integer|0s</StoredType>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="294" parent="269" name="Volume">
-      <NotNull>1</NotNull>
-      <Position>9</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>integer|0s</StoredType>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="295" parent="269" name="CompasMetric">
-      <NotNull>1</NotNull>
-      <Position>10</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>integer|0s</StoredType>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="296" parent="269" name="AvrgDuration">
-      <NotNull>1</NotNull>
-      <Position>11</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>integer|0s</StoredType>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="297" parent="269" name="Key">
-      <NotNull>1</NotNull>
-      <Position>12</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>integer|0s</StoredType>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="298" parent="269" name="BpmLower">
-      <NotNull>1</NotNull>
-      <Position>13</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>integer|0s</StoredType>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="299" parent="269" name="BpmUpper">
-      <NotNull>1</NotNull>
-      <Position>14</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>integer|0s</StoredType>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="300" parent="269" name="Color">
       <Position>15</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>text|0s</StoredType>
-      <TypeId>25</TypeId>
+      <StateNumber>768</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
     </column>
-    <column id="301" parent="269" name="GenreCreationYear">
+    <column id="311" parent="269" name="CompasMetric">
+      <DefaultExpression>4</DefaultExpression>
+      <NotNull>1</NotNull>
       <Position>16</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>text|0s</StoredType>
-      <TypeId>25</TypeId>
+      <StateNumber>768</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
     </column>
-    <column id="302" parent="269" name="GenreOriginCountry">
+    <column id="312" parent="269" name="AvrgDuration">
+      <NotNull>1</NotNull>
       <Position>17</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>text|0s</StoredType>
-      <TypeId>25</TypeId>
+      <StateNumber>768</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
     </column>
-    <column id="303" parent="269" name="TimeStamp">
+    <column id="313" parent="269" name="IsActive">
+      <DefaultExpression>true</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>18</Position>
-      <StateNumber>757</StateNumber>
-      <StoredType>timestamp with time zone|0s</StoredType>
-      <TypeId>1184</TypeId>
+      <StateNumber>768</StateNumber>
+      <StoredType>boolean|0s</StoredType>
+      <TypeId>16</TypeId>
     </column>
-    <foreign-key id="304" parent="269" name="FK_Genres_Genres_ParentGenreId">
+    <column id="314" parent="269" name="TimeStamp">
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>19</Position>
+      <StateNumber>768</StateNumber>
+      <StoredType>timestamp|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <foreign-key id="315" parent="269" name="Genres_ParentGenreId_fkey">
       <ColNames>ParentGenreId</ColNames>
-      <ObjectId>16414</ObjectId>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16457</ObjectId>
       <OnDelete>restrict</OnDelete>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
       <RefKeyColPositions>1</RefKeyColPositions>
-      <RefTableId>16402</RefTableId>
+      <RefTableId>16436</RefTableId>
     </foreign-key>
-    <foreign-key id="305" parent="269" name="FK_Genres_Clusters_ClusterId">
+    <foreign-key id="316" parent="269" name="Genres_ClusterId_fkey">
       <ColNames>ClusterId</ColNames>
-      <ObjectId>16409</ObjectId>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16462</ObjectId>
       <OnDelete>set-null</OnDelete>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
       <RefKeyColPositions>1</RefKeyColPositions>
       <RefTableId>16395</RefTableId>
     </foreign-key>
-    <index id="306" parent="269" name="PK_Genres">
+    <index id="317" parent="269" name="Genres_pkey">
       <ColNames>Id</ColNames>
-      <ObjectId>16407</ObjectId>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16455</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>757</StateNumber>
+      <StateNumber>768</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
       <CollationNames>default</CollationNames>
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="307" parent="269" name="PK_Genres">
-      <ObjectId>16408</ObjectId>
+    <key id="318" parent="269" name="Genres_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16456</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>757</StateNumber>
-      <UnderlyingIndexId>16407</UnderlyingIndexId>
+      <StateNumber>768</StateNumber>
+      <UnderlyingIndexId>16455</UnderlyingIndexId>
     </key>
-    <column id="308" parent="270" name="MigrationId">
+    <column id="319" parent="270" name="MigrationId">
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StateNumber>752</StateNumber>
       <StoredType>varchar(150)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="309" parent="270" name="ProductVersion">
+    <column id="320" parent="270" name="ProductVersion">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>752</StateNumber>
       <StoredType>varchar(32)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <index id="310" parent="270" name="PK___EFMigrationsHistory">
+    <index id="321" parent="270" name="PK___EFMigrationsHistory">
       <ColNames>MigrationId</ColNames>
       <ObjectId>16393</ObjectId>
       <Primary>1</Primary>
@@ -5158,7 +5249,7 @@ pg_catalog</CollationParentNames>
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="311" parent="270" name="PK___EFMigrationsHistory">
+    <key id="322" parent="270" name="PK___EFMigrationsHistory">
       <ObjectId>16394</ObjectId>
       <Primary>1</Primary>
       <StateNumber>752</StateNumber>

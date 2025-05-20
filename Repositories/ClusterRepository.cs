@@ -38,7 +38,6 @@ namespace MusicTree.Repositories
             {
                 Name = dto.Name,
                 Description = dto.Description
-                // IsActive and TimeStamp are set by default
             };
         
             await AddAsync(cluster);

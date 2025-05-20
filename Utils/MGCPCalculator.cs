@@ -16,7 +16,7 @@ namespace MusicTree.Utils
         {
             // Distance functions between genre1 and genre2
             float modeDistance = CalculateModeDistance(genre1.GenreTipicalMode, genre2.GenreTipicalMode);
-            float bpmDistance = CalculateBpmDistance(genre1.Bpm, genre2.Bpm);
+            float bpmDistance = CalculateBpmDistance(genre1.BpmLower, genre2.BpmLower);
             float volumeDistance = CalculateVolumeDistance(genre1.Volume, genre2.Volume);
             float compasDistance = CalculateCompasDistance(genre1.CompasMetric, genre2.CompasMetric);
             float durationDistance = CalculateDurationDistance(genre1.AvrgDuration, genre2.AvrgDuration);

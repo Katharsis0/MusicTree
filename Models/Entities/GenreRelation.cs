@@ -1,25 +1,23 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MusicTree.Models.Entities
 {
     public class GenreRelation
     {
-        [Key, Column(Order = 0)]
-        public string GenreId { get; set; }  // Changed from int to string
+        [Key]
+        public string GenreId { get; set; } = string.Empty;
 
-        [ForeignKey("GenreId")]
-        public Genre Genre { get; set; }
-
-        [Key, Column(Order = 1)]
-        public string RelatedGenreId { get; set; }  // Changed from int to string
-
-        [ForeignKey("RelatedGenreId")]
-        public Genre RelatedGenre { get; set; }
+        [Key]
+        public string RelatedGenreId { get; set; } = string.Empty;
 
         [Range(1, 10)]
         public int Influence { get; set; } = 5;
 
-        public float MGPC { get; set; } 
+        [Range(0, 1)]
+        public float MGPC { get; set; } = 0;
+
+        // Navigation properties
+        public Genre Genre { get; set; } = null!;
+        public Genre RelatedGenre { get; set; } = null!;
     }
 }

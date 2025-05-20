@@ -9,29 +9,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b71533bc-7416-48ed-8407-d45372d86c01" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Entities/GenreRelation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/OperationResult.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/global.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298/storage_v2/_src_/database/musictree_db.-r7mzA/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298/storage_v2/_src_/database/musictree_db.-r7mzA/schema/public.abK9xQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/httpRequests/http-requests-log.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/ArtistsController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/AuthController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/ClustersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ClustersController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/GenresController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/GenresController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/DTOs/ClusterCreateDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/ClusterCreateDto.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/DTOs/GenreCreateDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/GenreCreateDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Entities/Cluster.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Entities/Cluster.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/Entities/Genre.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Entities/Genre.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Entities/GenreRelation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Entities/GenreRelation.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MusicTree.http" beforeDir="false" afterPath="$PROJECT_DIR$/MusicTree.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Repositories/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/AppDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Repositories/ClusterRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/ClusterRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Repositories/GenreRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/GenreRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Services/GenreService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/GenreService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Interfaces/IClusterService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/IClusterService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Services/Interfaces/IGenreService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/IGenreService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/XMusicStoreClient.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Utils/MGCPCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/MGCPCalculator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,34 +48,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.MusicTree: http.executor": "Run",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "HTTP Request.MusicTree | #1.executor": "Run",
-    "HTTP Request.MusicTree | #2.executor": "Run",
-    "HTTP Request.MusicTree | #3.executor": "Run",
-    "HTTP Request.MusicTree | #4.executor": "Run",
-    "HTTP Request.MusicTree | #5.executor": "Run",
-    "HTTP Request.MusicTree | #6.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.environmentSetup",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.MusicTree: http.executor&quot;: &quot;Run&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;HTTP Request.MusicTree | #1.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #2.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #3.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #4.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #5.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #6.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.environmentSetup&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunDashboard">
     <option name="openRunningConfigInTab" value="true" />
   </component>
@@ -154,7 +147,8 @@
       <workItem from="1747686575826" duration="1249000" />
       <workItem from="1747687941687" duration="5525000" />
       <workItem from="1747697104348" duration="2813000" />
-      <workItem from="1747700379899" duration="4934000" />
+      <workItem from="1747700379899" duration="8788000" />
+      <workItem from="1747713685652" duration="4640000" />
     </task>
     <servers />
   </component>

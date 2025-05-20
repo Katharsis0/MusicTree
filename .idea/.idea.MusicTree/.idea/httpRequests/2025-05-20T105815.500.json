@@ -1,0 +1,4 @@
+{
+  "error": "A system error occurred. Please try again later.",
+  "details": "42P01: relation \"Genres\" does not exist\n\nPOSITION: 39"
+}
