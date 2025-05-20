@@ -1,0 +1,256 @@
+GET http://localhost:5102/api/genres
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+POST http://localhost:5102/api/genres
+Content-Type: application/json
+Content-Length: 312
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "name": "House",
+  "description": "House music genre",
+  "isSubgenre": false,
+  "color": "#FF5733",
+  "genreCreationYear": 1980,
+  "genreOriginCountry": "United States",
+  "genreTipicalMode": 0.8,
+  "bpmLower": 120,
+  "bpmUpper": 130,
+  "key": 0,
+  "volume": -20,
+  "compasMetric": 4,
+  "avrgDuration": 300
+}
+
+<> 2025-05-19T202726.500.json
+
+###
+
+GET http://localhost:5102/api/clusters
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-05-19T202706.200.json
+
+###
+
+POST http://localhost:5102/api/clusters
+Content-Type: application/json
+Content-Length: 77
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "name": "Electronic Music",
+  "description": "Electronic music cluster"
+}
+
+<> 2025-05-19T202640.201.json
+
+###
+
+POST http://localhost:5102/api/genres
+Content-Type: application/json
+Content-Length: 312
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "name": "House",
+  "description": "House music genre",
+  "isSubgenre": false,
+  "color": "#FF5733",
+  "genreCreationYear": 1980,
+  "genreOriginCountry": "United States",
+  "genreTipicalMode": 0.8,
+  "bpmLower": 120,
+  "bpmUpper": 130,
+  "key": 0,
+  "volume": -20,
+  "compasMetric": 4,
+  "avrgDuration": 300
+}
+
+<> 2025-05-19T185236.500.json
+
+###
+
+POST http://localhost:5102/api/clusters
+Content-Type: application/json
+Content-Length: 77
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "name": "Electronic Music",
+  "description": "Electronic music cluster"
+}
+
+<> 2025-05-19T185233.500.json
+
+###
+
+GET http://localhost:5102/api/genres
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102/api/clusters
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-05-19T185223.500.json
+
+###
+
+GET http://localhost:5102
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102/api/clusters
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-05-19T184127.500.json
+
+###
+
+GET http://localhost:5102/api/genres
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+POST http://localhost:5102/api/genres
+Content-Type: application/json
+Content-Length: 312
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "name": "House",
+  "description": "House music genre",
+  "isSubgenre": false,
+  "color": "#FF5733",
+  "genreCreationYear": 1980,
+  "genreOriginCountry": "United States",
+  "genreTipicalMode": 0.8,
+  "bpmLower": 120,
+  "bpmUpper": 130,
+  "key": 0,
+  "volume": -20,
+  "compasMetric": 4,
+  "avrgDuration": 300
+}
+
+<> 2025-05-19T184053.400.json
+
+###
+
+POST http://localhost:5102/api/clusters
+Content-Type: application/json
+Content-Length: 77
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "name": "Electronic Music",
+  "description": "Electronic music cluster"
+}
+
+<> 2025-05-19T184040.500.json
+
+###
+
+GET http://localhost:5102/api/genres
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102/api/genre
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102/api/genre
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102/api/cluster
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102/api/cluster
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+
+GET http://localhost:5102/swagger
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-05-19T181446.200.html
+
+###
+
+GET http://localhost:5102
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+###
+

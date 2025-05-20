@@ -1,0 +1,14 @@
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "dto": [
+      "The dto field is required."
+    ],
+    "$.genreCreationYear": [
+      "The JSON value could not be converted to System.String. Path: $.genreCreationYear | LineNumber: 5 | BytePositionInLine: 27."
+    ]
+  },
+  "traceId": "00-f0f333b8e1dd779c040038806f45e1e6-facb6333843e940f-00"
+}

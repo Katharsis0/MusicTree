@@ -1,55 +1,49 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using MusicTree.Repositories;
 using MusicTree.Services;
 using MusicTree.Services.Interfaces;
 
-var builder = WebApplication.CreateBuilder(args);
-
-//Add services to the container
-builder.Services.AddControllers();
-
-//Esto es para OpenAPI aka swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+namespace MusicTree
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { 
-        Title = "MusicTree API", 
-        Version = "v1" 
-    });
-});
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container
+            builder.Services.AddControllers();
 
-//PostgreSQL DB
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+            // Add DbContext with PostgreSQL
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//Register repositories and services
-builder.Services.AddScoped<ClusterRepository>();
-builder.Services.AddScoped<GenreRepository>();
-builder.Services.AddScoped<IClusterService, ClusterService>();
-builder.Services.AddScoped<IGenreService, GenreService>();
+            // Add repositories
+            builder.Services.AddScoped<ClusterRepository>();
+            builder.Services.AddScoped<GenreRepository>();
 
-var app = builder.Build();
+            // Add services
+            builder.Services.AddScoped<IClusterService, ClusterService>();
+            builder.Services.AddScoped<IGenreService, GenreService>();
 
-//Migración automática (esto hay q corregirlo mas adelante) 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+            // Add API explorer for development
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseAuthorization();
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
 }
-
-//Esto tmbn es para swagger
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-
-
-
-app.Run();

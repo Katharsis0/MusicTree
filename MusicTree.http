@@ -1,6 +1,56 @@
 @MusicTree_HostAddress = http://localhost:5102
 
-GET {{MusicTree_HostAddress}}/weatherforecast/
+# Test API is running
+GET {{MusicTree_HostAddress}}/
 Accept: application/json
+
+###
+
+# Test Swagger 
+GET {{MusicTree_HostAddress}}/swagger
+
+###
+
+# Test controllers 
+GET {{MusicTree_HostAddress}}/api/clusters
+Accept: application/json
+
+###
+
+GET {{MusicTree_HostAddress}}/api/genres
+Accept: application/json
+
+###
+
+# Test creating a cluster
+POST {{MusicTree_HostAddress}}/api/clusters
+Content-Type: application/json
+
+{
+  "name": "Electronic Music",
+  "description": "Electronic music cluster"
+}
+
+###
+
+# Test creating a genre
+POST {{MusicTree_HostAddress}}/api/genres
+Content-Type: application/json
+
+{
+  "name": "House",
+  "description": "House music genre",
+  "isSubgenre": false,
+  "color": "#FF5733",
+  "genreCreationYear": 1980,
+  "genreOriginCountry": "United States",
+  "genreTipicalMode": 0.8,
+  "bpmLower": 120,
+  "bpmUpper": 130,
+  "key": 0,
+  "volume": -20,
+  "compasMetric": 4,
+  "avrgDuration": 300
+}
 
 ###

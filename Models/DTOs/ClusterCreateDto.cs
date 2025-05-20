@@ -1,9 +1,9 @@
+// Models/DTOs/ClusterCreateDto.cs
 using System.ComponentModel.DataAnnotations;
 
 namespace MusicTree.Models.DTOs;
 //Data Transfer Object de Requests
 
-// Models/DTOs/ClusterCreateDto.cs
 public class ClusterCreateDto
 {
     [Required]

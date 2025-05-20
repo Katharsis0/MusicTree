@@ -2,6 +2,8 @@ using MusicTree.Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MusicTree.Models.DTOs;
+using MusicTree.Utils;
 
 namespace MusicTree.Repositories
 {
@@ -12,6 +14,33 @@ namespace MusicTree.Repositories
         public GenreRepository(AppDbContext context)
         {
             _context = context;
+        }
+        
+        public async Task AddWithRelationsAsync(Genre genre, List<GenreRelationDto>? relations)
+        {
+            await _context.Genres.AddAsync(genre);
+        
+            if (relations != null && relations.Any())
+            {
+                var mgpcCalculator = new MgpcCalculator();
+                foreach (var relation in relations)
+                {
+                    var relatedGenre = await GetByIdAsync(relation.GenreId);
+                    if (relatedGenre != null)
+                    {
+                        var mgpc = mgpcCalculator.Calculate(genre, relatedGenre);
+                        _context.GenreRelations.Add(new GenreRelation
+                        {
+                            GenreId = genre.Id,
+                            RelatedGenreId = relatedGenre.Id,
+                            Influence = relation.InfluenceStrength,
+                            MGPC = mgpc
+                        });
+                    }
+                }
+            }
+        
+            await _context.SaveChangesAsync();
         }
 
         public async Task AddAsync(Genre genre)

@@ -1,6 +1,5 @@
 using MusicTree.Models.DTOs;
 using MusicTree.Models.Entities;
-using System.Threading.Tasks;
 
 namespace MusicTree.Services.Interfaces
 {

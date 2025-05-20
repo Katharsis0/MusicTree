@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using MusicTree.Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MusicTree.Models.DTOs;
+using MusicTree.Models;
 
 namespace MusicTree.Repositories
 {
@@ -23,6 +25,24 @@ namespace MusicTree.Repositories
         public async Task<bool> ExistsByNameAsync(string name)
         {
             return await _context.Clusters.AnyAsync(c => c.Name == name);
+        }
+        
+        public async Task<OperationResult> ValidateAndAddAsync(ClusterCreateDto dto)
+        {
+            if (await ExistsByNameAsync(dto.Name))
+            {
+                return OperationResult.CreateFailure("Cluster with this name already exists");
+            }
+        
+            var cluster = new Cluster
+            {
+                Name = dto.Name,
+                Description = dto.Description
+                // IsActive and TimeStamp are set by default
+            };
+        
+            await AddAsync(cluster);
+            return OperationResult.CreateSuccess(cluster.Id);
         }
 
         public async Task<IEnumerable<Cluster>> GetAllAsync(bool includeInactive = false)

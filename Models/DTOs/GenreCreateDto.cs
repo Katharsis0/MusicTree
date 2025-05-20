@@ -1,6 +1,7 @@
 //Models/DTOs/GenreCreateDto.cs
 using System.ComponentModel.DataAnnotations;
 
+//Objeto de data exchange en el API  
 namespace MusicTree.Models.DTOs
 {
     public class GenreCreateDto
@@ -23,9 +24,6 @@ namespace MusicTree.Models.DTOs
         [Range(0, 1)]
         public float GenreTipicalMode { get; set; }  // 0=minor, 1=major
 
-        [Range(0, 250)]
-        public int Bpm { get; set; }  // Beats per minute
-
         [Range(-60, 0)]
         public int Volume { get; set; }  // In decibels (dB)
 
@@ -35,13 +33,33 @@ namespace MusicTree.Models.DTOs
         [Range(0, 3600)]
         public int AvrgDuration { get; set; }  // In seconds
 
+        [Range(-1, 11)]
+        public int Key { get; set; } = -1; // Musical key (0=C, 1=C#/Db, etc., -1=undefined)
+
+        // BPM Range fields (per user story requirement)
+        [Range(0, 250)]
+        public int BpmLower { get; set; }
+
+        [Range(0, 250)]
+        public int BpmUpper { get; set; }
+
         // Optional fields
         public string? Color { get; set; }  // Disabled if IsSubgenre=true
-        public string? GenreCreationYear { get; set; }
+        public int? GenreCreationYear { get; set; }
         public string? GenreOriginCountry { get; set; }  // Country list (e.g., UN countries)
 
         // Related genres (for MGPC calculations)
         public List<GenreRelationDto>? RelatedGenres { get; set; }
+        
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (BpmLower > BpmUpper)
+            {
+                yield return new ValidationResult(
+                    "BPM lower bound cannot be greater than upper bound",
+                    new[] { nameof(BpmLower), nameof(BpmUpper) });
+            }
+        }
     }
 
     // Helper DTO for genre relationships (influences + MGPC)

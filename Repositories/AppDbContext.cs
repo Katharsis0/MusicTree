@@ -11,10 +11,11 @@ namespace MusicTree.Repositories
 
         public DbSet<Cluster> Clusters { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<GenreRelation> GenreRelations { get; set; } // Added missing DbSet
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure relationships
+            //Set relationships
             modelBuilder.Entity<Genre>()
                 .HasOne(g => g.ParentGenre)
                 .WithMany()
@@ -27,14 +28,21 @@ namespace MusicTree.Repositories
                 .HasForeignKey(g => g.ClusterId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Configure many-to-many relationship for RelatedGenres
-            modelBuilder.Entity<Genre>()
-                .HasMany(g => g.RelatedGenres)
-                .WithMany()
-                .UsingEntity<Dictionary<string, object>>(
-                    "GenreRelations",
-                    j => j.HasOne<Genre>().WithMany().HasForeignKey("RelatedGenreId"),
-                    j => j.HasOne<Genre>().WithMany().HasForeignKey("GenreId"));
+            //Set many-to-many relationship using GenreRelation entity
+            modelBuilder.Entity<GenreRelation>()
+                .HasKey(gr => new { gr.GenreId, gr.RelatedGenreId });
+
+            modelBuilder.Entity<GenreRelation>()
+                .HasOne(gr => gr.Genre)
+                .WithMany(g => g.RelatedGenresAsSource)
+                .HasForeignKey(gr => gr.GenreId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GenreRelation>()
+                .HasOne(gr => gr.RelatedGenre)
+                .WithMany(g => g.RelatedGenresAsTarget)
+                .HasForeignKey(gr => gr.RelatedGenreId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

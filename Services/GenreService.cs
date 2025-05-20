@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MusicTree.Services.Interfaces;
+using MusicTree.Utils;
 
 namespace MusicTree.Services
 {
@@ -26,7 +27,7 @@ namespace MusicTree.Services
             if (string.IsNullOrEmpty(dto.Name))
                 throw new ArgumentException("Name is required.");
 
-            // Validate name uniqueness
+            // Validate name uniqueness (considering subgenre context)
             if (await _genreRepo.ExistsByNameAsync(dto.Name, dto.IsSubgenre ? dto.ParentGenreId : null))
                 throw new ArgumentException("Genre with this name already exists.");
 
@@ -45,7 +46,7 @@ namespace MusicTree.Services
                     throw new ArgumentException("Cannot create a subgenre of another subgenre.");
             }
 
-            // Get cluster if specified
+            // Get cluster if specified (only for non-subgenres)
             Cluster? cluster = null;
             if (!string.IsNullOrEmpty(dto.ClusterId) && !dto.IsSubgenre)
             {
@@ -54,63 +55,48 @@ namespace MusicTree.Services
                     throw new ArgumentException("Cluster not found.");
             }
 
-            // Create the genre
+            // Validate BPM range
+            if (dto.BpmLower > dto.BpmUpper)
+                throw new ArgumentException("BPM lower bound cannot be greater than upper bound.");
+
+            // Create the genre entity
             var genre = new Genre
             {
-                Id = GenerateGenreId(dto.IsSubgenre),
                 Name = dto.Name,
                 Description = dto.Description,
                 IsSubgenre = dto.IsSubgenre,
-                ParentGenre = parentGenre,
-                Cluster = cluster,
+                ParentGenreId = parentGenre?.Id,
+                ClusterId = cluster?.Id,
+                Key = dto.Key,
+                BpmLower = dto.BpmLower,
+                BpmUpper = dto.BpmUpper,
                 Color = dto.IsSubgenre ? null : dto.Color,
                 GenreCreationYear = dto.GenreCreationYear,
                 GenreOriginCountry = dto.GenreOriginCountry,
                 GenreTipicalMode = dto.GenreTipicalMode,
-                Bpm = dto.Bpm,
                 Volume = dto.Volume,
                 CompasMetric = dto.CompasMetric,
-                AvrgDuration = dto.AvrgDuration,
-                RelatedGenres = new List<Genre>()
+                AvrgDuration = dto.AvrgDuration
             };
 
-            // Handle related genres and calculate MGPC
-            if (dto.RelatedGenres != null && dto.RelatedGenres.Any())
+            // Save genre with relationships and MGPC calculations
+            await _genreRepo.AddWithRelationsAsync(genre, dto.RelatedGenres);
+
+            // If this is a subgenre, calculate MGPC with parent
+            if (dto.IsSubgenre && parentGenre != null)
             {
-                foreach (var relation in dto.RelatedGenres)
-                {
-                    var relatedGenre = await _genreRepo.GetByIdAsync(relation.GenreId);
-                    if (relatedGenre != null)
-                    {
-                        genre.RelatedGenres.Add(relatedGenre);
-                        // Here you would store the MGPC calculation
-                    }
-                }
+                var mgpcCalculator = new MgpcCalculator();
+                var mgpcWithParent = mgpcCalculator.Calculate(genre, parentGenre);
+                // This MGPC can be stored in a separate parent-child relationship table if needed
             }
 
-            await _genreRepo.AddAsync(genre);
             return genre;
         }
 
-        private string GenerateGenreId(bool isSubgenre)
-        {
-            var randomId = GenerateRandomId(12);
-            return isSubgenre ? $"G-{randomId}S-{GenerateRandomId(12)}" : $"G-{randomId}S-000000000000";
-        }
-
-        private string GenerateRandomId(int length)
-        {
-            var random = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        // Implement MGPC calculation based on the formula in the spec
         public float CalculateMGPC(Genre genreA, Genre genreB)
         {
-            //TODO
-            throw new NotImplementedException();
+            var calculator = new MgpcCalculator();
+            return calculator.Calculate(genreA, genreB);
         }
     }
 }
