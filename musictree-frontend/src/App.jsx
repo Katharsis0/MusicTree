@@ -10,7 +10,8 @@ import MenuLogin from "./VistaMenu/MenuLogin";
 import LoginCurador from "./VistaCurador/LoginCurador";
 import RegistroCurador from "./VistaCurador/RegistroCurador";
 import Reservacion from "./VistaCurador/Reservacion";
-import RegistrarReservacion from "./VistaCurador/RegistrarReservacion";
+import CrearCluster from "./VistaCurador/CrearCluster";
+import CrearGenero from "./VistaCurador/CrearGenero";
 import VerReservaciones from "./VistaCurador/VerReservaciones";
 import MenuCurador from "./VistaCurador/MenuCurador";
 
@@ -38,9 +39,10 @@ function App() {
         <Route element={<LayoutCurador />}>
           
           <Route path="/curador/reservacion" element={<Reservacion />} />
-          <Route path="/curador/reservacion/registrar/:id" element={<RegistrarReservacion />} />
-          <Route path="/curador/reservaciones" element={<VerReservaciones />} />
+          <Route path="/curador/crearcluster" element={<CrearCluster />} />
+          <Route path="/curador/verclusters" element={<VerReservaciones />} />
           <Route path="/curador/menucurador" element={<MenuCurador />} />
+          <Route path="/curador/creargenero" element={<CrearGenero />} />
 
         </Route>
 

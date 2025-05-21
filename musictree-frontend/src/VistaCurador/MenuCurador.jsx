@@ -2,9 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const roles = [
-{ name: "Crear Clúster", path: "/crearcluster" },
-{ name: "Ver Clústers", path: "/vercluster" },
-{ name: "Crear Género/Subgénero", path: "/creargenero" }
+{ name: "Crear Clúster", path: "/curador/crearcluster" },
+{ name: "Ver Clústers", path: "/curador/vercluster" },
+{ name: "Crear Género/Subgénero", path: "/curador/creargenero" }
 ];
 
 const MenuCurador = () => {
