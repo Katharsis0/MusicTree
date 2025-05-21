@@ -39,7 +39,7 @@ const CrearGenero = () => {
   useEffect(() => {
     //axios.get('${api}/api/Cluster/listar_generos')
     axios.get(`${api}/api/Genres`)
-      .then(res => setGeneros(res.data))
+      .then(res => setGeneros(res.data.genres || []))
       .catch(err => console.log(err));
     
     //axios.get('${api}/api/Cluster/listar_clusters')
@@ -203,9 +203,12 @@ const handleSubmit = async (event) => {
               <select className='form-select' value={values.padre}
                 onChange={e => setValues({ ...values, padre: e.target.value })}>
                 <option value=''>Seleccione un género</option>
-                {generos.filter(g => !g.esSubgenero).map(g => (
-                  <option key={g.idGenero} value={g.idGenero}>{g.nombre}</option>
+                {Array.isArray(generos) && generos
+                  .filter(g => !g.isSubgenre)
+                  .map(g => (
+                    <option key={g.id} value={g.id}>{g.name}</option>
                 ))}
+
               </select>
             </div>
           )}
