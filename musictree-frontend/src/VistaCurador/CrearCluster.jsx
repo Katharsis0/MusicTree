@@ -16,7 +16,7 @@ const CrearCluster = () => {
 
     try {
       // Enviar los valores incluyendo el campo 'activo'
-      await axios.post('http://localhost:5197/api/Cluester/registrar_cluster', values);
+      await axios.post('http://localhost:5197/api/Cluster/registrar_cluster', values);
 
       console.log('Se creó el cluster correctamente');
       navigate('/curador/menucurador');
