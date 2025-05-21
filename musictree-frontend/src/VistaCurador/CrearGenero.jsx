@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import countryList from 'react-select-country-list';
 import { v4 as uuidv4 } from 'uuid';
+import Swal from 'sweetalert2';
+
+const api = import.meta.env.VITE_API_URL;
 
 const CrearGenero = () => {
   const navigate = useNavigate();
@@ -32,16 +35,33 @@ const CrearGenero = () => {
 
   const [generos, setGeneros] = useState([]);
   const [clusters, setClusters] = useState([]);
-
+  const [clusterError, setClusterError] = useState(null); 
   useEffect(() => {
-    axios.get('http://localhost:5197/api/Cluster/listar_generos')
+    //axios.get('${api}/api/Cluster/listar_generos')
+    axios.get(`${api}/api/Genres`)
       .then(res => setGeneros(res.data))
       .catch(err => console.log(err));
+    
+    //axios.get('${api}/api/Cluster/listar_clusters')
+    
+    axios.get(`${api}/api/Clusters`)
+      .then(res => {
+        if (!Array.isArray(res.data)) {
+          console.error("La respuesta del backend no es un array:", res.data);
+          throw new Error("Formato de respuesta inesperado");
+        }
 
-    axios.get('http://localhost:5197/api/Cluster/listar_clusters')
-      .then(res => setClusters(res.data))
-      .catch(err => console.log(err));
-  }, []);
+        setClusters(res.data);
+        setClusterError(null);
+      })
+      .catch(err => {
+        console.error("Error al obtener clusters:", err);
+        setClusterError("No se pudieron cargar los clusters. Intente más tarde.");
+      });
+}, []);
+
+
+
 
   const handleInfluenciasChange = (index, field, value) => {
     const newInfluencias = [...values.influencias];
@@ -56,60 +76,93 @@ const CrearGenero = () => {
     });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    // Validaciones locales
-    if (!values.nombre || values.nombre.length < 3 || values.nombre.length > 30) {
-      Swal.fire('Error', 'Debe ingresar un nombre entre 3 y 30 caracteres.', 'warning');
-      return;
-    }
-
-    if (values.subgenero && !values.padre) {
-      Swal.fire('Error', 'Debe seleccionar un género padre para el subgénero.', 'warning');
-      return;
-    }
-
-    if (values.bpmMin < 0 || values.bpmMax > 250 || values.bpmMin > values.bpmMax) {
-      Swal.fire('Error', 'El rango de BPM debe estar entre 0 y 250 y el mínimo no puede ser mayor que el máximo.', 'warning');
-      return;
-    }
-
-    if (values.tono < -1 || values.tono > 11) {
-      Swal.fire('Error', 'El tono dominante debe estar entre -1 y 11.', 'warning');
-      return;
-    }
-
-    if (values.volumen < -60 || values.volumen > 0) {
-      Swal.fire('Error', 'El volumen debe estar entre -60 y 0 DB.', 'warning');
-      return;
-    }
-
-    if (values.tiempo < 0 || values.tiempo > 8) {
-      Swal.fire('Error', 'El compás debe estar entre 0 y 8.', 'warning');
-      return;
-    }
-
-    if (values.duracion < 0 || values.duracion > 3600) {
-      Swal.fire('Error', 'La duración debe estar entre 0 y 3600 segundos.', 'warning');
-      return;
-    }
-
-    try {
-      const response = await axios.post('http://localhost:5197/api/Cluster/registrar_genero', values);
-
-      if (response.data?.duplicado) {
-        Swal.fire('Error', 'Ya existe una carta con esta combinación de género y subgénero.', 'warning');
-        return;
-      }
-
-      Swal.fire('Éxito', 'Se creó el género correctamente.', 'success');
-      navigate('/curador/menucurador');
-    } catch (error) {
-      Swal.fire('Error', 'No se pudo procesar la transacción. Intente más tarde.', 'error');
-      console.error(error);
-    }
+  const parseOrNull = (val) => {
+    const parsed = parseInt(val);
+    return isNaN(parsed) ? null : parsed;
   };
+
+  // Validaciones locales
+  if (!values.nombre || values.nombre.length < 3 || values.nombre.length > 30) {
+    Swal.fire('Error', 'Debe ingresar un nombre entre 3 y 30 caracteres.', 'warning');
+    return;
+  }
+
+  if (values.esSubgenero && !values.padre) {
+    Swal.fire('Error', 'Debe seleccionar un género padre para el subgénero.', 'warning');
+    return;
+  }
+
+  if (parseOrNull(values.bpmMin) < 0 || parseOrNull(values.bpmMax) > 250 || parseOrNull(values.bpmMin) > parseOrNull(values.bpmMax)) {
+    Swal.fire('Error', 'El rango de BPM debe estar entre 0 y 250 y el mínimo no puede ser mayor que el máximo.', 'warning');
+    return;
+  }
+
+  if (parseOrNull(values.tono) < -1 || parseOrNull(values.tono) > 11) {
+    Swal.fire('Error', 'El tono dominante debe estar entre -1 y 11.', 'warning');
+    return;
+  }
+
+  if (parseOrNull(values.volumen) < -60 || parseOrNull(values.volumen) > 0) {
+    Swal.fire('Error', 'El volumen debe estar entre -60 y 0 DB.', 'warning');
+    return;
+  }
+
+  if (parseOrNull(values.tiempo) < 0 || parseOrNull(values.tiempo) > 8) {
+    Swal.fire('Error', 'El compás debe estar entre 0 y 8.', 'warning');
+    return;
+  }
+
+  if (parseOrNull(values.duracion) < 0 || parseOrNull(values.duracion) > 3600) {
+    Swal.fire('Error', 'La duración debe estar entre 0 y 3600 segundos.', 'warning');
+    return;
+  }
+
+  try {
+    const payload = {
+      Name: values.nombre,
+      Description: values.desc,
+      IsSubgenre: values.esSubgenero,
+      ParentGenreId: values.esSubgenero ? values.padre : null,
+      ClusterId: values.esSubgenero ? null : values.cluster || null,
+      GenreTipicalMode: parseFloat(values.modo),
+      Volume: parseOrNull(values.volumen),
+      CompasMetric: parseOrNull(values.tiempo),
+      AvrgDuration: parseOrNull(values.duracion),
+      Key: parseOrNull(values.tono),
+      BpmLower: parseOrNull(values.bpmMin),
+      BpmUpper: parseOrNull(values.bpmMax),
+      Color: values.esSubgenero ? null : values.color,
+      GenreCreationYear: parseOrNull(values.año),
+      GenreOriginCountry: values.pais,
+      RelatedGenres: values.influencias.map(inf => ({
+        GenreId: inf.generoRelacionado,
+        InfluenceStrength: parseOrNull(inf.valorInfluencia)
+      }))
+    };
+
+    console.log("Payload enviado:", payload);
+
+    const response = await axios.post(`${api}/api/Genres`, payload);
+
+
+
+
+    if (response.data?.duplicado) {
+      Swal.fire('Error', 'Ya existe una carta con esta combinación de género y subgénero.', 'warning');
+      return;
+    }
+
+    Swal.fire('Éxito', 'Se creó el género correctamente.', 'success');
+    navigate('/curador/menucurador');
+  } catch (error) {
+    Swal.fire('Error', 'No se pudo procesar la transacción. Intente más tarde.', 'error');
+    console.error(error.response?.data || error);
+  }
+};
+
 
 
   const countries = countryList().getData();
@@ -184,13 +237,21 @@ const CrearGenero = () => {
 
           <div className='mb-2'>
             <label>Clúster asociado (opcional)</label>
+
+            {clusterError && (
+              <div className="alert alert-danger" role="alert">
+                {clusterError}
+              </div>
+            )}
+
             <select className='form-select' value={values.cluster}
               onChange={e => setValues({ ...values, cluster: e.target.value })}>
               <option value=''>Sin clúster</option>
               {clusters.map(c => (
-                <option key={c.id} value={c.id}>{c.nombre}</option>
+                <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
+
           </div>
 
           <div className='mb-2'>
