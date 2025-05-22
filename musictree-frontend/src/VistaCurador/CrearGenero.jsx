@@ -121,6 +121,24 @@ const handleSubmit = async (event) => {
   }
 
   try {
+
+    let mgpc = null;
+
+    if (values.esSubgenero) {
+      const padre = generos.find(g => g.id === values.padre);
+      const duracionPadre = padre?.musicalAttributes?.averageDuration;
+
+      const bpmSuperior = parseInt(values.bpmMax);
+      const duracionSubgenero = parseInt(values.duracion);
+
+      if (!isNaN(bpmSuperior) && !isNaN(duracionSubgenero) && duracionPadre > 0) {
+        mgpc = ((bpmSuperior * duracionSubgenero) / duracionPadre).toFixed(2);
+        console.log(`MGPC calculado correctamente: (${bpmSuperior} * ${duracionSubgenero}) / ${duracionPadre} = ${mgpc}`);
+      } else {
+        console.warn(" No se pudo calcular MGPC: datos inválidos o género padre no encontrado.");
+      }
+    }
+
     const payload = {
       Name: values.nombre,
       Description: values.desc,
@@ -137,6 +155,7 @@ const handleSubmit = async (event) => {
       Color: values.esSubgenero ? null : values.color,
       GenreCreationYear: parseOrNull(values.año),
       GenreOriginCountry: values.pais,
+      //MGPC: values.esSubgenero ? parseFloat(mgpc) : null,
       RelatedGenres: values.influencias.map(inf => ({
         GenreId: inf.generoRelacionado,
         InfluenceStrength: parseOrNull(inf.valorInfluencia)
