@@ -12,6 +12,7 @@ namespace MusicTree.Repositories
         public DbSet<Cluster> Clusters { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<GenreRelation> GenreRelations { get; set; }
+        public DbSet<Artist> Artists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,7 +72,16 @@ namespace MusicTree.Repositories
                     .HasForeignKey(gr => gr.RelatedGenreId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
-            
+
+            // Configure Artist 
+            modelBuilder.Entity<Artist>(entity =>
+            {
+                entity.Property(c => c.Id).HasMaxLength(128);
+                entity.Property(c => c.Name).HasMaxLength(30).IsRequired();
+                entity.Property(c => c.Biography).HasMaxLength(300);
+                entity.Property(c => c.IsActive).HasDefaultValue(true);
+                entity.Property(c => c.TimeStamp).HasDefaultValueSql("NOW()");
+            });
         }
     }
 }
