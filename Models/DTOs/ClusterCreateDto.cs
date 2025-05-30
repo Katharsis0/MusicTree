@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace MusicTree.Models.DTOs;
-//Data Transfer Object de Requests
 
 public class ClusterCreateDto
 {
@@ -12,4 +11,7 @@ public class ClusterCreateDto
 
     [StringLength(300)]
     public string? Description { get; set; }  //Opcional
+    
+    [Required]
+    public bool IsActive { get; set; } = true;
 }

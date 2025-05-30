@@ -21,6 +21,12 @@ namespace MusicTree.Repositories
             await _context.Clusters.AddAsync(cluster);
             await _context.SaveChangesAsync();
         }
+        
+        public async Task UpdateAsync(Cluster cluster)
+        {
+            _context.Clusters.Update(cluster);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task<bool> ExistsByNameAsync(string name)
         {
@@ -61,6 +67,13 @@ namespace MusicTree.Repositories
             return await _context.Clusters
                 .Include(c => c.Genres)
                 .FirstOrDefaultAsync(c => c.Id == id);
+        }
+        public async Task<IEnumerable<Cluster>> GetByStatusAsync(bool isActive)
+        {
+            return await _context.Clusters
+                .Where(c => c.IsActive == isActive)
+                .OrderByDescending(c => c.Name)
+                .ToListAsync();
         }
     }
 }

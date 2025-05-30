@@ -7,5 +7,7 @@ namespace MusicTree.Services.Interfaces
     {
         Task<Cluster> CreateClusterAsync(ClusterCreateDto dto);
         Task<IEnumerable<Cluster>> GetAllClustersAsync(bool includeInactive = false);
+        Task<bool> ToggleClusterStatusAsync(string clusterId);
+        Task<bool> SetClusterStatusAsync(string clusterId, bool isActive);
     }
 }

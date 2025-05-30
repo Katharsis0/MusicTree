@@ -42,6 +42,30 @@ namespace MusicTree.Services
         {
             return await _clusterRepo.GetAllAsync(includeInactive);
         }
+        
+        // Add method to toggle cluster status
+        public async Task<bool> ToggleClusterStatusAsync(string clusterId)
+        {
+            var cluster = await _clusterRepo.GetByIdAsync(clusterId);
+            if (cluster == null)
+                return false;
+
+            cluster.IsActive = !cluster.IsActive;
+            await _clusterRepo.UpdateAsync(cluster);
+            return true;
+        }
+
+        // Add method to set specific status
+        public async Task<bool> SetClusterStatusAsync(string clusterId, bool isActive)
+        {
+            var cluster = await _clusterRepo.GetByIdAsync(clusterId);
+            if (cluster == null)
+                return false;
+
+            cluster.IsActive = isActive;
+            await _clusterRepo.UpdateAsync(cluster);
+            return true;
+        }
 
         private string GenerateRandomId(int length)
         {

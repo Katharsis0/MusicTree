@@ -9,10 +9,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b71533bc-7416-48ed-8407-d45372d86c01" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/httpRequests/http-requests-log.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MusicTree.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/MusicTree.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/ClustersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ClustersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/DTOs/ClusterCreateDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/ClusterCreateDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/ClusterRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/ClusterRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/ClusterService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/ClusterService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Interfaces/IClusterService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/IClusterService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +140,7 @@
       <workItem from="1747697104348" duration="2813000" />
       <workItem from="1747700379899" duration="8788000" />
       <workItem from="1747713685652" duration="4640000" />
-      <workItem from="1748640136274" duration="5184000" />
+      <workItem from="1748640136274" duration="6739000" />
     </task>
     <servers />
   </component>
