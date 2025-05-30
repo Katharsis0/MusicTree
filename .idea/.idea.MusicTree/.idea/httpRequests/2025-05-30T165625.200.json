@@ -1,0 +1,32 @@
+[
+  {
+    "id": "cluster-world",
+    "name": "World",
+    "isActive": true,
+    "creationDate": "2025-05-30T22:54:41.131485Z"
+  },
+  {
+    "id": "cluster-rock",
+    "name": "Rock",
+    "isActive": true,
+    "creationDate": "2025-05-30T22:54:41.131485Z"
+  },
+  {
+    "id": "cluster-pop",
+    "name": "Pop",
+    "isActive": true,
+    "creationDate": "2025-05-30T22:54:41.131485Z"
+  },
+  {
+    "id": "cluster-electronic",
+    "name": "Electronic",
+    "isActive": true,
+    "creationDate": "2025-05-30T22:54:41.131485Z"
+  },
+  {
+    "id": "cluster-classical",
+    "name": "Classical",
+    "isActive": true,
+    "creationDate": "2025-05-30T22:54:41.131485Z"
+  }
+]

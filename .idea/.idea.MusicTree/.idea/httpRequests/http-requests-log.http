@@ -1,3 +1,21 @@
+GET http://localhost:5102/swagger
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-05-30T165633.200.html
+
+###
+
+GET http://localhost:5102/api/clusters
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+<> 2025-05-30T165625.200.json
+
+###
+
 GET http://localhost:5102/api/genres
 Accept: application/json
 User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.2
