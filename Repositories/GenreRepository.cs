@@ -15,160 +15,303 @@ namespace MusicTree.Repositories
         {
             _context = context;
         }
-        
-        public async Task AddWithRelationsAsync(Genre genre, List<GenreRelationDto>? relations)
-{
-    Console.WriteLine($"AddWithRelationsAsync called for genre: {genre.Name} (ID: {genre.Id})"); // Log entry
 
-    try
-    {
-        await _context.Genres.AddAsync(genre);
-        Console.WriteLine("Genre added to context, saving changes...");
-        await _context.SaveChangesAsync(); // Save the genre first
-        Console.WriteLine("Genre saved successfully.");
-
-        if (relations != null && relations.Any())
+        public async Task AddGenreRelationAsync(string genreId, string relatedGenreId, int influence, float mgpc)
         {
-            Console.WriteLine($"Adding {relations.Count} relations...");
-            var mgpcCalculator = new MgpcCalculator();
-            foreach (var relation in relations)
+            Console.WriteLine($"AddGenreRelationAsync called: genreId={genreId}, relatedGenreId={relatedGenreId}, influence={influence}, mgpc={mgpc}");
+
+            try
             {
-                Console.WriteLine($"Processing relation for GenreId: {relation.GenreId}");
-                var relatedGenre = await GetByIdAsync(relation.GenreId);
-                if (relatedGenre != null)
+                // Check if the relationship already exists
+                var existingRelation = await _context.GenreRelations
+                    .FirstOrDefaultAsync(gr => gr.GenreId == genreId && gr.RelatedGenreId == relatedGenreId);
+
+                if (existingRelation != null)
                 {
-                    Console.WriteLine($"Related genre found: {relatedGenre.Name} (ID: {relatedGenre.Id})");
-                    var mgpc = mgpcCalculator.Calculate(genre, relatedGenre);
-                    Console.WriteLine($"MGPC calculated: {mgpc}");
-                    await AddGenreRelationAsync(genre.Id, relatedGenre.Id, relation.InfluenceStrength, mgpc);
-                    Console.WriteLine("Relation added successfully.");
+                    Console.WriteLine("Relationship already exists, updating values...");
+                    existingRelation.Influence = influence;
+                    existingRelation.MGPC = mgpc;
+                    _context.GenreRelations.Update(existingRelation);
                 }
                 else
                 {
-                    Console.WriteLine($"Warning: Related Genre with ID {relation.GenreId} not found.");
+                    Console.WriteLine("Creating new relationship...");
+                    var relation = new GenreRelation
+                    {
+                        GenreId = genreId,
+                        RelatedGenreId = relatedGenreId,
+                        Influence = influence,
+                        MGPC = mgpc
+                    };
+
+                    await _context.GenreRelations.AddAsync(relation);
                 }
+
+                await _context.SaveChangesAsync();
+                Console.WriteLine("GenreRelation saved successfully.");
+            }
+            catch (DbUpdateException dbEx)
+            {
+                Console.WriteLine($"DbUpdateException in AddGenreRelationAsync: {dbEx}");
+                if (dbEx.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {dbEx.InnerException}");
+                }
+                throw new InvalidOperationException($"Failed to save genre relationship: {dbEx.Message}", dbEx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in AddGenreRelationAsync: {ex}");
+                throw new InvalidOperationException($"Unexpected error saving genre relationship: {ex.Message}", ex);
             }
         }
-        Console.WriteLine("AddWithRelationsAsync completed."); // Log completion
-    }
-    catch (DbUpdateException dbEx)
-    {
-        Console.WriteLine($"DbUpdateException in AddWithRelationsAsync: {dbEx}");
-        // Log inner exceptions for more details
-        if (dbEx.InnerException != null)
-        {
-            Console.WriteLine($"Inner Exception: {dbEx.InnerException}");
-        }
-        throw;
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Exception in AddWithRelationsAsync: {ex}");
-        throw;
-    }
-}
-
-public async Task AddGenreRelationAsync(string genreId, string relatedGenreId, int influence, float mgpc)
-{
-    Console.WriteLine($"AddGenreRelationAsync called: genreId={genreId}, relatedGenreId={relatedGenreId}, influence={influence}, mgpc={mgpc}");
-
-    try
-    {
-        var relation = new GenreRelation
-        {
-            GenreId = genreId,
-            RelatedGenreId = relatedGenreId,
-            Influence = influence,
-            MGPC = mgpc
-        };
-
-        _context.GenreRelations.Add(relation);
-        await _context.SaveChangesAsync();
-        Console.WriteLine("GenreRelation saved successfully.");
-    }
-    catch (DbUpdateException dbEx)
-    {
-        Console.WriteLine($"DbUpdateException in AddGenreRelationAsync: {dbEx}");
-        if (dbEx.InnerException != null)
-        {
-            Console.WriteLine($"Inner Exception: {dbEx.InnerException}");
-        }
-        throw;
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Exception in AddGenreRelationAsync: {ex}");
-        throw;
-    }
-}
 
         public async Task AddAsync(Genre genre)
         {
-            await _context.Genres.AddAsync(genre);
-            await _context.SaveChangesAsync();
+            try
+            {
+                Console.WriteLine($"Adding genre to context: {genre.Name} (ID: {genre.Id})");
+                await _context.Genres.AddAsync(genre);
+                await _context.SaveChangesAsync();
+                Console.WriteLine("Genre saved successfully.");
+            }
+            catch (DbUpdateException dbEx)
+            {
+                Console.WriteLine($"DbUpdateException in AddAsync: {dbEx}");
+                if (dbEx.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {dbEx.InnerException}");
+                }
+                throw new InvalidOperationException($"Failed to save genre: {dbEx.Message}", dbEx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in AddAsync: {ex}");
+                throw new InvalidOperationException($"Unexpected error saving genre: {ex.Message}", ex);
+            }
         }
 
         public async Task<bool> ExistsByNameAsync(string name, string? parentGenreId = null)
         {
-            if (parentGenreId == null)
+            try
             {
-                // Check for main genres (no parent)
-                return await _context.Genres
-                    .Where(g => g.Name == name && !g.IsSubgenre)
-                    .AnyAsync();
+                if (parentGenreId == null)
+                {
+                    // Check for main genres (no parent)
+                    return await _context.Genres
+                        .Where(g => g.Name == name && !g.IsSubgenre)
+                        .AnyAsync();
+                }
+                else
+                {
+                    // Check for subgenres under specific parent
+                    return await _context.Genres
+                        .Where(g => g.Name == name && g.IsSubgenre && g.ParentGenreId == parentGenreId)
+                        .AnyAsync();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Check for subgenres under specific parent
-                return await _context.Genres
-                    .Where(g => g.Name == name && g.IsSubgenre && g.ParentGenreId == parentGenreId)
-                    .AnyAsync();
+                Console.WriteLine($"Error in ExistsByNameAsync: {ex}");
+                throw new InvalidOperationException($"Failed to check genre name existence: {ex.Message}", ex);
             }
         }
 
         public async Task<Genre?> GetByIdAsync(string id)
         {
-            return await _context.Genres
-                .Include(g => g.ParentGenre)
-                .Include(g => g.Cluster)
-                .Include(g => g.RelatedGenresAsSource)
-                    .ThenInclude(r => r.RelatedGenre)
-                .Include(g => g.RelatedGenresAsTarget)
-                    .ThenInclude(r => r.Genre)
-                .FirstOrDefaultAsync(g => g.Id == id);
+            try
+            {
+                return await _context.Genres
+                    .Include(g => g.ParentGenre)
+                    .Include(g => g.Cluster)
+                    .Include(g => g.RelatedGenresAsSource)
+                        .ThenInclude(r => r.RelatedGenre)
+                    .Include(g => g.RelatedGenresAsTarget)
+                        .ThenInclude(r => r.Genre)
+                    .FirstOrDefaultAsync(g => g.Id == id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetByIdAsync: {ex}");
+                throw new InvalidOperationException($"Failed to retrieve genre: {ex.Message}", ex);
+            }
         }
 
         public async Task<IEnumerable<Genre>> GetAllAsync()
         {
-            return await _context.Genres
-                .Include(g => g.ParentGenre)
-                .Include(g => g.Cluster)
-                .Where(g => g.IsActive)
-                .OrderBy(g => g.Name) // Alphabetical order as per user story
-                .ToListAsync();
+            try
+            {
+                return await _context.Genres
+                    .Include(g => g.ParentGenre)
+                    .Include(g => g.Cluster)
+                    .Include(g => g.RelatedGenresAsSource)
+                        .ThenInclude(r => r.RelatedGenre)
+                    .Where(g => g.IsActive)
+                    .OrderBy(g => g.Name) // Alphabetical order as per user story
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetAllAsync: {ex}");
+                throw new InvalidOperationException($"Failed to retrieve genres: {ex.Message}", ex);
+            }
         }
 
         public async Task<IEnumerable<Genre>> GetMainGenresAsync()
         {
-            return await _context.Genres
-                .Include(g => g.Cluster)
-                .Where(g => g.IsActive && !g.IsSubgenre)
-                .OrderBy(g => g.Name)
-                .ToListAsync();
+            try
+            {
+                return await _context.Genres
+                    .Include(g => g.Cluster)
+                    .Include(g => g.RelatedGenresAsSource)
+                        .ThenInclude(r => r.RelatedGenre)
+                    .Where(g => g.IsActive && !g.IsSubgenre)
+                    .OrderBy(g => g.Name)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetMainGenresAsync: {ex}");
+                throw new InvalidOperationException($"Failed to retrieve main genres: {ex.Message}", ex);
+            }
         }
 
         public async Task<IEnumerable<Genre>> GetSubgenresAsync(string? parentGenreId = null)
         {
-            var query = _context.Genres
-                .Include(g => g.ParentGenre)
-                .Where(g => g.IsActive && g.IsSubgenre);
-
-            if (!string.IsNullOrEmpty(parentGenreId))
+            try
             {
-                query = query.Where(g => g.ParentGenreId == parentGenreId);
-            }
+                var query = _context.Genres
+                    .Include(g => g.ParentGenre)
+                    .Include(g => g.RelatedGenresAsSource)
+                        .ThenInclude(r => r.RelatedGenre)
+                    .Where(g => g.IsActive && g.IsSubgenre);
 
-            return await query.OrderBy(g => g.Name).ToListAsync();
+                if (!string.IsNullOrEmpty(parentGenreId))
+                {
+                    query = query.Where(g => g.ParentGenreId == parentGenreId);
+                }
+
+                return await query.OrderBy(g => g.Name).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetSubgenresAsync: {ex}");
+                throw new InvalidOperationException($"Failed to retrieve subgenres: {ex.Message}", ex);
+            }
+        }
+
+        // Method to get genres by compás metric
+        public async Task<IEnumerable<Genre>> GetByCompasMetricAsync(int compasMetric)
+        {
+            try
+            {
+                return await _context.Genres
+                    .Include(g => g.ParentGenre)
+                    .Include(g => g.Cluster)
+                    .Where(g => g.IsActive && g.CompasMetric == compasMetric)
+                    .OrderBy(g => g.Name)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetByCompasMetricAsync: {ex}");
+                throw new InvalidOperationException($"Failed to retrieve genres by compás metric: {ex.Message}", ex);
+            }
+        }
+
+        // Method to get genres by BPM range
+        public async Task<IEnumerable<Genre>> GetByBpmRangeAsync(int? minBpm = null, int? maxBpm = null)
+        {
+            try
+            {
+                var query = _context.Genres
+                    .Include(g => g.ParentGenre)
+                    .Include(g => g.Cluster)
+                    .Where(g => g.IsActive);
+
+                if (minBpm.HasValue)
+                {
+                    query = query.Where(g => g.BpmUpper >= minBpm.Value);
+                }
+
+                if (maxBpm.HasValue)
+                {
+                    query = query.Where(g => g.BpmLower <= maxBpm.Value);
+                }
+
+                return await query.OrderBy(g => g.Name).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetByBpmRangeAsync: {ex}");
+                throw new InvalidOperationException($"Failed to retrieve genres by BPM range: {ex.Message}", ex);
+            }
+        }
+
+        // Method to update MGPC values for existing relationships
+        public async Task UpdateGenreRelationMGPCAsync(string genreId, string relatedGenreId, float newMgpc)
+        {
+            try
+            {
+                var relation = await _context.GenreRelations
+                    .FirstOrDefaultAsync(gr => gr.GenreId == genreId && gr.RelatedGenreId == relatedGenreId);
+
+                if (relation != null)
+                {
+                    relation.MGPC = newMgpc;
+                    _context.GenreRelations.Update(relation);
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine($"Updated MGPC for relationship {genreId} -> {relatedGenreId}: {newMgpc}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateGenreRelationMGPCAsync: {ex}");
+                throw new InvalidOperationException($"Failed to update MGPC: {ex.Message}", ex);
+            }
+        }
+
+        // Method to get all relationships for a genre
+        public async Task<IEnumerable<GenreRelation>> GetGenreRelationshipsAsync(string genreId)
+        {
+            try
+            {
+                return await _context.GenreRelations
+                    .Include(gr => gr.Genre)
+                    .Include(gr => gr.RelatedGenre)
+                    .Where(gr => gr.GenreId == genreId || gr.RelatedGenreId == genreId)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetGenreRelationshipsAsync: {ex}");
+                throw new InvalidOperationException($"Failed to retrieve genre relationships: {ex.Message}", ex);
+            }
+        }
+
+        // Method to delete a genre relationship
+        public async Task<bool> RemoveGenreRelationAsync(string genreId, string relatedGenreId)
+        {
+            try
+            {
+                var relation = await _context.GenreRelations
+                    .FirstOrDefaultAsync(gr => gr.GenreId == genreId && gr.RelatedGenreId == relatedGenreId);
+
+                if (relation != null)
+                {
+                    _context.GenreRelations.Remove(relation);
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine($"Removed relationship: {genreId} -> {relatedGenreId}");
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in RemoveGenreRelationAsync: {ex}");
+                throw new InvalidOperationException($"Failed to remove genre relationship: {ex.Message}", ex);
+            }
         }
     }
 }

@@ -49,12 +49,21 @@ namespace MusicTree.Models.DTOs
         [Range(0, 250)] 
         public int BpmUpper { get; set; }
         
-        //Optional fields
-        public string? Color { get; set; }  // Disabled if IsSubgenre=true
+        //RGB Color fields (instead of hex)
+        [Range(0, 255)]
+        public int? ColorR { get; set; }  // Red component (0-255)
+        
+        [Range(0, 255)]
+        public int? ColorG { get; set; }  // Green component (0-255)
+        
+        [Range(0, 255)]
+        public int? ColorB { get; set; }  // Blue component (0-255)
+        
+        // Optional fields
         public int? GenreCreationYear { get; set; }
         public string? GenreOriginCountry { get; set; }  //Country list (UN countries)
 
-        //Related genres (for MGPC calculations)
+        //Related genres (for MGPC calculations and influence)
         public List<GenreRelationDto>? RelatedGenres { get; set; }
         
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -84,11 +93,20 @@ namespace MusicTree.Models.DTOs
             }
 
             //Subgenre cannot have color
-            if (IsSubgenre && !string.IsNullOrEmpty(Color))
+            if (IsSubgenre && (ColorR.HasValue || ColorG.HasValue || ColorB.HasValue))
             {
                 yield return new ValidationResult(
                     "Subgenres cannot have a color assigned",
-                    new[] { nameof(Color) });
+                    new[] { nameof(ColorR), nameof(ColorG), nameof(ColorB) });
+            }
+
+            //RGB color validation - all components must be provided together
+            var colorComponentsProvided = new[] { ColorR.HasValue, ColorG.HasValue, ColorB.HasValue };
+            if (colorComponentsProvided.Any(x => x) && !colorComponentsProvided.All(x => x))
+            {
+                yield return new ValidationResult(
+                    "If color is specified, all RGB components (R, G, B) must be provided",
+                    new[] { nameof(ColorR), nameof(ColorG), nameof(ColorB) });
             }
         }
     }
@@ -99,7 +117,8 @@ namespace MusicTree.Models.DTOs
         [Required]
         public string GenreId { get; set; } = string.Empty;  // ID of the influencing genre
 
+        [Required]
         [Range(1, 10)]
-        public int InfluenceStrength { get; set; } = 5;  // Default=5 (per user story)
+        public int InfluenceStrength { get; set; } = 5;  // Influence strength (1-10 scale)
     }
 }

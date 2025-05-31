@@ -9,9 +9,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b71533bc-7416-48ed-8407-d45372d86c01" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/setup_musictree_powershell.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/GenresController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/GenresController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/DTOs/GenreCreateDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/GenreCreateDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Entities/Genre.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Entities/Genre.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/AppDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/GenreRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/GenreRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SETUP_REFERENCE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SETUP_REFERENCE.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/GenreService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/GenreService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils/MGCPCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/MGCPCalculator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/musictree_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/musictree_db.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -139,7 +145,7 @@
       <workItem from="1747697104348" duration="2813000" />
       <workItem from="1747700379899" duration="8788000" />
       <workItem from="1747713685652" duration="4640000" />
-      <workItem from="1748640136274" duration="8531000" />
+      <workItem from="1748640136274" duration="11884000" />
     </task>
     <servers />
   </component>

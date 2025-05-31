@@ -7,22 +7,14 @@ Database Connection:
 - User: musictree_admin
 - Password: musictree
 
-Commands (Linux):
+Commands:
 - Start application: dotnet run
 - Connect to DB: psql -h localhost -p 5432 -U musictree_admin -d musictree_db  
 - Rebuild schema: psql -h localhost -p 5432 -U musictree_admin -d musictree_db -f musictree_init.sql
 
-Commands (Windows PowerShell):
-- Start application: dotnet run
-- Connect to DB: `psql -h localhost -p 5432 -U musictree_admin -d musictree_db`
-  (Ensure PostgreSQL is added to PATH and `psql` is available)
-- Rebuild schema:
-  `psql -h localhost -p 5432 -U musictree_admin -d musictree_db -f musictree_init.sql`
-
 Files:
 - Database schema: musictree_init.sql
 - App configuration: appsettings.Development.json
-- Setup scripts:
-  - Linux/macOS: setup_musictree.sh
-  - Windows: (Manual setup or use WSL/PowerShell script equivalent)
+- Setup script: setup_musictree.sh
 
+Setup completed: Fri May 30 07:48:39 PM CST 2025

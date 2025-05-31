@@ -57,8 +57,17 @@ public class Genre
     [Range(0, 3600)]
     public int AvrgDuration { get; set; }
 
+    // RGB Color components
+    [Range(0, 255)]
+    public int? ColorR { get; set; } // Red  (0-255)
+    
+    [Range(0, 255)]
+    public int? ColorG { get; set; } // Green  (0-255)
+    
+    [Range(0, 255)]
+    public int? ColorB { get; set; } // Blue  (0-255)
+
     // Optional
-    public string? Color { get; set; } // Not for subgenres
     public int? GenreCreationYear { get; set; }
     public string? GenreOriginCountry { get; set; }
 
@@ -66,11 +75,35 @@ public class Genre
     public ICollection<GenreRelation> RelatedGenresAsSource { get; set; } = new List<GenreRelation>();
     public ICollection<GenreRelation> RelatedGenresAsTarget { get; set; } = new List<GenreRelation>();
 
-    // Get all related genres (not mapped to DB)
+    // Get all related genres
     [NotMapped]
     public IEnumerable<Genre> RelatedGenres =>
         RelatedGenresAsSource.Select(r => r.RelatedGenre)
             .Concat(RelatedGenresAsTarget.Select(r => r.Genre));
+
+    // Helper property to get RGB color as formatted string
+    [NotMapped]
+    public string? RgbColor 
+    {
+        get 
+        {
+            if (ColorR.HasValue && ColorG.HasValue && ColorB.HasValue)
+                return $"rgb({ColorR},{ColorG},{ColorB})";
+            return null;
+        }
+    }
+
+    // Helper property to get hex representation if needed
+    [NotMapped]
+    public string? HexColor 
+    {
+        get 
+        {
+            if (ColorR.HasValue && ColorG.HasValue && ColorB.HasValue)
+                return $"#{ColorR:X2}{ColorG:X2}{ColorB:X2}";
+            return null;
+        }
+    }
 
     //Metadata
     public bool IsActive { get; set; } = true;
@@ -115,6 +148,23 @@ public class Genre
         if (string.IsNullOrEmpty(Id))
         {
             Id = GenerateGenreId(IsSubgenre);
+        }
+    }
+
+    // Method to set RGB color from DTO
+    public void SetRgbColor(int? r, int? g, int? b)
+    {
+        if (r.HasValue && g.HasValue && b.HasValue)
+        {
+            ColorR = r;
+            ColorG = g;
+            ColorB = b;
+        }
+        else
+        {
+            ColorR = null;
+            ColorG = null;
+            ColorB = null;
         }
     }
 }

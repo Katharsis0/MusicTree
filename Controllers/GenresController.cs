@@ -57,6 +57,7 @@ namespace MusicTree.Controllers
                         name = genre.Name,
                         isSubgenre = genre.IsSubgenre,
                         createdAt = genre.TimeStamp,
+                        color = genre.RgbColor,
                         message = $"{(genre.IsSubgenre ? "Subgenre" : "Genre")} created successfully"
                     });
             }
@@ -120,7 +121,11 @@ namespace MusicTree.Controllers
                     },
                     metadata = new
                     {
-                        color = genre.Color,
+                        color = new { 
+                            rgb = genre.RgbColor,
+                            hex = genre.HexColor,
+                            components = genre.ColorR.HasValue ? new { r = genre.ColorR, g = genre.ColorG, b = genre.ColorB } : null
+                        },
                         creationYear = genre.GenreCreationYear,
                         originCountry = genre.GenreOriginCountry,
                         isActive = genre.IsActive,
@@ -152,12 +157,18 @@ namespace MusicTree.Controllers
         /// <param name="includeSubgenres">Include subgenres in the list (default: true)</param>
         /// <param name="includeInactive">Include inactive genres (default: false)</param>
         /// <param name="parentGenreId">Filter subgenres by parent genre ID</param>
+        /// <param name="compasMetric">Filter by compás metric (time signature)</param>
+        /// <param name="minBpm">Minimum BPM filter</param>
+        /// <param name="maxBpm">Maximum BPM filter</param>
         /// <returns>List of genres</returns>
         [HttpGet]
         public async Task<IActionResult> GetAllGenres(
             [FromQuery] bool includeSubgenres = true, 
             [FromQuery] bool includeInactive = false,
-            [FromQuery] string? parentGenreId = null)
+            [FromQuery] string? parentGenreId = null,
+            [FromQuery] int? compasMetric = null,
+            [FromQuery] int? minBpm = null,
+            [FromQuery] int? maxBpm = null)
         {
             try
             {
@@ -181,11 +192,37 @@ namespace MusicTree.Controllers
                     filteredGenres = filteredGenres.Where(g => g.ParentGenreId == parentGenreId);
                 }
 
+                // NEW: Filter by compás metric
+                if (compasMetric.HasValue)
+                {
+                    filteredGenres = filteredGenres.Where(g => g.CompasMetric == compasMetric.Value);
+                }
+
+                // NEW: Filter by BPM range
+                if (minBpm.HasValue)
+                {
+                    filteredGenres = filteredGenres.Where(g => g.BpmUpper >= minBpm.Value);
+                }
+
+                if (maxBpm.HasValue)
+                {
+                    filteredGenres = filteredGenres.Where(g => g.BpmLower <= maxBpm.Value);
+                }
+
                 // Check if list is empty
                 if (!filteredGenres.Any())
                 {
                     return Ok(new { 
                         message = "No genres found matching the specified criteria.",
+                        appliedFilters = new
+                        {
+                            includeSubgenres,
+                            includeInactive,
+                            parentGenreId,
+                            compasMetric,
+                            minBpm,
+                            maxBpm
+                        },
                         genres = new List<object>()
                     });
                 }
@@ -208,6 +245,12 @@ namespace MusicTree.Controllers
                         volume = g.Volume,
                         compasMetric = g.CompasMetric,
                         averageDuration = g.AvrgDuration
+                    },
+                    color = new
+                    {
+                        rgb = g.RgbColor,
+                        hex = g.HexColor,
+                        components = g.ColorR.HasValue ? new { r = g.ColorR, g = g.ColorG, b = g.ColorB } : null
                     }
                 })
                 .OrderBy(g => g.name) // Per requirements: alphabetical order
@@ -215,6 +258,15 @@ namespace MusicTree.Controllers
 
                 return Ok(new { 
                     count = response.Count,
+                    appliedFilters = new
+                    {
+                        includeSubgenres,
+                        includeInactive,
+                        parentGenreId,
+                        compasMetric,
+                        minBpm,
+                        maxBpm
+                    },
                     genres = response 
                 });
             }
@@ -263,12 +315,74 @@ namespace MusicTree.Controllers
                     genreA = new { id = genreA.Id, name = genreA.Name },
                     genreB = new { id = genreB.Id, name = genreB.Name },
                     mgpc = mgpc,
+                    interpretation = mgpc switch
+                    {
+                        >= 0.8f => "Very High Similarity",
+                        >= 0.6f => "High Similarity", 
+                        >= 0.4f => "Moderate Similarity",
+                        >= 0.2f => "Low Similarity",
+                        _ => "Very Low Similarity"
+                    },
                     calculatedAt = DateTime.UtcNow
                 });
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in CalculateMGPC: {ex}");
+                return StatusCode(500, new { 
+                    error = "A system error occurred. Please try again later." 
+                });
+            }
+        }
+
+        /// <summary>
+        /// Get genres filtered by compás metric specifically
+        /// </summary>
+        /// <param name="compasMetric">Compás metric to filter by</param>
+        /// <returns>List of genres with specified compás metric</returns>
+        [HttpGet("by-compas/{compasMetric}")]
+        public async Task<IActionResult> GetGenresByCompas(int compasMetric)
+        {
+            try
+            {
+                if (compasMetric < 0 || compasMetric > 8)
+                {
+                    return BadRequest(new { error = "Compás metric must be between 0 and 8" });
+                }
+
+                var genres = await _genreService.GetAllGenresAsync();
+                var filteredGenres = genres.Where(g => g.CompasMetric == compasMetric && g.IsActive).ToList();
+
+                var response = filteredGenres.Select(g => new
+                {
+                    id = g.Id,
+                    name = g.Name,
+                    compasMetric = g.CompasMetric,
+                    bpmRange = new { lower = g.BpmLower, upper = g.BpmUpper },
+                    typicalMode = g.GenreTipicalMode,
+                    isSubgenre = g.IsSubgenre,
+                    parentGenreName = g.ParentGenre?.Name
+                }).ToList();
+
+                return Ok(new
+                {
+                    compasMetric = compasMetric,
+                    compasDescription = compasMetric switch
+                    {
+                        0 => "Undefined",
+                        2 => "2/4 time",
+                        3 => "3/4 time (Waltz)",
+                        4 => "4/4 time (Common)",
+                        6 => "6/8 time",
+                        _ => $"{compasMetric}/4 or {compasMetric}/8 time"
+                    },
+                    count = response.Count,
+                    genres = response
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetGenresByCompas: {ex}");
                 return StatusCode(500, new { 
                     error = "A system error occurred. Please try again later." 
                 });
