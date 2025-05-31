@@ -9,12 +9,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b71533bc-7416-48ed-8407-d45372d86c01" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/setup_musictree_powershell.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/ClustersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ClustersController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/DTOs/ClusterCreateDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/ClusterCreateDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/ClusterRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/ClusterRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/ClusterService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/ClusterService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Interfaces/IClusterService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/IClusterService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SETUP_REFERENCE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SETUP_REFERENCE.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/musictree_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/musictree_db.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +50,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHELLCHECK.PATH": "I do mind",
     "git-widget-placeholder": "backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -140,7 +139,7 @@
       <workItem from="1747697104348" duration="2813000" />
       <workItem from="1747700379899" duration="8788000" />
       <workItem from="1747713685652" duration="4640000" />
-      <workItem from="1748640136274" duration="6739000" />
+      <workItem from="1748640136274" duration="8531000" />
     </task>
     <servers />
   </component>

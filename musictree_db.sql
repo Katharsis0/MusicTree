@@ -209,7 +209,7 @@ CREATE INDEX "IX_GenreRelations_MGPC" ON "GenreRelations"("MGPC");
 -- SAMPLE DATA 
 -- =============================================================================
 
--- Insert sample clusters
+-- Insert sample clusters (IDS no siguen convención, es únicamente para test)
 INSERT INTO "Clusters" ("Id", "Name", "Description", "IsActive") VALUES
 ('cluster-electronic', 'Electronic', 'Electronic music and derivatives', true),
 ('cluster-rock', 'Rock', 'Rock music and its subgenres', true),
