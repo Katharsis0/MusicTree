@@ -29,6 +29,7 @@ namespace MusicTree.Services
                 Id = $"A-{GenerateRandomId(12)}",
                 Name = dto.Name,
                 Biography = dto.Biography,
+                OriginCountry = dto.OriginCountry,
                 IsActive = true,
                 TimeStamp = DateTime.UtcNow,
             };

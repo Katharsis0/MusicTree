@@ -12,5 +12,22 @@ namespace MusicTree.Models.DTOs
 
         [StringLength(2000)]
         public string? Biography { get; set; }
+
+        public string OriginCountry { get; set; }
+
+        public List<ArtistGenreRelationDto> ArtistRelatedGenres { get; set; }
+        public List<ArtistSubgenreRelationDto>? ArtistRelatedSubgenres { get; set; }
+
+        public class ArtistGenreRelationDto
+        {
+            [Required]
+            public string GenreId { get; set; } = string.Empty;  // ID of the genre
+        }
+
+        public class ArtistSubgenreRelationDto
+        {
+            [Required]
+            public string GenreId { get; set; } = string.Empty;  // ID of the genre
+        }
     }
 }

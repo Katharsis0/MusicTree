@@ -10,8 +10,12 @@ public class Artist
     public string Id { get; set; } = $"C-{GenerateRandomId()}";
     public string Name { get; set; }
     public string? Biography { get; set; }
+    public string OriginCountry { get; set; }
     public bool IsActive { get; set; } = true;
     public DateTime TimeStamp { get; set; } = DateTime.UtcNow;
+
+    public ICollection<Genre> RelatedGenres { get; set; } = new List<Genre>();
+    public ICollection<Genre> RelatedSubgenres { get; set; } = new List<Genre>();
     
     private static string GenerateRandomId()
     {
