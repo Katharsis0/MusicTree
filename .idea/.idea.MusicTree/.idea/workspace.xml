@@ -10,15 +10,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b71533bc-7416-48ed-8407-d45372d86c01" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/GenresController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/GenresController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/DTOs/GenreCreateDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/GenreCreateDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Entities/Genre.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Entities/Genre.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/AppDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/GenreRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/GenreRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SETUP_REFERENCE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SETUP_REFERENCE.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/GenreService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/GenreService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utils/MGCPCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/MGCPCalculator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/musictree_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/musictree_db.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup_musictree_powershell.sh" beforeDir="false" afterPath="$PROJECT_DIR$/setup_musictree_powershell.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +22,20 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Katharsis0"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:Katharsis0/MusicTree.git",
+    "accountId": "ad3d7d43-a3e9-405d-a24d-1039749dadb8"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Models/DTOs/GenreCreateDto.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -43,35 +48,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.MusicTree: http.executor": "Run",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "HTTP Request.MusicTree | #1.executor": "Run",
-    "HTTP Request.MusicTree | #2.executor": "Run",
-    "HTTP Request.MusicTree | #3.executor": "Run",
-    "HTTP Request.MusicTree | #4.executor": "Run",
-    "HTTP Request.MusicTree | #5.executor": "Run",
-    "HTTP Request.MusicTree | #6.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHELLCHECK.PATH": "I do mind",
-    "git-widget-placeholder": "backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.MusicTree: http.executor&quot;: &quot;Run&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;HTTP Request.MusicTree | #1.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #2.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #3.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #4.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #5.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #6.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;I do mind&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunDashboard">
     <option name="openRunningConfigInTab" value="true" />
   </component>
@@ -145,7 +150,7 @@
       <workItem from="1747697104348" duration="2813000" />
       <workItem from="1747700379899" duration="8788000" />
       <workItem from="1747713685652" duration="4640000" />
-      <workItem from="1748640136274" duration="11884000" />
+      <workItem from="1748640136274" duration="12566000" />
     </task>
     <servers />
   </component>
