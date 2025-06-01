@@ -49,7 +49,7 @@ namespace MusicTree.Models.DTOs
         [Range(0, 250)] 
         public int BpmUpper { get; set; }
         
-        //RGB Color fields (instead of hex)
+        //RGB Color fields 
         [Range(0, 255)]
         public int? ColorR { get; set; }  // Red component (0-255)
         

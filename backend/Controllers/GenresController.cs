@@ -3,6 +3,7 @@ using MusicTree.Models.DTOs;
 using MusicTree.Models.Entities;
 using MusicTree.Services.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using MusicTree.Services;
 
 namespace MusicTree.Controllers
 {
@@ -388,5 +389,214 @@ namespace MusicTree.Controllers
                 });
             }
         }
+                
+        /// <summary>
+        /// Import multiple genres from JSON file
+        /// </summary>
+        /// <param name="file">JSON file containing genres array</param>
+        /// <returns>Import result with success and error counts</returns>
+        [HttpPost("import")]
+        public async Task<IActionResult> ImportGenres(IFormFile file)
+        {
+            try
+            {
+                // Validate file presence
+                if (file == null || file.Length == 0)
+                {
+                    return BadRequest(new { 
+                        error = "No se proporcionó archivo o el archivo está vacío",
+                        details = "Debe proporcionar un archivo JSON válido con géneros para importar"
+                    });
+                }
+
+                // Validate file type
+                if (!IsValidJsonFile(file))
+                {
+                    return BadRequest(new { 
+                        error = "El archivo debe ser exclusivamente JSON",
+                        details = "Solo se aceptan archivos con extensión .json y Content-Type application/json"
+                    });
+                }
+
+                // Check file size (reasonable limit for JSON)
+                const int maxFileSizeBytes = 10 * 1024 * 1024; // 10MB
+                if (file.Length > maxFileSizeBytes)
+                {
+                    return BadRequest(new { 
+                        error = "El archivo es demasiado grande",
+                        details = "El tamaño máximo permitido es 10MB"
+                    });
+                }
+
+                // Process the import
+                var importService = HttpContext.RequestServices.GetRequiredService<GenreImportService>();
+                var result = await importService.ImportGenresFromJsonAsync(file);
+
+                // Return appropriate response based on results
+                if (result.ErrorRecords == 0)
+                {
+                    return Ok(new
+                    {
+                        success = true,
+                        message = $"La carga ha terminado. {result.ImportedRecords} géneros importados exitosamente.",
+                        data = new
+                        {
+                            totalRecords = result.TotalRecords,
+                            importedRecords = result.ImportedRecords,
+                            errorRecords = result.ErrorRecords,
+                            processedAt = result.ProcessedAt,
+                            archivedFile = result.ImportedFileName,
+                            errorFile = result.ErrorFileName
+                        }
+                    });
+                }
+                else if (result.ImportedRecords > 0)
+                {
+                    return Ok(new
+                    {
+                        success = true,
+                        message = $"La carga ha terminado. {result.ImportedRecords} registros importados, {result.ErrorRecords} registros con errores.",
+                        data = new
+                        {
+                            totalRecords = result.TotalRecords,
+                            importedRecords = result.ImportedRecords,
+                            errorRecords = result.ErrorRecords,
+                            processedAt = result.ProcessedAt,
+                            archivedFile = result.ImportedFileName,
+                            errorFile = result.ErrorFileName
+                        },
+                        errors = result.Errors.Take(10).Select(e => new { 
+                            record = e.OriginalRecord?.nombre ?? "Unknown",
+                            error = e.ErrorDescription 
+                        }).ToList(),
+                        note = result.Errors.Count > 10 ? $"Mostrando solo los primeros 10 errores de {result.Errors.Count} total. Ver archivo {result.ErrorFileName} para detalles completos." : null
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = $"No se pudieron importar géneros. {result.ErrorRecords} registros con errores.",
+                        data = new
+                        {
+                            totalRecords = result.TotalRecords,
+                            importedRecords = result.ImportedRecords,
+                            errorRecords = result.ErrorRecords,
+                            processedAt = result.ProcessedAt,
+                            errorFile = result.ErrorFileName
+                        },
+                        errors = result.Errors.Take(5).Select(e => new { 
+                            record = e.OriginalRecord?.nombre ?? "Unknown",
+                            error = e.ErrorDescription 
+                        }).ToList()
+                    });
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // Handle validation errors (file format, etc.)
+                return BadRequest(new { 
+                    error = ex.Message,
+                    details = "Verifique que el archivo sea un JSON válido con el formato correcto"
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Handle business logic errors
+                return StatusCode(500, new { 
+                    error = ex.Message,
+                    details = "Error durante el procesamiento masivo"
+                });
+            }
+            catch (Exception ex)
+            {
+                // Log unexpected errors
+                Console.WriteLine($"Unexpected error in ImportGenres: {ex}");
+                return StatusCode(500, new { 
+                    error = "Ocurrió un error durante el procesamiento masivo y solicitará intentarlo nuevamente más tarde.",
+                    details = ex.Message // Remove this in production
+                });
+            }
+        }
+
+        /// <summary>
+        /// Download error file from import process
+        /// </summary>
+        /// <param name="filename">Error file name</param>
+        /// <returns>Error file content</returns>
+        [HttpGet("import/errors/{filename}")]
+        public async Task<IActionResult> DownloadErrorFile(string filename)
+        {
+            try
+            {
+                var archiveFolder = HttpContext.RequestServices
+                    .GetRequiredService<IConfiguration>()
+                    .GetValue<string>("ImportSettings:ArchiveFolder") ?? "Archives";
+                    
+                var filePath = Path.Combine(archiveFolder, filename);
+                
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return NotFound(new { error = "Archivo de errores no encontrado" });
+                }
+                
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                return File(fileBytes, "application/json", filename);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error downloading error file: {ex}");
+                return StatusCode(500, new { error = "Error al descargar archivo de errores" });
+            }
+        }
+
+        /// <summary>
+        /// Get import history
+        /// </summary>
+        /// <returns>List of recent imports</returns>
+        [HttpGet("import/history")]
+        public async Task<IActionResult> GetImportHistory()
+        {
+            try
+            {
+                var archiveFolder = HttpContext.RequestServices
+                    .GetRequiredService<IConfiguration>()
+                    .GetValue<string>("ImportSettings:ArchiveFolder") ?? "Archives";
+                    
+                if (!Directory.Exists(archiveFolder))
+                {
+                    return Ok(new { imports = new List<object>() });
+                }
+                
+                var files = Directory.GetFiles(archiveFolder, "*.json")
+                    .Where(f => !Path.GetFileName(f).Contains("_Errores"))
+                    .Select(f => new FileInfo(f))
+                    .OrderByDescending(f => f.CreationTime)
+                    .Take(20)
+                    .Select(f => new
+                    {
+                        filename = f.Name,
+                        importDate = f.CreationTime,
+                        size = f.Length,
+                        errorFile = Directory.Exists(archiveFolder) && Directory.GetFiles(archiveFolder, f.Name.Replace(".json", "_Errores.json")).Any()
+                    })
+                    .ToList();
+                    
+                return Ok(new { imports = files });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting import history: {ex}");
+                return StatusCode(500, new { error = "Error al obtener historial de importaciones" });
+            }
+        }
+
+        private static bool IsValidJsonFile(IFormFile file)
+        {
+            return file.ContentType == "application/json" || 
+                   Path.GetExtension(file.FileName).Equals(".json", StringComparison.OrdinalIgnoreCase);
+        }
+                
     }
 }

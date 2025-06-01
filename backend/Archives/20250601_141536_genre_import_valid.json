@@ -1,0 +1,52 @@
+[
+  {
+    "nombre": "Rock Alternativo",
+    "descripcion": "Un género diverso derivado del rock clásico con influencias del punk y pop.",
+    "activo": true,
+    "color": "rgb(255,87,51)",
+    "anio_creacion": 1980,
+    "pais_origen": "Estados Unidos",
+    "modo": 0.65,
+    "bpm": {"min": 90, "max": 140},
+    "tono_dominante": 0,
+    "volumen_tipico_db": -35,
+    "compas": 4,
+    "duracion_promedio_segundos": 210,
+    "es_subgenero": false,
+    "genero_padre": null,
+    "generos_relacionados": [
+      {"nombre": "Punk Rock", "influencia": 8},
+      {"nombre": "Indie Rock", "influencia": 7}
+    ]
+  },
+  {
+    "nombre": "Synthwave", 
+    "descripcion": "Estilo inspirado en bandas sonoras de películas de los años 80.",
+    "activo": true,
+    "compas": 4,
+    "duracion_promedio_segundos": 260,
+    "es_subgenero": true,
+    "genero_padre": "G-ELECTRONIC01",
+    "generos_relacionados": [
+      {"nombre": "New Wave", "influencia": 9},
+      {"nombre": "Electropop", "influencia": 6}
+    ]
+  },
+  {
+    "nombre": "Ambient",
+    "descripcion": null,
+    "activo": true,
+    "color": "rgb(112,128,144)",
+    "anio_creacion": 1975,
+    "pais_origen": "Reino Unido",
+    "modo": 0.40,
+    "bpm": {"min": 50, "max": 80},
+    "tono_dominante": 2,
+    "volumen_tipico_db": -55,
+    "compas": 0,
+    "duracion_promedio_segundos": 480,
+    "es_subgenero": false,
+    "genero_padre": null,
+    "generos_relacionados": []
+  }
+]

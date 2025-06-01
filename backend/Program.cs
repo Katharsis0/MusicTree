@@ -38,6 +38,7 @@ namespace MusicTree
             builder.Services.AddScoped<IClusterService, ClusterService>();
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IArtistService, ArtistService>();
+            builder.Services.AddScoped<GenreImportService>();
 
             // Add API explorer for development
             builder.Services.AddEndpointsApiExplorer();
