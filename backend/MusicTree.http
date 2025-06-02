@@ -1,0 +1,54 @@
+@MusicTree_HostAddress = http://localhost:5102
+
+# Test API is running
+GET {{MusicTree_HostAddress}}/
+Accept: application/json
+
+###
+
+# Test Swagger 
+GET {{MusicTree_HostAddress}}/swagger
+
+###
+
+# Get clusters
+GET {{MusicTree_HostAddress}}/api/clusters
+Accept: application/json
+
+###
+# Get genres
+GET {{MusicTree_HostAddress}}/api/genres
+Accept: application/json
+
+###
+
+# Creating a cluster
+POST {{MusicTree_HostAddress}}/api/clusters
+Content-Type: application/json
+
+{
+  "name": "Electronic Music",
+  "description": "Electronic music cluster"
+}
+
+###
+
+# Creating a genre
+POST {{MusicTree_HostAddress}}/api/genres
+Content-Type: application/json
+
+{
+  "name": "House",
+  "description": "House music genre",
+  "isSubgenre": false,
+  "clusterId": "C-ZOZ83314J7Y6",
+  "color": "#FF5733",
+  "genreCreationYear": 1980,
+  "genreOriginCountry": "United States",
+  "genreTipicalMode": 0.8,
+  "bpmLower": 120,
+  "bpmUpper": 130,
+  "avrgDuration": 300
+}
+
+###
