@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Electronic",
+    "description": "Electronic music genre",
+    "active": true,
+    "rgb": "rgb(100,100,200)",
+    "creation_year": 1970,
+    "origin_country": "Germany",
+    "mode": 0.7,
+    "bpm": { "min": 70, "max": 150 },
+    "tipical_mode": -1,
+    "volume": -40,
+    "compas": 4,
+    "avrg_duration": 300,
+    "is_subgenre": false,
+    "parent_genre": null,
+    "related_genre": []
+  },
+  {
+    "name": "Punk Rock",
+    "description": "Punk rock genre",
+    "active": true,
+    "rgb": "rgb(200,50,50)",
+    "creation_year": 1975,
+    "origin_country": "USA",
+    "mode": 0.8,
+    "bpm": { "min": 120, "max": 180 },
+    "tipical_mode": 0,
+    "volume": -30,
+    "compas": 4,
+    "avrg_duration": 180,
+    "is_subgenre": false,
+    "parent_genre": null,
+    "related_genre": []
+  },
+  {
+    "name": "Indie Rock",
+    "description": "Indie rock genre",
+    "active": true,
+    "rgb": "rgb(150,150,50)",
+    "creation_year": 1980,
+    "origin_country": "UK",
+    "mode": 0.6,
+    "bpm": { "min": 90, "max": 140 },
+    "tipical_mode": 0,
+    "volume": -35,
+    "compas": 4,
+    "avrg_duration": 210,
+    "is_subgenre": false,
+    "parent_genre": null,
+    "related_genre": []
+  }
+]

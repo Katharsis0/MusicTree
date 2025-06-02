@@ -101,13 +101,65 @@ namespace MusicTree.Repositories
 
             // Configure Artist 
             modelBuilder.Entity<Artist>(entity =>
-            {
-                entity.Property(c => c.Id).HasMaxLength(128);
-                entity.Property(c => c.Name).HasMaxLength(100).IsRequired();
-                entity.Property(c => c.Biography).HasMaxLength(2000);
-                entity.Property(c => c.IsActive).HasDefaultValue(true);
-                entity.Property(c => c.TimeStamp).HasDefaultValueSql("NOW()");
-            });
+{
+                entity.Property(a => a.Id).HasMaxLength(128);
+                entity.Property(a => a.Name).HasMaxLength(100).IsRequired();
+                entity.Property(a => a.Biography).HasMaxLength(2000);
+                entity.Property(a => a.OriginCountry).HasMaxLength(100).IsRequired();
+                entity.Property(a => a.IsActive).HasDefaultValue(true);
+                entity.Property(a => a.TimeStamp).HasDefaultValueSql("NOW()");
+
+                // Index for performance
+                entity.HasIndex(a => a.Name);
+                entity.HasIndex(a => a.OriginCountry);
+                entity.HasIndex(a => a.IsActive);
+                });
+
+                // Configure ArtistGenre junction table
+                modelBuilder.Entity<ArtistGenre>(entity =>
+                {
+                entity.HasKey(ag => new { ag.ArtistId, ag.GenreId });
+
+                entity.Property(ag => ag.InfluenceCoefficient).HasDefaultValue(1.0f);
+                entity.Property(ag => ag.AssociatedDate).HasDefaultValueSql("NOW()");
+
+                entity.HasOne(ag => ag.Artist)
+                    .WithMany(a => a.ArtistGenres)
+                    .HasForeignKey(ag => ag.ArtistId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(ag => ag.Genre)
+                    .WithMany()
+                    .HasForeignKey(ag => ag.GenreId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Ensure genre is not a subgenre
+                entity.HasCheckConstraint("CK_ArtistGenre_NotSubgenre", 
+                    "NOT EXISTS (SELECT 1 FROM \"Genres\" WHERE \"Id\" = \"GenreId\" AND \"IsSubgenre\" = true)");
+                });
+
+                // Configure ArtistSubgenre junction table
+                modelBuilder.Entity<ArtistSubgenre>(entity =>
+                {
+                entity.HasKey(asq => new { asq.ArtistId, asq.GenreId });
+
+                entity.Property(asq => asq.InfluenceCoefficient).HasDefaultValue(1.0f);
+                entity.Property(asq => asq.AssociatedDate).HasDefaultValueSql("NOW()");
+
+                entity.HasOne(asq => asq.Artist)
+                    .WithMany(a => a.ArtistSubgenres)
+                    .HasForeignKey(asq => asq.ArtistId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(asq => asq.Genre)
+                    .WithMany()
+                    .HasForeignKey(asq => asq.GenreId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Ensure genre is a subgenre
+                entity.HasCheckConstraint("CK_ArtistSubgenre_IsSubgenre", 
+                    "EXISTS (SELECT 1 FROM \"Genres\" WHERE \"Id\" = \"GenreId\" AND \"IsSubgenre\" = true)");
+                });
         }
 
         // Override SaveChanges to add additional validation
