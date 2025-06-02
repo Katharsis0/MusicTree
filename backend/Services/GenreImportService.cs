@@ -96,7 +96,7 @@ namespace MusicTree.Services
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Error processing genre: {GenreName}", genreDto.nombre);
+                        _logger.LogError(ex, "Error processing genre: {GenreName}", genreDto.name);
                         errors.Add(new GenreImportErrorDto
                         {
                             OriginalRecord = genreDto,
@@ -177,37 +177,37 @@ namespace MusicTree.Services
         private async Task<(bool IsValid, string ErrorMessage, string FieldName)> ValidateBusinessRulesAsync(GenreImportDto dto)
         {
             // Check name uniqueness
-            var existingGenre = await _genreRepo.ExistsByNameAsync(dto.nombre, dto.es_subgenero ? dto.genero_padre : null);
+            var existingGenre = await _genreRepo.ExistsByNameAsync(dto.name, dto.is_subgenre ? dto.parent_genre : null);
             if (existingGenre)
             {
-                return (false, $"Ya existe un {(dto.es_subgenero ? "subgénero" : "género")} con el nombre '{dto.nombre}'", nameof(dto.nombre));
+                return (false, $"Ya existe un {(dto.is_subgenre ? "subgénero" : "género")} con el name '{dto.name}'", nameof(dto.name));
             }
 
             // Validate parent genre exists (for subgenres)
-            if (dto.es_subgenero && !string.IsNullOrEmpty(dto.genero_padre))
+            if (dto.is_subgenre && !string.IsNullOrEmpty(dto.parent_genre))
             {
-                var parentExists = await _genreRepo.GetByIdAsync(dto.genero_padre);
+                var parentExists = await _genreRepo.GetByIdAsync(dto.parent_genre);
                 if (parentExists == null)
                 {
-                    return (false, $"No se encontró el género padre con ID '{dto.genero_padre}'", nameof(dto.genero_padre));
+                    return (false, $"No se encontró el género padre con ID '{dto.parent_genre}'", nameof(dto.parent_genre));
                 }
 
                 if (parentExists.IsSubgenre)
                 {
-                    return (false, "No se puede crear un subgénero de otro subgénero", nameof(dto.genero_padre));
+                    return (false, "No se puede crear un subgénero de otro subgénero", nameof(dto.parent_genre));
                 }
             }
 
             // Validate related genres exist
-            if (dto.generos_relacionados?.Any() == true)
+            if (dto.related_genre?.Any() == true)
             {
-                foreach (var relation in dto.generos_relacionados)
+                foreach (var relation in dto.related_genre)
                 {
                     // For the import, we'll look up by name since the JSON uses names
-                    var relatedGenre = await FindGenreByNameAsync(relation.nombre);
+                    var relatedGenre = await FindGenreByNameAsync(relation.name);
                     if (relatedGenre == null)
                     {
-                        return (false, $"No se encontró el género relacionado '{relation.nombre}'", nameof(dto.generos_relacionados));
+                        return (false, $"No se encontró el género relacionado '{relation.name}'", nameof(dto.related_genre));
                     }
                 }
             }
@@ -223,29 +223,29 @@ namespace MusicTree.Services
 
         private async Task<Genre> ConvertToGenreEntityAsync(GenreImportDto dto)
         {
-            var genre = new Genre(dto.es_subgenero)
+            var genre = new Genre(dto.is_subgenre)
             {
-                Name = dto.nombre,
-                Description = dto.descripcion,
-                IsSubgenre = dto.es_subgenero,
-                ParentGenreId = dto.es_subgenero ? dto.genero_padre : null,
-                Key = dto.tono_dominante,
+                Name = dto.name,
+                Description = dto.description,
+                IsSubgenre = dto.is_subgenre,
+                ParentGenreId = dto.is_subgenre ? dto.parent_genre : null,
+                Key = dto.tipical_mode,
                 BpmLower = dto.bpm.min,
                 BpmUpper = dto.bpm.max,
                 Bpm = (dto.bpm.min + dto.bpm.max) / 2,
-                GenreCreationYear = dto.anio_creacion,
-                GenreOriginCountry = dto.pais_origen,
-                GenreTipicalMode = dto.modo,
-                Volume = dto.volumen_tipico_db,
+                GenreCreationYear = dto.creation_year,
+                GenreOriginCountry = dto.origin_country,
+                GenreTipicalMode = dto.mode,
+                Volume = dto.volume,
                 CompasMetric = dto.compas,
-                AvrgDuration = dto.duracion_promedio_segundos,
-                IsActive = dto.activo
+                AvrgDuration = dto.avrg_duration,
+                IsActive = dto.active
             };
 
             // Set RGB color if provided (only for main genres)
-            if (!dto.es_subgenero && !string.IsNullOrEmpty(dto.color))
+            if (!dto.is_subgenre && !string.IsNullOrEmpty(dto.rgb))
             {
-                var (r, g, b) = ParseRgbColor(dto.color);
+                var (r, g, b) = ParseRgbColor(dto.rgb);
                 genre.SetRgbColor(r, g, b);
             }
 
@@ -285,12 +285,12 @@ namespace MusicTree.Services
 
             foreach (var processedGenre in processedGenres)
             {
-                var dto = importData.First(d => d.nombre == processedGenre.Name);
+                var dto = importData.First(d => d.name == processedGenre.Name);
 
                 // Handle subgenre-parent relationship
-                if (dto.es_subgenero && !string.IsNullOrEmpty(dto.genero_padre))
+                if (dto.is_subgenre && !string.IsNullOrEmpty(dto.parent_genre))
                 {
-                    var parentGenre = await _genreRepo.GetByIdAsync(dto.genero_padre);
+                    var parentGenre = await _genreRepo.GetByIdAsync(dto.parent_genre);
                     if (parentGenre != null)
                     {
                         var mgpc = mgpcCalculator.Calculate(processedGenre, parentGenre);
@@ -299,18 +299,18 @@ namespace MusicTree.Services
                 }
 
                 // Handle explicit relationships
-                if (dto.generos_relacionados?.Any() == true)
+                if (dto.related_genre?.Any() == true)
                 {
-                    foreach (var relation in dto.generos_relacionados)
+                    foreach (var relation in dto.related_genre)
                     {
-                        var relatedGenre = await FindGenreByNameAsync(relation.nombre);
+                        var relatedGenre = await FindGenreByNameAsync(relation.name);
                         if (relatedGenre != null)
                         {
                             var mgpc = mgpcCalculator.Calculate(processedGenre, relatedGenre);
                             await _genreRepo.AddGenreRelationAsync(
                                 processedGenre.Id, 
                                 relatedGenre.Id, 
-                                relation.influencia, 
+                                relation.influence, 
                                 mgpc);
                         }
                     }

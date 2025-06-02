@@ -1,0 +1,26 @@
+[
+  {
+    "original_record": {
+      "name": "",
+      "description": null,
+      "active": true,
+      "rgb": null,
+      "creation_year": null,
+      "origin_country": null,
+      "mode": 0,
+      "bpm": {
+        "min": 100,
+        "max": 160
+      },
+      "tipical_mode": -1,
+      "volume": 0,
+      "compas": 5,
+      "avrg_duration": 0,
+      "is_subgenre": false,
+      "parent_genre": null,
+      "related_genre": null
+    },
+    "error_description": "The name field is required.",
+    "field_name": "Validation"
+  }
+]

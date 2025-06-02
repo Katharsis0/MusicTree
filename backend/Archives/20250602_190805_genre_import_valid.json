@@ -15,8 +15,8 @@
     "is_subgenre": false,
     "parent_genre": null,
     "related_genre": [
-      { "name": "Punk Rock", "influence": 8 },
-      { "name": "Indie Rock", "influence": 7 }
+      { "nombre": "Punk Rock", "influencia": 8 },
+      { "nombre": "Indie Rock", "influencia": 7 }
     ]
   },
   {
@@ -32,13 +32,13 @@
     "is_subgenre": true,
     "parent_genre": "G-ELECTRONIC01",
     "related_genre": [
-      { "name": "New Wave", "influence": 9 },
-      { "name": "Electropop", "influence": 6 }
+      { "nombre": "New Wave", "influencia": 9 },
+      { "nombre": "Electropop", "influencia": 6 }
     ]
   },
   {
     "name": "Ambient",
-    "description": "Música ambiental atmosférica",
+    "description": null,
     "active": true,
     "rgb": "rgb(112,128,144)",
     "creation_year": 1975,

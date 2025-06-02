@@ -1,3 +1,4 @@
+// Controllers/GenresController.cs (Fixed with English strings)
 using Microsoft.AspNetCore.Mvc;
 using MusicTree.Models.DTOs;
 using MusicTree.Models.Entities;
@@ -404,8 +405,8 @@ namespace MusicTree.Controllers
                 if (file == null || file.Length == 0)
                 {
                     return BadRequest(new { 
-                        error = "No se proporcionó archivo o el archivo está vacío",
-                        details = "Debe proporcionar un archivo JSON válido con géneros para importar"
+                        error = "No file provided or file is empty",
+                        details = "You must provide a valid JSON file with genres to import"
                     });
                 }
 
@@ -413,8 +414,8 @@ namespace MusicTree.Controllers
                 if (!IsValidJsonFile(file))
                 {
                     return BadRequest(new { 
-                        error = "El archivo debe ser exclusivamente JSON",
-                        details = "Solo se aceptan archivos con extensión .json y Content-Type application/json"
+                        error = "File must be exclusively JSON",
+                        details = "Only files with .json extension and application/json Content-Type are accepted"
                     });
                 }
 
@@ -423,8 +424,8 @@ namespace MusicTree.Controllers
                 if (file.Length > maxFileSizeBytes)
                 {
                     return BadRequest(new { 
-                        error = "El archivo es demasiado grande",
-                        details = "El tamaño máximo permitido es 10MB"
+                        error = "File is too large",
+                        details = "Maximum allowed size is 10MB"
                     });
                 }
 
@@ -438,7 +439,7 @@ namespace MusicTree.Controllers
                     return Ok(new
                     {
                         success = true,
-                        message = $"La carga ha terminado. {result.ImportedRecords} géneros importados exitosamente.",
+                        message = $"Import completed successfully. {result.ImportedRecords} genres imported.",
                         data = new
                         {
                             totalRecords = result.TotalRecords,
@@ -455,7 +456,7 @@ namespace MusicTree.Controllers
                     return Ok(new
                     {
                         success = true,
-                        message = $"La carga ha terminado. {result.ImportedRecords} registros importados, {result.ErrorRecords} registros con errores.",
+                        message = $"Import completed. {result.ImportedRecords} records imported, {result.ErrorRecords} records with errors.",
                         data = new
                         {
                             totalRecords = result.TotalRecords,
@@ -466,10 +467,10 @@ namespace MusicTree.Controllers
                             errorFile = result.ErrorFileName
                         },
                         errors = result.Errors.Take(10).Select(e => new { 
-                            record = e.OriginalRecord?.nombre ?? "Unknown",
+                            record = e.OriginalRecord?.name ?? "Unknown",
                             error = e.ErrorDescription 
                         }).ToList(),
-                        note = result.Errors.Count > 10 ? $"Mostrando solo los primeros 10 errores de {result.Errors.Count} total. Ver archivo {result.ErrorFileName} para detalles completos." : null
+                        note = result.Errors.Count > 10 ? $"Showing only first 10 errors of {result.Errors.Count} total. See {result.ErrorFileName} file for complete details." : null
                     });
                 }
                 else
@@ -477,7 +478,7 @@ namespace MusicTree.Controllers
                     return BadRequest(new
                     {
                         success = false,
-                        message = $"No se pudieron importar géneros. {result.ErrorRecords} registros con errores.",
+                        message = $"No genres could be imported. {result.ErrorRecords} records with errors.",
                         data = new
                         {
                             totalRecords = result.TotalRecords,
@@ -487,7 +488,7 @@ namespace MusicTree.Controllers
                             errorFile = result.ErrorFileName
                         },
                         errors = result.Errors.Take(5).Select(e => new { 
-                            record = e.OriginalRecord?.nombre ?? "Unknown",
+                            record = e.OriginalRecord?.name ?? "Unknown",
                             error = e.ErrorDescription 
                         }).ToList()
                     });
@@ -498,7 +499,7 @@ namespace MusicTree.Controllers
                 // Handle validation errors (file format, etc.)
                 return BadRequest(new { 
                     error = ex.Message,
-                    details = "Verifique que el archivo sea un JSON válido con el formato correcto"
+                    details = "Please verify that the file is a valid JSON with the correct format"
                 });
             }
             catch (InvalidOperationException ex)
@@ -506,7 +507,7 @@ namespace MusicTree.Controllers
                 // Handle business logic errors
                 return StatusCode(500, new { 
                     error = ex.Message,
-                    details = "Error durante el procesamiento masivo"
+                    details = "Error during bulk processing"
                 });
             }
             catch (Exception ex)
@@ -514,7 +515,7 @@ namespace MusicTree.Controllers
                 // Log unexpected errors
                 Console.WriteLine($"Unexpected error in ImportGenres: {ex}");
                 return StatusCode(500, new { 
-                    error = "Ocurrió un error durante el procesamiento masivo y solicitará intentarlo nuevamente más tarde.",
+                    error = "An error occurred during bulk processing. Please try again later.",
                     details = ex.Message // Remove this in production
                 });
             }
@@ -538,7 +539,7 @@ namespace MusicTree.Controllers
                 
                 if (!System.IO.File.Exists(filePath))
                 {
-                    return NotFound(new { error = "Archivo de errores no encontrado" });
+                    return NotFound(new { error = "Error file not found" });
                 }
                 
                 var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
@@ -547,7 +548,7 @@ namespace MusicTree.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine($"Error downloading error file: {ex}");
-                return StatusCode(500, new { error = "Error al descargar archivo de errores" });
+                return StatusCode(500, new { error = "Error downloading error file" });
             }
         }
 
@@ -570,7 +571,7 @@ namespace MusicTree.Controllers
                 }
                 
                 var files = Directory.GetFiles(archiveFolder, "*.json")
-                    .Where(f => !Path.GetFileName(f).Contains("_Errores"))
+                    .Where(f => !Path.GetFileName(f).Contains("_Errors"))
                     .Select(f => new FileInfo(f))
                     .OrderByDescending(f => f.CreationTime)
                     .Take(20)
@@ -579,7 +580,7 @@ namespace MusicTree.Controllers
                         filename = f.Name,
                         importDate = f.CreationTime,
                         size = f.Length,
-                        errorFile = Directory.Exists(archiveFolder) && Directory.GetFiles(archiveFolder, f.Name.Replace(".json", "_Errores.json")).Any()
+                        errorFile = Directory.Exists(archiveFolder) && Directory.GetFiles(archiveFolder, f.Name.Replace(".json", "_Errors.json")).Any()
                     })
                     .ToList();
                     
@@ -588,7 +589,7 @@ namespace MusicTree.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine($"Error getting import history: {ex}");
-                return StatusCode(500, new { error = "Error al obtener historial de importaciones" });
+                return StatusCode(500, new { error = "Error getting import history" });
             }
         }
 
@@ -597,6 +598,5 @@ namespace MusicTree.Controllers
             return file.ContentType == "application/json" || 
                    Path.GetExtension(file.FileName).Equals(".json", StringComparison.OrdinalIgnoreCase);
         }
-                
     }
 }

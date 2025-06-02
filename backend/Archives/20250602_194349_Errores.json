@@ -1,0 +1,59 @@
+[
+  {
+    "original_record": {
+      "name": "Synthwave",
+      "description": "Estilo inspirado en bandas sonoras de pel\u00EDculas de los a\u00F1os 80.",
+      "active": true,
+      "rgb": null,
+      "creation_year": null,
+      "origin_country": null,
+      "mode": 0.5,
+      "bpm": {
+        "min": 80,
+        "max": 120
+      },
+      "tipical_mode": -1,
+      "volume": -40,
+      "compas": 4,
+      "avrg_duration": 260,
+      "is_subgenre": true,
+      "parent_genre": "G-ELECTRONIC01",
+      "related_genre": [
+        {
+          "name": "New Wave",
+          "influence": 9
+        },
+        {
+          "name": "Electropop",
+          "influence": 6
+        }
+      ]
+    },
+    "error_description": "No se encontr\u00F3 el g\u00E9nero padre con ID \u0027G-ELECTRONIC01\u0027",
+    "field_name": "parent_genre"
+  },
+  {
+    "original_record": {
+      "name": "Ambient",
+      "description": "M\u00FAsica ambiental atmosf\u00E9rica",
+      "active": true,
+      "rgb": "rgb(112,128,144)",
+      "creation_year": 1975,
+      "origin_country": "Reino Unido",
+      "mode": 0.4,
+      "bpm": {
+        "min": 50,
+        "max": 80
+      },
+      "tipical_mode": 2,
+      "volume": -55,
+      "compas": 0,
+      "avrg_duration": 480,
+      "is_subgenre": false,
+      "parent_genre": null,
+      "related_genre": []
+    },
+    "error_description": "Ya existe un g\u00E9nero con el name \u0027Ambient\u0027",
+    "field_name": "name"
+  }
+]

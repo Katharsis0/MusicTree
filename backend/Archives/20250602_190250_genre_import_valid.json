@@ -1,0 +1,22 @@
+[
+  {
+    "nombre": "Jazz Fusión",
+    "descripcion": "Combinación de jazz con otros géneros como el rock y el funk.",
+    "activo": true,
+    "color": "rgb(70,130,180)",
+    "anio_creacion": 1969,
+    "pais_origen": "Estados Unidos",
+    "modo": 0.55,
+    "bpm": {"min": 100, "max": 160},
+    "tono_dominante": 2,
+    "volumen_tipico_db": -30,
+    "compas": 5,
+    "duracion_promedio_segundos": 300,
+    "es_subgenero": false,
+    "genero_padre": null,
+    "generos_relacionados": [
+      {"nombre": "Jazz", "influencia": 10},
+      {"nombre": "Funk", "influencia": 7}
+    ]
+  }
+]
