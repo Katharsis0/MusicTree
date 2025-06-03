@@ -13,7 +13,6 @@ namespace MusicTree.Services.Interfaces
         Task<bool> DeleteArtistAsync(string id);
         Task<bool> ReactivateArtistAsync(string id);
         
-        // Legacy method
         Task<IEnumerable<Artist>> GetAllArtistAsync(bool includeInactive = false);
         
         // Genre relationship methods

@@ -10,6 +10,8 @@ namespace MusicTree.Models.DTOs
         [StringLength(100)]
         public string? OriginCountry { get; set; }
 
+        public string? ActivityYears { get; set; }
+
         public bool IncludeInactive { get; set; } = false;
 
         [Range(1, int.MaxValue)]
@@ -22,5 +24,11 @@ namespace MusicTree.Models.DTOs
         public string SortDirection { get; set; } = "asc"; // "asc" or "desc"
 
         public string? GenreId { get; set; }
+        public string? SubgenreId { get; set; }
+
+        // Additional filters
+        public bool? HasAlbums { get; set; }
+        public int? MinAlbumCount { get; set; }
+        public int? MaxAlbumCount { get; set; }
     }
 }
