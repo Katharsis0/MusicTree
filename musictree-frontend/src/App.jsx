@@ -12,6 +12,9 @@ import RegistroCurador from "./VistaCurador/RegistroCurador";
 import CrearCluster from "./VistaCurador/CrearCluster";
 import CrearGenero from "./VistaCurador/CrearGenero";
 import VerCluster from "./VistaCurador/VerCluster";
+import ImportarGeneros  from "./VistaCurador/ImportarGeneros";
+import CatalogoArtistas from "./VistaCurador/CatalogoArtistas";
+import CrearArtista from "./VistaCurador/CrearArtista";
 import MenuCurador from "./VistaCurador/MenuCurador";
 
 
@@ -41,6 +44,9 @@ function App() {
           <Route path="/curador/vercluster" element={<VerCluster />} />
           <Route path="/curador/menucurador" element={<MenuCurador />} />
           <Route path="/curador/creargenero" element={<CrearGenero />} />
+          <Route path="/curador/importargeneros" element={<ImportarGeneros />} />
+          <Route path="/curador/crearartista" element={<CrearArtista />} />
+          <Route path="/curador/catalogoartistas" element={<CatalogoArtistas />} />
 
         </Route>
 
