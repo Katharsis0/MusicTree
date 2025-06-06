@@ -398,7 +398,10 @@ namespace MusicTree.Controllers
         /// <returns>Import result with success and error counts</returns>
         [HttpPost("import")]
         public async Task<IActionResult> ImportGenres(IFormFile file)
-        {
+        {   Console.WriteLine($"=== ImportGenres invoked ===");
+            Console.WriteLine($"File: {(file == null ? "NULL" : file.FileName)}");
+            Console.WriteLine($"File length: {(file?.Length ?? -1)}");
+            Console.WriteLine($"Content type: {file?.ContentType}");
             try
             {
                 // Validate file presence

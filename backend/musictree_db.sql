@@ -369,7 +369,7 @@ RETURNS TABLE(
     genre_id TEXT,
     genre_name VARCHAR(30),
     parent_id TEXT
-) AS $
+) AS $$
 BEGIN
 RETURN QUERY
     WITH RECURSIVE genre_tree AS (
@@ -396,7 +396,7 @@ RETURN QUERY
     )
 SELECT * FROM genre_tree ORDER BY level_num, genre_name;
 END;
-$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- =============================================================================
 -- SCRIPT COMPLETION MESSAGE

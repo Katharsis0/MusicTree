@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Salsa",
+    "description": "Un género diverso derivado de cumbia con influencias del punk y pop.",
+    "active": false,
+    "rgb": "rgb(255,87,51)",
+    "creation_year": 1980,
+    "origin_country": "Colombia",
+    "mode": 0.65,
+    "bpm": { "min": 90, "max": 140 },
+    "tipical_mode": 0,
+    "volume": -35,
+    "compas": 4,
+    "avrg_duration": 210,
+    "is_subgenre": false,
+    "parent_genre": null,
+    "related_genre": []
+  }
+]
