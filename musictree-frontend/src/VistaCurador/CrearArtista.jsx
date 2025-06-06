@@ -172,7 +172,18 @@ const CrearArtista = () => {
               ))}
             </select>
           </div>
-
+          <div className='mb-3 form-check form-switch'>
+            <input
+              className='form-check-input'
+              type='checkbox'
+              id='activoSwitch'
+              checked={values.activo}
+              onChange={e => setValues({ ...values, activo: e.target.checked })}
+            />
+            <label className='form-check-label' htmlFor='activoSwitch'>
+              {values.activo ? 'Activo' : 'Desactivado'}
+            </label>
+          </div>
           <div className='mb-2'>
             <label>Años de actividad</label>
             <input type='text' className='form-control' placeholder='Ej: 1990–2001, 2010–presente'
