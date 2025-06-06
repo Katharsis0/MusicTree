@@ -13,7 +13,7 @@ const CatalogoArtistas = () => {
     axios.get(`${api}/api/Artists`)
       .then(res => {
         const data = res.data || [];
-        setArtistas(data.sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion)));
+        setArtistas((data.items || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
         setError(null);
       })
       .catch(err => {
@@ -47,11 +47,12 @@ const CatalogoArtistas = () => {
             <tbody>
               {artistas.map((artista) => (
                 <tr key={artista.idArtista}>
-                  <td>{artista.idArtista}</td>
-                  <td>{artista.nombre}</td>
-                  <td>{artista.pais}</td>
-                  <td>{artista.discos?.length || 0}</td>
-                  <td>{new Date(artista.fechaCreacion).toLocaleString()}</td>
+                  <td>{artista.id}</td>
+                  <td>{artista.name}</td>
+                  <td>{artista.originCountry}</td>
+                  <td>{artista.albumCount}</td>
+                  <td>{new Date(artista.createdAt).toLocaleString()}</td>
+
                 </tr>
               ))}
             </tbody>

@@ -14,6 +14,7 @@ const VerCluster = () => {
     setCargando(true);
     axios.get(`${api}/api/Clusters?includeInactive=true`)
       .then(res => {
+        console.log("Datos recibidos del backend:", res.data);  
         setData(res.data || []);
         setCargando(false);
       })
@@ -25,7 +26,7 @@ const VerCluster = () => {
   }, []);
 
   const clustersFiltrados = soloActivos
-    ? data.filter(c => c.isActive)
+    ? data.filter(c => c.isActive ?? c.IsActive)
     : data;
 
   return (
@@ -64,11 +65,12 @@ const VerCluster = () => {
                 </tr>
               ) : (
                 clustersFiltrados.map(cluster => (
-                  <tr key={cluster.id}>
-                    <td>{cluster.id}</td>
-                    <td>{cluster.name}</td>
-                    <td>{cluster.isActive ? 'Activo' : 'Inactivo'}</td>
-                    <td>{new Date(cluster.creationDate).toLocaleDateString()}</td>
+                  <tr key={cluster.id ?? cluster.Id}>
+                    <td>{cluster.id ?? cluster.Id}</td>
+                    <td>{cluster.name ?? cluster.Name}</td>
+                    <td>{(cluster.isActive ?? cluster.IsActive) ? 'Activo' : 'Inactivo'}</td>
+                    <td>{cluster.creationDate ? new Date(cluster.creationDate).toLocaleDateString() : 
+                         cluster.timeStamp ? new Date(cluster.timeStamp).toLocaleDateString() : '-'}</td>
                   </tr>
                 ))
               )}

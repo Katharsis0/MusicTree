@@ -59,45 +59,89 @@ const CrearArtista = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!values.nombre || values.nombre.length < 3 || values.nombre.length > 100) {
-      Swal.fire('Error', 'El nombre debe tener entre 3 y 100 caracteres.', 'warning');
-      return;
-    }
+    console.log("=== Enviando artista al backend ===");
+    console.log("Id:", values.idArtista);
+    console.log("Name:", values.nombre);
+    console.log("Biography:", values.biografia);
+    console.log("OriginCountry:", values.pais);
+    console.log("IsActive:", values.activo);
+    console.log("ActivityYears:", values.añosActividad);
+    console.log("CreatedAt:", values.fechaCreacion);
+    console.log("Genres:", values.generos);
+    console.log("Subgenres:", values.subgeneros);
+    console.log("Members:", values.miembros);
+    console.log("Albums:", values.discos);
+    console.log("CoverImage:", values.portada);
+    console.log("ArtistRelatedGenres:", values.generos.map(g => ({
+      GenreId: g,    
+      InfluenceCoefficient: g.influenceCoefficient ?? 1.0
+    })));
 
-    if (!values.pais) {
-      Swal.fire('Error', 'Debe seleccionar un país de origen.', 'warning');
-      return;
-    }
-
-    if (!values.portada) {
-      Swal.fire('Error', 'Debe subir una imagen de portada (JPEG, 800x800px, máx 5MB).', 'warning');
-      return;
-    }
+    console.log("ArtistRelatedSubgenres:", (values.subgeneros ?? []).map(sg => ({
+      GenreId: sg,    
+      InfluenceCoefficient: sg.influenceCoefficient ?? 1.0
+    })));
 
     const formData = new FormData();
-    formData.append('idArtista', values.idArtista);
-    formData.append('nombre', values.nombre);
-    formData.append('biografia', values.biografia);
-    formData.append('pais', values.pais);
-    formData.append('activo', values.activo);
-    formData.append('fechaCreacion', values.fechaCreacion);
-    formData.append('añosActividad', values.añosActividad);
-    formData.append('generos', JSON.stringify(values.generos));
-    formData.append('subgeneros', JSON.stringify(values.subgeneros));
-    formData.append('miembros', JSON.stringify(values.miembros));
-    formData.append('discos', JSON.stringify(values.discos));
-    formData.append('portada', values.portada);
+
+    // Campos básicos
+    formData.append('Name', values.nombre);
+    formData.append('Biography', values.biografia);
+    formData.append('OriginCountry', values.pais);
+    formData.append('ActivityYears', values.añosActividad);
+    formData.append('CreatedAt', values.fechaCreacion);
+    formData.append('IsActive', values.activo);
+
+    const artistGenresPayload = values.generos.map(g => ({
+    GenreId: g,
+      InfluenceCoefficient: 1.0
+    }));
+
+    console.log("ArtistRelatedGenres:", artistGenresPayload);
+
+    // Enviar como campos indexados:
+    artistGenresPayload.forEach((g, index) => {
+      formData.append(`ArtistRelatedGenres[${index}].GenreId`, g.GenreId);
+      formData.append(`ArtistRelatedGenres[${index}].InfluenceCoefficient`, g.InfluenceCoefficient);
+    });
+    const artistSubgenresPayload = values.subgeneros.map(sg => ({
+    GenreId: sg,                  
+      InfluenceCoefficient: 1.0     
+    }));
+
+    console.log(">>> Enviando ArtistRelatedSubgenres:", artistSubgenresPayload);
+
+    artistSubgenresPayload.forEach((sg, index) => {
+      formData.append(`ArtistRelatedSubgenres[${index}].GenreId`, sg.GenreId);
+      formData.append(`ArtistRelatedSubgenres[${index}].InfluenceCoefficient`, sg.InfluenceCoefficient);
+    });
+
+
+    // Otros campos
+    formData.append('Members', JSON.stringify(values.miembros));
+    formData.append('Albums', JSON.stringify(values.discos));
+
+    if (values.portada) {
+      formData.append('CoverImage', values.portada);
+    }
+
 
     try {
-      await axios.post(`${api}/api/Artists`, formData, {
+      const response = await axios.post(`${api}/api/Artists`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      Swal.fire('Éxito', 'Artista creado correctamente.', 'success');
-      navigate('/curador/menucurador');
-    } catch (err) {
-      Swal.fire('Error', 'No se pudo registrar el artista. Intente más tarde.', 'error');
-      console.error(err);
+      console.log("Artista creado con éxito:", response.data);
+      Swal.fire("Éxito", "El artista se creó correctamente.", "success");
+
+    } catch (error) {
+      console.error("Error al crear artista:", error);
+
+      if (error.response && error.response.data) {
+        console.log("Detalles del error:", error.response.data);
+      }
+
+      Swal.fire("Error", "No se pudo crear el artista.", "error");
     }
   };
 

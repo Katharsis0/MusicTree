@@ -28,27 +28,36 @@ const ImportarGeneros = () => {
     }
 
     const formData = new FormData();
-    formData.append('archivo', archivo);
+    formData.append('file', archivo);  
 
     try {
       setProcesando(true);
 
-      const response = await axios.post(`${api}/api/Genres/importar`, formData, {
+      const response = await axios.post(`${api}/api/Genres/import`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      const { totalImportados, totalErrores, nombreArchivoErrores } = response.data;
+      console.log('Respuesta:', response.data);
 
-      let mensaje = `Importación finalizada.\n\nTotal de géneros importados: ${totalImportados}\nErrores: ${totalErrores}`;
-      if (totalErrores > 0 && nombreArchivoErrores) {
-        mensaje += `\n\nEl archivo de errores se guardó como: ${nombreArchivoErrores}`;
-      }
+      const data = response.data.data || {};
+      const mensaje = `
+        ${response.data.message}
+
+        Total registros: ${data.totalRecords ?? 0}
+        Importados: ${data.importedRecords ?? 0}
+        Errores: ${data.errorRecords ?? 0}
+      `;
 
       Swal.fire('Proceso completado', mensaje, 'success');
       setArchivo(null);
     } catch (error) {
-      console.error(error);
-      Swal.fire('Error', 'Ocurrió un error al importar los géneros. Intente más tarde.', 'error');
+      console.error('Error en importación:', error);
+
+      if (error.response?.data?.error) {
+        Swal.fire('Error', `${error.response.data.error}\n\n${error.response.data.details || ''}`, 'error');
+      } else {
+        Swal.fire('Error', 'Ocurrió un error al importar los géneros. Intente más tarde.', 'error');
+      }
     } finally {
       setProcesando(false);
     }
@@ -61,7 +70,12 @@ const ImportarGeneros = () => {
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="mb-3">
           <label className="form-label">Archivo JSON</label>
-          <input type="file" accept=".json" className="form-control" onChange={handleFileChange} />
+          <input
+            type="file"
+            accept=".json"
+            className="form-control"
+            onChange={handleFileChange}
+          />
         </div>
 
         <div className="d-flex gap-3">
@@ -73,7 +87,8 @@ const ImportarGeneros = () => {
       </form>
 
       <div className="alert alert-info mt-4">
-        <strong>Nota:</strong> El archivo debe tener un arreglo de géneros con las propiedades correctas. Si hay errores en registros individuales, se generará un archivo con los errores específicos.
+        <strong>Nota:</strong> El archivo debe tener un arreglo de géneros con las propiedades correctas. 
+        Si hay errores en registros individuales, se generará un archivo con los errores específicos.
       </div>
     </div>
   );
