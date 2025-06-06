@@ -445,9 +445,20 @@ namespace MusicTree.Services
             };
         }
 
+
         private async Task<string> SaveImageAsync(IFormFile image, string folder, string entityId)
         {
-            var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", folder);
+            _logger.LogInformation(">>> Entrando a SaveImageAsync <<<");
+
+            
+            var webRootPath = _webHostEnvironment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+            _logger.LogInformation($"WEB ROOT PATH (resolved): {webRootPath}");
+            _logger.LogInformation($"[DEBUG] Folder param: '{folder}'");
+            _logger.LogInformation($"[DEBUG] entityId param: '{entityId}'");
+            _logger.LogInformation($"[DEBUG] CoverImage.FileName: '{image?.FileName}'");
+
+            var uploadsPath = Path.Combine(webRootPath, "uploads", folder);
             Directory.CreateDirectory(uploadsPath);
 
             var fileName = $"{entityId}_{Guid.NewGuid()}{Path.GetExtension(image.FileName)}";
@@ -458,6 +469,7 @@ namespace MusicTree.Services
 
             return $"/uploads/{folder}/{fileName}";
         }
+
 
         private async Task DeleteImageAsync(string imageUrl)
         {
