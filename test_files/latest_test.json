@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Progressive Rock",
+    "description": "Rock music characterized by complex compositions and virtuoso musicianship.",
+    "active": true,
+    "rgb": "rgb(128,0,128)",
+    "creation_year": 1968,
+    "origin_country": "Reino Unido",
+    "mode": 0.55,
+    "bpm": {"min": 60, "max": 180},
+    "tipical_mode": 0,
+    "volume": -25,
+    "compas": 7,
+    "avrg_duration": 420,
+    "is_subgenre": false,
+    "parent_genre": null,
+    "related_genre": [
+      {"name": "Punk Rock", "influence": 6},
+      {"name": "Indie Rock", "influence": 5}
+    ]
+  },
+  {
+    "name": "World Music",
+    "description": "Música tradicional y contemporánea de diferentes culturas mundiales.",
+    "active": true,
+    "rgb": "rgb(218,165,32)",
+    "creation_year": 1960,
+    "origin_country": "Various",
+    "mode": 0.75,
+    "bpm": {"min": 40, "max": 200},
+    "tipical_mode": -1,
+    "volume": -18,
+    "compas": 0,
+    "avrg_duration": 250,
+    "is_subgenre": false,
+    "parent_genre": null,
+    "related_genre": []
+  },
+  {
+    "name": "Synthwave",
+    "description": "Estilo inspirado en bandas sonoras de películas de los años 80.",
+    "active": true,
+    "rgb": null,
+    "creation_year": 2005,
+    "origin_country": "Francia",
+    "mode": 0.80,
+    "bpm": {"min": 70, "max": 120},
+    "tipical_mode": -1,
+    "volume": -40,
+    "compas": 4,
+    "avrg_duration": 260,
+    "is_subgenre": true,
+    "parent_genre": "G-BESLMCPSAV7U",
+    "related_genre": [
+      {"name": "Electronic", "influence": 9}
+    ]
+  },
+  {
+    "name": "Grunge",
+    "description": "Subgénero del rock alternativo con influencias del punk y metal.",
+    "active": true,
+    "rgb": null,
+    "creation_year": 1987,
+    "origin_country": "Estados Unidos",
+    "mode": 0.3,
+    "bpm": {"min": 110, "max": 160},
+    "tipical_mode": 0,
+    "volume": -20,
+    "compas": 4,
+    "avrg_duration": 280,
+    "is_subgenre": true,
+    "parent_genre": "G-64RE7OEDEI72",
+    "related_genre": [
+      {"name": "Punk Rock", "influence": 8},
+      {"name": "Rock Alternativo", "influence": 10}
+    ]
+  },
+  {
+    "name": "Minimal Techno",
+    "description": "Forma minimalista de música techno con elementos repetitivos.",
+    "active": true,
+    "rgb": null,
+    "creation_year": 1992,
+    "origin_country": "Alemania",
+    "mode": 0.2,
+    "bpm": {"min": 120, "max": 135},
+    "tipical_mode": -1,
+    "volume": -30,
+    "compas": 4,
+    "avrg_duration": 360,
+    "is_subgenre": true,
+    "parent_genre": "G-BESLMCPSAV7U",
+    "related_genre": []
+  },
+  {
+    "name": "Error Test Subgenre",
+    "description": "This should fail - subgenre with color assigned",
+    "active": true,
+    "rgb": "rgb(255,0,255)",
+    "creation_year": 2024,
+    "origin_country": "Test Country",
+    "mode": 0.6,
+    "bpm": {"min": 100, "max": 140},
+    "tipical_mode": -1,
+    "volume": -30,
+    "compas": 4,
+    "avrg_duration": 180,
+    "is_subgenre": true,
+    "parent_genre": "G-BESLMCPSAV7U",
+    "related_genre": []
+  }
+]

@@ -13,6 +13,11 @@ namespace MusicTree.Repositories
         public DbSet<Genre> Genres { get; set; }
         public DbSet<GenreRelation> GenreRelations { get; set; }
         public DbSet<Artist> Artists { get; set; }
+        public DbSet<ArtistMember> ArtistMembers { get; set; }
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<Event> Events { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -101,7 +106,7 @@ namespace MusicTree.Repositories
 
             // Configure Artist 
             modelBuilder.Entity<Artist>(entity =>
-{
+            {
                 entity.Property(a => a.Id).HasMaxLength(128);
                 entity.Property(a => a.Name).HasMaxLength(100).IsRequired();
                 entity.Property(a => a.Biography).HasMaxLength(2000);
@@ -113,11 +118,11 @@ namespace MusicTree.Repositories
                 entity.HasIndex(a => a.Name);
                 entity.HasIndex(a => a.OriginCountry);
                 entity.HasIndex(a => a.IsActive);
-                });
+            });
 
-                // Configure ArtistGenre junction table
-                modelBuilder.Entity<ArtistGenre>(entity =>
-                {
+            // Configure ArtistGenre junction table
+            modelBuilder.Entity<ArtistGenre>(entity =>
+            {
                 entity.HasKey(ag => new { ag.ArtistId, ag.GenreId });
 
                 entity.Property(ag => ag.InfluenceCoefficient).HasDefaultValue(1.0f);
@@ -136,11 +141,11 @@ namespace MusicTree.Repositories
                 // Ensure genre is not a subgenre
                 entity.HasCheckConstraint("CK_ArtistGenre_NotSubgenre", 
                     "NOT EXISTS (SELECT 1 FROM \"Genres\" WHERE \"Id\" = \"GenreId\" AND \"IsSubgenre\" = true)");
-                });
+            });
 
-                // Configure ArtistSubgenre junction table
-                modelBuilder.Entity<ArtistSubgenre>(entity =>
-                {
+            // Configure ArtistSubgenre junction table
+            modelBuilder.Entity<ArtistSubgenre>(entity =>
+            {
                 entity.HasKey(asq => new { asq.ArtistId, asq.GenreId });
 
                 entity.Property(asq => asq.InfluenceCoefficient).HasDefaultValue(1.0f);
@@ -159,7 +164,98 @@ namespace MusicTree.Repositories
                 // Ensure genre is a subgenre
                 entity.HasCheckConstraint("CK_ArtistSubgenre_IsSubgenre", 
                     "EXISTS (SELECT 1 FROM \"Genres\" WHERE \"Id\" = \"GenreId\" AND \"IsSubgenre\" = true)");
-                });
+            });
+
+            // FIXED: Configure ArtistMember with correct column name
+            modelBuilder.Entity<ArtistMember>(entity =>
+            {
+                entity.Property(am => am.Id).HasMaxLength(128).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(am => am.ArtistId).HasMaxLength(128);
+                entity.Property(am => am.FullName).HasMaxLength(200).IsRequired();
+                entity.Property(am => am.Instrument).HasMaxLength(100);
+                entity.Property(am => am.ActivityPeriod).HasMaxLength(100);
+                entity.Property(am => am.IsActive).HasDefaultValue(true);
+                entity.Property(am => am.CreatedAt).HasDefaultValueSql("NOW()");
+
+                entity.HasOne(am => am.Artist)
+                    .WithMany(a => a.Members)
+                    .HasForeignKey(am => am.ArtistId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configure Album
+            modelBuilder.Entity<Album>(entity =>
+            {
+                entity.Property(alb => alb.Id).HasMaxLength(128).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(alb => alb.ArtistId).HasMaxLength(128);
+                entity.Property(alb => alb.Title).HasMaxLength(200).IsRequired();
+                entity.Property(alb => alb.IsActive).HasDefaultValue(true);
+                entity.Property(alb => alb.CreatedAt).HasDefaultValueSql("NOW()");
+
+                entity.HasOne(alb => alb.Artist)
+                    .WithMany(a => a.Albums)
+                    .HasForeignKey(alb => alb.ArtistId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(alb => alb.ArtistId);
+            });
+
+            // Configure Comment
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.Property(c => c.Id).HasMaxLength(128).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(c => c.ArtistId).HasMaxLength(128);
+                entity.Property(c => c.Content).IsRequired();
+                entity.Property(c => c.AuthorName).HasMaxLength(100).IsRequired();
+                entity.Property(c => c.IsActive).HasDefaultValue(true);
+                entity.Property(c => c.CreatedAt).HasDefaultValueSql("NOW()");
+
+                entity.HasOne(c => c.Artist)
+                    .WithMany(a => a.Comments)
+                    .HasForeignKey(c => c.ArtistId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(c => c.ArtistId);
+            });
+
+            // Configure Photo
+            modelBuilder.Entity<Photo>(entity =>
+            {
+                entity.Property(p => p.Id).HasMaxLength(128).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(p => p.ArtistId).HasMaxLength(128);
+                entity.Property(p => p.ImageUrl).IsRequired();
+                entity.Property(p => p.Caption).HasMaxLength(500);
+                entity.Property(p => p.IsActive).HasDefaultValue(true);
+                entity.Property(p => p.CreatedAt).HasDefaultValueSql("NOW()");
+
+                entity.HasOne(p => p.Artist)
+                    .WithMany(a => a.PhotoGallery)
+                    .HasForeignKey(p => p.ArtistId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(p => p.ArtistId);
+            });
+
+            // Configure Event
+            modelBuilder.Entity<Event>(entity =>
+            {
+                entity.Property(e => e.Id).HasMaxLength(128).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(e => e.ArtistId).HasMaxLength(128);
+                entity.Property(e => e.Title).HasMaxLength(200).IsRequired();
+                entity.Property(e => e.Venue).HasMaxLength(200);
+                entity.Property(e => e.City).HasMaxLength(100);
+                entity.Property(e => e.Country).HasMaxLength(100);
+                entity.Property(e => e.IsActive).HasDefaultValue(true);
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
+
+                entity.HasOne(e => e.Artist)
+                    .WithMany(a => a.Events)
+                    .HasForeignKey(e => e.ArtistId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => e.ArtistId);
+                entity.HasIndex(e => e.EventDate);
+            });
         }
 
         // Override SaveChanges to add additional validation
