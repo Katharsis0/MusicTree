@@ -16,6 +16,10 @@ import ImportarGeneros  from "./VistaCurador/ImportarGeneros";
 import CatalogoArtistas from "./VistaCurador/CatalogoArtistas";
 import CrearArtista from "./VistaCurador/CrearArtista";
 import MenuCurador from "./VistaCurador/MenuCurador";
+import LoginFanaticos from "./VistaFanaticos/LoginFanaticos";
+import RegistroFanaticos from "./VistaFanaticos/RegistroFanaticos";
+import BuscarArtistaFanaticos from "./VistaFanaticos/BuscarArtistaFanaticos";
+import MenuFanaticos from "./VistaFanaticos/MenuFanaticos";
 
 
 function App() {
@@ -36,6 +40,8 @@ function App() {
           <Route path="/" element={<MenuLogin />} />
           <Route path="/logincurador" element={<LoginCurador />} />
           <Route path="/registercurador" element={<RegistroCurador />} />
+          <Route path="/loginfanaticos" element={<LoginFanaticos />} />
+          <Route path="/registerfanaticos" element={<RegistroFanaticos />} />
 
         {/**Rutas Curador */}
         <Route element={<LayoutCurador />}>
@@ -47,6 +53,14 @@ function App() {
           <Route path="/curador/importargeneros" element={<ImportarGeneros />} />
           <Route path="/curador/crearartista" element={<CrearArtista />} />
           <Route path="/curador/catalogoartistas" element={<CatalogoArtistas />} />
+
+        </Route>
+
+
+        {/**Rutas Fanaticos */}
+        <Route element={<LayoutCurador />}>
+          <Route path="/fanaticos/menufanaticos" element={<MenuFanaticos />} />
+          <Route path="/fanaticos/buscarartistafanaticos" element={<BuscarArtistaFanaticos />} />
 
         </Route>
 
