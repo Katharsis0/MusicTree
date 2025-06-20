@@ -110,8 +110,8 @@ const handleSubmit = async (event) => {
     return;
   }
 
-  if (parseOrNull(values.tiempo) < 0 || parseOrNull(values.tiempo) > 8) {
-    Swal.fire('Error', 'El compás debe estar entre 0 y 8.', 'warning');
+  if (parseOrNull(values.tiempo) < 0 || parseOrNull(values.tiempo) == 1 || parseOrNull(values.tiempo) > 8) {
+    Swal.fire('Error', 'El compás debe eser 0 o entre 2 a 8.', 'warning');
     return;
   }
 
