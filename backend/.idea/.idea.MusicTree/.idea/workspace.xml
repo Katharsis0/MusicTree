@@ -9,17 +9,81 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b71533bc-7416-48ed-8407-d45372d86c01" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Controllers/ArtistController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298/storage_v2/_src_/database/musictree_db.-r7mzA/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298/storage_v2/_src_/database/musictree_db.-r7mzA/schema/public.abK9xQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/DTOs/ArtistCreateDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/ArtistCreateDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/DTOs/ArtistSearchParams.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/ArtistSearchParams.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250601_141536_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250601_141536_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_185605_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_185605_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_185622_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_185622_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_190005_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_190005_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_190250_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_190250_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_190805_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_190805_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_191443_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_191443_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_193925_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_193925_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_194033_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_194033_genre_import_invalid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_194120_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_194120_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_194325_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_194325_prereqs_import.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_194349_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250602_194349_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_193944_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_193944_generos_prueba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_194746_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_194746_gen_prueba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_194747_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_194747_gen_prueba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_195330_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_195330_gen_prueba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_202058_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_202058_gen_prueba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_202930_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_202930_gen_prueba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_204228_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_204228_gen_prueba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_204405_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_204405_gen_prueba.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_204821_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_204821_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_205002_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_205002_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_221832_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_221832_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_221906_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_221906_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_221920_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_221920_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_222647_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_222647_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_222703_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_222703_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_224936_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_224936_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_231708_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_231708_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_232119_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_232119_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_232244_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_232244_genre_import_valid.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_233352_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250605_233352_gen.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250606_000217_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250606_000217_proofalse.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250606_000440_Errores.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archives/20250606_000440_proofalse.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/Entities/Artist.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Entities/Artist.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Responses/ArtistResponseDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Responses/ArtistResponseDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/ArtistRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/ArtistRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/ArtistService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/ArtistService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Interfaces/IArtistService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/IArtistService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/AppDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/musictree_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/musictree_db.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,35 +121,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.MusicTree: http.executor": "Run",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "HTTP Request.MusicTree | #1.executor": "Run",
-    "HTTP Request.MusicTree | #2.executor": "Run",
-    "HTTP Request.MusicTree | #3.executor": "Run",
-    "HTTP Request.MusicTree | #4.executor": "Run",
-    "HTTP Request.MusicTree | #5.executor": "Run",
-    "HTTP Request.MusicTree | #6.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHELLCHECK.PATH": "I do mind",
-    "git-widget-placeholder": "feature/register-artist",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.MusicTree: http.executor&quot;: &quot;Run&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;HTTP Request.MusicTree | #1.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #2.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #3.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #4.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #5.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.MusicTree | #6.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;I do mind&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;frontandback2.0&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunDashboard">
     <option name="openRunningConfigInTab" value="true" />
   </component>
@@ -164,6 +228,9 @@
       <workItem from="1748785294960" duration="2075000" />
       <workItem from="1748889842490" duration="3516000" />
       <workItem from="1748912187377" duration="2941000" />
+      <workItem from="1749243360117" duration="4198000" />
+      <workItem from="1749247803451" duration="3660000" />
+      <workItem from="1749412914443" duration="2010000" />
     </task>
     <servers />
   </component>

@@ -115,8 +115,8 @@ namespace MusicTree.Models.Entities
         public string ActivityPeriod { get; set; } = string.Empty; // e.g., "1965–1994, 2005–presente"
 
         public bool IsActive { get; set; } = true;
-        public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
-
+        
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Artist Artist { get; set; } = null!;
 
         public ArtistMember()
