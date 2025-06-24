@@ -20,7 +20,6 @@ namespace MusicTree.Models.Entities
         public string OriginCountry { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(200)]
         public string ActivityYears { get; set; } = string.Empty; // e.g., "1965–1994, 2005, 2013–presente"
 
         [StringLength(500)]

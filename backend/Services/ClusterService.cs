@@ -29,7 +29,7 @@ namespace MusicTree.Services
                 Id = $"C-{GenerateRandomId(12)}",
                 Name = dto.Name,
                 Description = dto.Description,
-                IsActive = true,
+                IsActive = dto.IsActive,
                 TimeStamp = DateTime.UtcNow,
                 Genres = new List<Genre>()
             };

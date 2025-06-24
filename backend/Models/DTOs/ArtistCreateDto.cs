@@ -16,7 +16,6 @@ namespace MusicTree.Models.DTOs
         public string OriginCountry { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(200)]
         public string ActivityYears { get; set; } = string.Empty;
 
         // Cover image (will be handled separately for file upload)
@@ -95,9 +94,9 @@ namespace MusicTree.Models.DTOs
                     continue;
 
                 // Check for range (e.g., "1965–1994" or "2013–presente")
-                if (trimmed.Contains('–'))
+                if (trimmed.Contains('-'))
                 {
-                    var rangeParts = trimmed.Split('–');
+                    var rangeParts = trimmed.Split('-');
                     if (rangeParts.Length == 2)
                     {
                         var start = rangeParts[0].Trim();
@@ -173,7 +172,6 @@ namespace MusicTree.Models.DTOs
             public string Instrument { get; set; } = string.Empty;
 
             [Required]
-            [StringLength(200)]
             public string ActivityPeriod { get; set; } = string.Empty;
 
             public bool IsActive { get; set; } = true;

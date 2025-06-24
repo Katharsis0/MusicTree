@@ -1,6 +1,12 @@
 -- Drop the database if it exists
-DROP DATABASE IF EXISTS "MusicTreeDB";
+DROP TABLE IF EXISTS "GenreRelations" CASCADE;
+DROP TABLE IF EXISTS "Genres" CASCADE;
+DROP TABLE IF EXISTS "Clusters" CASCADE;
+DROP TABLE IF EXISTS "Artists" CASCADE;
+DROP TABLE IF EXISTS "Fanaticos" CASCADE;
+DROP TABLE IF EXISTS "FanaticoGenres" CASCADE;
 
+DROP DATABASE IF EXISTS "MusicTreeDB";
 -- Drop the user if exists 
 -- DROP USER IF EXISTS musictree_user;
 
@@ -15,7 +21,7 @@ CREATE DATABASE "MusicTreeDB"
     CONNECTION LIMIT = -1;
 
 -- Grant privileges (uncomment if using separate user)
- GRANT ALL PRIVILEGES ON DATABASE "MusicTreeDB" TO musictree_user;
+GRANT ALL PRIVILEGES ON DATABASE "MusicTreeDB" TO musictree_user;
 
 -- Connect to the new database
 \c "MusicTreeDB";
@@ -62,6 +68,9 @@ CREATE TABLE "Genres" (
                           "Bpm" INTEGER NOT NULL DEFAULT 120,
                           "BpmLower" INTEGER,
                           "BpmUpper" INTEGER,
+                          "AvrgDuration" INTEGER,
+                          "GenreCreationYear" INTEGER,
+                          "GenreTipicalMode" INTEGER,
                           "IsSubgenre" BOOLEAN NOT NULL DEFAULT false,
                           "ParentGenreId" VARCHAR(128),
                           "ClusterId" VARCHAR(128),
@@ -100,6 +109,7 @@ CREATE TABLE "Artists" (
                            "ActivityYears" TEXT,
                            "IsActive" BOOLEAN NOT NULL DEFAULT true,
                            "TimeStamp" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+                           "CoverImageUrl" TEXT,
                            CONSTRAINT "PK_Artists" PRIMARY KEY ("Id"),
                            CONSTRAINT "UQ_Artists_Name" UNIQUE ("Name")
 );
@@ -193,6 +203,31 @@ CREATE TABLE "Events" (
                           CONSTRAINT "FK_Events_Artist" FOREIGN KEY ("ArtistId") REFERENCES "Artists" ("Id") ON DELETE CASCADE
 );
 
+
+-- Create Fanaticos table
+CREATE TABLE "Fanaticos" (
+                             "Id" VARCHAR(50) NOT NULL DEFAULT ('F-' || substr(gen_random_uuid()::text, 1, 12)),
+                             "NombreUsuario" VARCHAR(30) NOT NULL,
+                             "Nombre" VARCHAR(100) NOT NULL,
+                             "Contrasena" VARCHAR(12) NOT NULL,
+                             "Pais" VARCHAR(100) NOT NULL,
+                             "Avatar" VARCHAR(200) NOT NULL,
+                             "FechaRegistro" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                             CONSTRAINT "PK_Fanaticos" PRIMARY KEY ("Id"),
+                             CONSTRAINT "UQ_Fanaticos_NombreUsuario" UNIQUE ("NombreUsuario")
+);
+
+
+-- Create FanaticoGenres join table
+CREATE TABLE "FanaticoGenres" (
+                                  "FanaticoId" VARCHAR(50) NOT NULL,
+                                  "GenreId" VARCHAR(128) NOT NULL,
+                                  CONSTRAINT "PK_FanaticoGenres" PRIMARY KEY ("FanaticoId", "GenreId"),
+                                  CONSTRAINT "FK_FanaticoGenres_Fanatico" FOREIGN KEY ("FanaticoId") REFERENCES "Fanaticos"("Id") ON DELETE CASCADE,
+                                  CONSTRAINT "FK_FanaticoGenres_Genre" FOREIGN KEY ("GenreId") REFERENCES "Genres"("Id") ON DELETE CASCADE
+);
+
+
 -- ============================================================================
 -- PART 4: INDEXES FOR PERFORMANCE
 -- ============================================================================
@@ -233,20 +268,20 @@ INSERT INTO "Clusters" ("Id", "Name", "Description") VALUES
                                                          ('cluster-jazz', 'Jazz', 'Jazz and its many variations');
 
 -- Insert sample main genres
-INSERT INTO "Genres" ("Id", "Name", "Description", "ClusterId", "GenreOriginCountry", "ColorR", "ColorG", "ColorB", "Bpm", "BpmLower", "BpmUpper") VALUES
-                                                                                                                                                       ('genre-rock', 'Rock', 'Classic rock music', 'cluster-rock', 'United States', 255, 0, 0, 120, 100, 140),
-                                                                                                                                                       ('genre-electronic', 'Electronic', 'Electronic dance music', 'cluster-electronic', 'Germany', 0, 255, 0, 128, 120, 140),
-                                                                                                                                                       ('genre-classical', 'Classical', 'Classical orchestral music', 'cluster-classical', 'Austria', 0, 0, 255, 80, 60, 100),
-                                                                                                                                                       ('genre-folk', 'Folk', 'Traditional folk music', 'cluster-folk', 'Various', 255, 255, 0, 100, 80, 120),
-                                                                                                                                                       ('genre-jazz', 'Jazz', 'Jazz music', 'cluster-jazz', 'United States', 255, 0, 255, 120, 100, 160);
+INSERT INTO "Genres" ("Id", "Name", "Description", "ClusterId", "GenreOriginCountry", "ColorR", "ColorG", "ColorB", "Bpm", "BpmLower", "BpmUpper", "AvrgDuration", "GenreCreationYear", "GenreTipicalMode") VALUES
+                                                                                                                                                                                                                ('genre-rock', 'Rock', 'Classic rock music', 'cluster-rock', 'United States', 255, 0, 0, 120, 100, 140,20,1970, 0),
+                                                                                                                                                                                                                ('genre-electronic', 'Electronic', 'Electronic dance music', 'cluster-electronic', 'Germany', 0, 255, 0, 128, 120, 140, 20,2000, 1),
+                                                                                                                                                                                                                ('genre-classical', 'Classical', 'Classical orchestral music', 'cluster-classical', 'Austria', 0, 0, 255, 80, 60, 100,30,1600, 1),
+                                                                                                                                                                                                                ('genre-folk', 'Folk', 'Traditional folk music', 'cluster-folk', 'Various', 255, 255, 0, 100, 80, 120,30,1970, 1),
+                                                                                                                                                                                                                ('genre-jazz', 'Jazz', 'Jazz music', 'cluster-jazz', 'United States', 255, 0, 255, 120, 100, 160,30,1950, 0);
 
 -- Insert sample subgenres
-INSERT INTO "Genres" ("Id", "Name", "Description", "ParentGenreId", "IsSubgenre", "Bpm", "BpmLower", "BpmUpper") VALUES
-                                                                                                                     ('subgenre-hard-rock', 'Hard Rock', 'Harder variation of rock', 'genre-rock', true, 130, 120, 150),
-                                                                                                                     ('subgenre-prog-rock', 'Progressive Rock', 'Complex rock with unusual time signatures', 'genre-rock', true, 110, 80, 140),
-                                                                                                                     ('subgenre-house', 'House', 'House music subgenre of electronic', 'genre-electronic', true, 128, 120, 135),
-                                                                                                                     ('subgenre-techno', 'Techno', 'Techno subgenre of electronic', 'genre-electronic', true, 130, 125, 140),
-                                                                                                                     ('subgenre-bebop', 'Bebop', 'Fast-paced jazz style', 'genre-jazz', true, 140, 120, 180);
+INSERT INTO "Genres" ("Id", "Name", "Description", "ParentGenreId", "IsSubgenre", "Bpm", "BpmLower", "BpmUpper","AvrgDuration") VALUES
+                                                                                                                                    ('subgenre-hard-rock', 'Hard Rock', 'Harder variation of rock', 'genre-rock', true, 130, 120, 150, 100),
+                                                                                                                                    ('subgenre-prog-rock', 'Progressive Rock', 'Complex rock with unusual time signatures', 'genre-rock', true, 110, 80, 140, 2000),
+                                                                                                                                    ('subgenre-house', 'House', 'House music subgenre of electronic', 'genre-electronic', true, 128, 120, 135, 3000),
+                                                                                                                                    ('subgenre-techno', 'Techno', 'Techno subgenre of electronic', 'genre-electronic', true, 130, 125, 140, 400),
+                                                                                                                                    ('subgenre-bebop', 'Bebop', 'Fast-paced jazz style', 'genre-jazz', true, 140, 120, 180, 500);
 
 -- Insert sample genre relations
 INSERT INTO "GenreRelations" ("GenreId", "RelatedGenreId", "Influence", "MGPC") VALUES
@@ -314,3 +349,10 @@ SELECT "Name", "Description", "IsSubgenre" FROM "Genres" ORDER BY "IsSubgenre", 
 
 SELECT 'Sample Artists:' as info;
 SELECT "Name", "OriginCountry", "ActivityYears" FROM "Artists" ORDER BY "Name";
+
+
+SELECT * FROM "Genres";
+
+SELECT * FROM "Artists";
+
+SELECT * FROM "Fanaticos";
