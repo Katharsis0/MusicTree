@@ -1,0 +1,452 @@
+	Notas ----------------------------------------------------------------------------
+Existen 5 estados para pruebas;
+	1 es "Pasada"(La prueba termino tal como se tenia previsto),
+	2 es "No Pasada"(La prueba no termino tal como se tenia previsto), 
+	3 es "Pasada (Sin problemas de ejecución)"(El proyecto pudo manejar un error de prueba de tal manera que no genero problemas de ejecución en el proyecto y/o servidor pero de manera inesperada, puede que el mensaje de error sea diferente al esperado por no tenerlo previsto debido a esto, se cuenta como "pasada" al probarse en un error y generar un error) 
+	4 es "No Pasada (Error ejecución)" (El proyecto no pudo manejar un error de prueba de tal manera que genero problemas de ejecución en el proyecto y/o servidor)
+
+	Nombre	----------------------------------------------------------------------------
+
+Valor; "Lor" (3 Caracteres)
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "Lo" (2 Caracteres)
+Esperado; "The field Name must be a string with a minimum length of 3 and a maximum length of 30"
+Obtenido; "The field Name must be a string with a minimum length of 3 and a maximum length of 30"
+Prueba; Pasada
+
+Valor; "Lorem ipsum dolor sit amet, co" (30 Caracteres)
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "Lorem ipsum dolor sit amet, con" (31 Caracteres)
+Esperado; "The field Name must be a string with a minimum length of 3 and a maximum length of 30"
+Obtenido; "The field Name must be a string with a minimum length of 3 and a maximum length of 30"
+Prueba; Pasada
+
+Valor; *Nombre ya existente*
+Esperado; "A genre with this name already exists"
+Obtenido; "A genre with this name already exists"
+Prueba; Pasada
+
+	Descripción ------------------------------------------------------------------------------
+
+Valor; "" (0 Caracteres)
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "Lorem ipsum dolor..." (1000 Caracteres)
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "Lorem ipsum dolor..." (1001 Caracteres)
+Esperado; "The field Description must be a string with a maximum length of 1000"
+Obtenido; "The field Description must be a string with a maximum length of 1000"
+Prueba; Pasada
+
+	Cluster ------------------------------------------------------------------------------
+
+Valor; *Muestra todos los clusters disponibles*
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+	Modo promedio ----------------------------------------------------------------------------
+
+Valor; "0"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "1"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "1.01"
+Esperado; "The field GenreTipicalMode must between 0 and 1"
+Obtenido; "The field GenreTipicalMode must between 0 and 1"
+Prueba; Pasada
+
+Valor; "0.999"
+Esperado; "Too many decimals"
+Obtenido; "Too many decimals"
+Prueba; Pasada
+
+Valor; 9999999999999999999999999
+Esperado; "The field GenreTipicalMode must between 0 and 1"
+Resultado; "The field GenreTipicalMode must between 0 and 1"
+Prueba; Pasada
+	
+	BPM -------------------------------------------------------------------------------------
+Valores; bpmLower: "0", bpmUpper: "0".
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valores; bpmLower: "0", bpmUpper: "-1".
+Esperado; "The field BpmUpper must between 0 and 250"
+Obtenido; "The field BpmUpper must between 0 and 250"
+Prueba; Pasada
+
+Valores; bpmLower: "-1", bpmUpper: "0".
+Esperado; "The field BpmLower must between 0 and 250"
+Obtenido; "The field BpmLower must between 0 and 250"
+Prueba; Pasada
+
+Valores; bpmLower: "250", bpmUpper: "250".
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valores; bpmLower: "251", bpmUpper: "250".
+Esperado; "The field BpmLower must between 0 and 250"
+Obtenido; "The field BpmLower must between 0 and 250"
+Prueba; Pasada
+
+Valores; bpmLower: "250", bpmUpper: "251".
+Esperado; "The field BpmUpper must between 0 and 250"
+Obtenido; "The field BpmUpper must between 0 and 250"
+Prueba; Pasada
+
+Valores; bpmLower: "120", bpmUpper: "110".
+Esperado; "BPM lower bound cannot be greater than uppper bound", "BPM lower bound cannot be greater than uppper bound"
+Obtenido; "BPM lower bound cannot be greater than uppper bound", "BPM lower bound cannot be greater than uppper bound"
+Prueba; Pasada
+
+Valores; bpmLower: "-0", bpmUpper: "-0".
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valores; bpmLower: "-1", bpmUpper: "-1".
+Esperado; "The field BpmLower must between 0 and 250", "The field BpmUpper must between 0 and 250"
+Obtenido; "The field BpmLower must between 0 and 250", "The field BpmUpper must between 0 and 250"
+Prueba; Pasada
+
+Valores; bpmLower: *Caracter*, bpmUpper: *Caracter*.
+Esperado; "Invalid format"
+Obtenido; "Invalid format"
+Prueba; Pasada
+
+Valores; 9999999999999999999999999
+Esperado; "The field BpmLower must between 0 and 250", "The field BpmUpper must between 0 and 250"
+Resultado; "The field BpmLower must between 0 and 250", "The field BpmUpper must between 0 and 250"
+Prueba; Pasada (Sin problemas de ejecución)
+
+Valores; *Numeros con comillas*
+Esperado; "Invalid format"
+Obtenido; "Invalid format"
+Prueba; Pasada
+
+
+	Tono musical ----------------------------------------------------------------------------
+
+Valor; "0"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "11"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "-1"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "-2"
+Esperado; "The field Key must be between -1 and 11"
+Obtenido; "The field Key must be between -1 and 11"
+Prueba; Pasada
+
+Valor; "12"
+Esperado; "The field Key must be between -1 and 11"
+Obtenido; "The field Key must be between -1 and 11"
+Prueba; Pasada
+
+Valor; "-0"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; *Caracter*
+Esperado; "Invalid format"
+Obtenido; "Invalid format"
+Prueba; Pasada
+
+Valor; 9999999999999999999999999
+Esperado; "The field Key must be between -1 and 11"
+Resultado; "The field Key must be between -1 and 11"
+Prueba; Pasada
+
+Valor; *Numero con comillas*
+Esperado; "Invalid format"
+Obtenido; "Invalid format"
+Prueba; Pasada
+
+	Volumen ----------------------------------------------------------------------------
+
+Valor; "-60"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "-61"
+Esperado; "The field Volume must be between -60 and 0"
+Obtenido; "The field Volume must be between -60 and 0"
+Prueba; Pasada
+
+Valor; "0"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "1"
+Esperado; "The field Volume must be between -60 and 0"
+Obtenido; "The field Volume must be between -60 and 0"
+Prueba; Pasada
+
+Valor; "-0"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; *Caracter*
+Esperado; "Invalid format"
+Obtenido; "Invalid format"
+Prueba; Pasada
+
+Valor; 9999999999999999999999999
+Esperado; "The field Volume must be between -60 and 0"
+Resultado; "Ocurrió un error durante el procesamiento masivo, Inténtelo nuevamente mas tarde"
+Prueba; Pasada (Sin problemas de ejecución)
+
+Valor; *Numero con comillas*
+Esperado; "Invalid format"
+Obtenido; "Invalid format"
+Prueba; Pasada
+
+	Compas ----------------------------------------------------------------------------
+
+Valor; "0"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "2"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "-2"
+Esperado; "The field CompasMetric must be between 2 and 8, or be 0"
+Obtenido; "The field CompasMetric must be between 0 and 8"
+Prueba; Pasada
+
+Valor; "8"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "9"
+Esperado; "The field CompasMetric must be between 2 and 8, or be 0"
+Obtenido; "The field CompasMetric must be between 0 and 8"
+Prueba; Pasada
+
+Valor; "1"
+Esperado; "The field CompasMetric must be between 2 and 8, or be 0"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; "-0"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; *Caracter*
+Esperado; "Invalid format"
+Esperado; "Invalid format"
+Prueba; Pasada (Sin problemas de ejecución)
+
+Valor; 9999999999999999999999999
+Esperado; "The field CompasMetric must be between 2 and 8, or be 0"
+Resultado; "Ocurrió un error durante el procesamiento masivo, Inténtelo nuevamente mas tarde"
+Prueba; Pasada (Sin problemas de ejecución)
+
+Valor; *Numero con comillas*
+Esperado; "Invalid format"
+Esperado; "Invalid format"
+Prueba; Pasada
+
+	Duración ----------------------------------------------------------------------------------
+
+Valor; "0"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "-1"
+Esperado; "The field AvrgDuration must between 0 and 3600"
+Obtenido; "The field AvrgDuration must between 0 and 3600"
+Prueba; Pasada
+
+Valor; "3600"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "3601"
+Esperado; "The field AvrgDuration must between 0 and 3600"
+Obtenido; "The field AvrgDuration must between 0 and 3600"
+Prueba; Pasada
+
+Valor; "-0"
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; *Caracter*
+Esperado; "Invalid format"
+Esperado; "Invalid format"
+Prueba; Pasada (Sin problemas de ejecución)
+
+Valor; 9999999999999999999999999
+Esperado; "The field AvrgDuration must between 0 and 3600"
+Resultado; "The field AvrgDuration must between 0 and 3600"
+Prueba; Pasada
+
+Valor; *Numero con comillas*
+Esperado; "Invalid format"
+Esperado; "Invalid format"
+Prueba; Pasada
+
+	SubGenero Color ----------------------------------------------------------------------------
+
+Valor; "255" 
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; "256" 
+Esperado; "The field Color(RGB) must be between 0 and 255"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; "0" 
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; "256" 
+Esperado; "The field Color(RGB) must be between 0 and 255"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; "-0" 
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; "-255"
+Esperado; "The field Color(RGB) must be between 0 and 255"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; *Caracter sin comillas*
+Esperado; "Invalid format"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; *Caracter con comillas*
+Esperado; "Invalid format"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; 9999999999999999999999999
+Esperado; "The field Color(RGB) must be between 0 and 255"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; *Numero con comillas*
+Esperado; "Invalid format"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+	Fecha Creaccion ---------------------------------------------------------------------------------------------
+
+Valor; *Numero positivo mayor a la fecha actual*
+Esperado; "Years must be in valid format"
+Obtenido; "Sin errores"
+Prueba; No Pasada
+
+Valor; *Numero negativo*
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; *Numero con comillas*
+Esperado; "Invalid format"
+Obtenido; "Invalid format"
+Prueba; Pasada
+
+Valor; *Caracter*
+Esperado; "Invalid format"
+Obtenido; "Invalid format"
+Prueba; Pasada
+
+	Generos relacionados, influencia ----------------------------------------------------------------------------
+
+Valor; "10" 
+Esperado; "Sin errores"
+Esperado; "Sin errores"
+Prueba; Pasada
+
+Valor; "11" 
+Esperado; "The field InfluenceStrength must be between 1 and 10"
+Obtenido; "The field InfluenceStrength must be between 1 and 10"
+Prueba; Pasada
+
+Valor; "0" 
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; "-1" 
+Esperado; "The field InfluenceStrength must be between 1 and 10"
+Obtenido; "The field InfluenceStrength must be between 1 and 10"
+Prueba; Pasada
+
+Valor; "'0" 
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+Prueba; Pasada
+
+Valor; *Caracter*
+Esperado; "Invalid format"
+Esperado; "Invalid format"
+Prueba; Pasada
+
+Valor; 9999999999999999999999999
+Esperado; "The field InfluenceStrength must be between 1 and 10"
+Resultado; "The field InfluenceStrength must be between 1 and 10"
+Prueba; Pasada
+
+Valor; *Numero con comillas*
+Esperado; "Invalid format"
+Esperado; "Invalid format"
+Prueba; Pasada
+
+	Generos relacionados, ID ---------------------------------------------------------------------------
+
+Valor; *Genero conocido*
+Esperado; "Sin errores"
+Obtenido; *Incapaz de seleccionar generos*
+Prueba; No Pasada

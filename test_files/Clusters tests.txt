@@ -1,0 +1,50 @@
+		Notas ----------------------------------------------------------------------------
+Existen 5 estados para pruebas;
+	1 es "Pasada"(La prueba termino tal como se tenia previsto),
+	2 es "No Pasada"(La prueba no termino tal como se tenia previsto), 
+	3 es "Pasada (Sin problemas de ejecución)"(El proyecto pudo manejar un error de prueba de tal manera que no genero problemas de ejecución en el proyecto y/o servidor pero de manera inesperada, puede que el mensaje de error sea diferente al esperado por no tenerlo previsto debido a esto, se cuenta como "pasada" al probarse en un error y generar un error) 
+	4 es "No Pasada (Error ejecución)" (El proyecto no pudo manejar un error de prueba de tal manera que genero problemas de ejecución en el proyecto y/o servidor)
+
+
+	Nombre ---------------------------------------------------------------------------
+
+Valor; "Lor" (3 Caracteres)
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+
+Valor; "Lo" (2 Caracteres)
+Esperado; "The field Name must be a string with a minimum length of 3 and a maximum length of 30"
+Obtenido; "The field Name must be a string with a minimum length of 3 and a maximum length of 30"
+
+Valor; "Lorem ipsum dolor sit amet, co" (30 Caracteres)
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+
+Valor; "Lorem ipsum dolor sit amet, con" (31 Caracteres)
+Esperado; "The field Name must be a string with a minimum length of 3 and a maximum length of 30"
+Obtenido; "The field Name must be a string with a minimum length of 3 and a maximum length of 30"
+
+Valor; *Nombre ya existente*
+Esperado; "A cluster with this name already exists"
+Esperado; "A cluster with this name already exists"
+Prueba; Pasada
+
+
+	Descripción ---------------------------------------------------------------------------
+
+Valor; "" (0 Caracteres)
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+
+Valor; "Lorem ipsum dolor..." (300 Caracteres)
+Esperado; "Sin errores"
+Obtenido; "Sin errores"
+
+Valor; "Lorem ipsum dolor..." (301 Caracteres)
+Esperado; "The field Description must be a string with a maximum length of 300"
+Obtenido; "The field Description must be a string with a maximum length of 300"
+
+	GET ---------------------------------------------------------------------------
+Valor; Solicitud de todos elementos
+Esperado; 5 elementos
+Obtenido; 5 elementos
