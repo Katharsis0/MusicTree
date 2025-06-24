@@ -43,6 +43,21 @@ namespace MusicTree.Migrations
                 {
                     table.PrimaryKey("PK_Clusters", x => x.Id);
                 });
+            
+            migrationBuilder.CreateTable(
+                name: "Fanaticos",
+                columns: table => new
+                {
+                    Username = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Password = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Country = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Avatar = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fanaticos", x => x.Username);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Albums",
@@ -437,6 +452,8 @@ namespace MusicTree.Migrations
 
             migrationBuilder.DropTable(
                 name: "Clusters");
+            migrationBuilder.DropTable(
+                name: "Fanaticos");
         }
     }
 }

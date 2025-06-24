@@ -32,6 +32,7 @@ namespace MusicTree
             builder.Services.AddScoped<ClusterRepository>();
             builder.Services.AddScoped<GenreRepository>();
             builder.Services.AddScoped<ArtistRepository>();
+            builder.Services.AddScoped<FanaticoRepository>();
 
 
             // Add services
@@ -39,6 +40,7 @@ namespace MusicTree
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IArtistService, ArtistService>();
             builder.Services.AddScoped<GenreImportService>();
+            builder.Services.AddScoped<IFanaticoService, FanaticoService>();
 
             // Add API explorer for development
             builder.Services.AddEndpointsApiExplorer();

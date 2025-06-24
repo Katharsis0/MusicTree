@@ -252,7 +252,35 @@ namespace MusicTree.Migrations
 
                     b.ToTable("Clusters");
                 });
+            modelBuilder.Entity("MusicTree.Models.Entities.Fanatico", b =>
+            {
+                b.Property<string>("Username")
+                    .HasMaxLength(128)
+                    .HasColumnType("character varying(128)");
 
+                b.Property<string>("Name")
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)");
+
+                b.Property<string>("Password")
+                    .HasMaxLength(12)
+                    .HasColumnType("character varying(100)");
+
+                b.Property<string>("Country")
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .HasColumnType("character varying(30)");
+
+                b.Property<string>("Avatar")
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .HasColumnType("character varying(30)");
+
+                b.HasKey("Username");
+
+                b.ToTable("Fanaticos");
+            });
+            
             modelBuilder.Entity("MusicTree.Models.Entities.Comment", b =>
                 {
                     b.Property<string>("Id")

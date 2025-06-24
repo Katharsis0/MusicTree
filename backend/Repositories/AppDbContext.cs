@@ -18,7 +18,8 @@ namespace MusicTree.Repositories
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Event> Events { get; set; }
-
+        public DbSet<Fanatico> Fanaticos { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configure Cluster 
@@ -29,6 +30,16 @@ namespace MusicTree.Repositories
                 entity.Property(c => c.Description).HasMaxLength(300);
                 entity.Property(c => c.IsActive).HasDefaultValue(true);
                 entity.Property(c => c.TimeStamp).HasDefaultValueSql("NOW()");
+            });
+            
+            // Configure Fanatico 
+            modelBuilder.Entity<Fanatico>(entity =>
+            {
+                entity.Property(f => f.Username).HasMaxLength(12).IsRequired();
+                entity.Property(f => f.Name).HasMaxLength(30).IsRequired();
+                entity.Property(f => f.Password).HasMaxLength(12).IsRequired();
+                entity.Property(f => f.Country).IsRequired();
+                entity.Property(f => f.Avatar).IsRequired();
             });
 
             // Configure Genre 

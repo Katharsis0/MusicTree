@@ -9,81 +9,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b71533bc-7416-48ed-8407-d45372d86c01" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Controllers/FanaticosController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/DTOs/FanaticoCreateDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/DTOs/FanaticoLoginDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/DTOs/FanaticoRegisterDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Entities/Fanatico.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Repositories/FanaticoRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/FanaticoService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/Interfaces/IFanaticoService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298/storage_v2/_src_/database/musictree_db.-r7mzA/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298/storage_v2/_src_/database/musictree_db.-r7mzA/schema/public.abK9xQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250601_141536_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250601_141536_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_185605_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_185605_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_185622_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_185622_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_190005_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_190005_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_190250_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_190250_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_190805_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_190805_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_191443_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_191443_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_193925_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_193925_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_194033_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_194033_genre_import_invalid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_194120_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_194120_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_194325_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_194325_prereqs_import.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_194349_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250602_194349_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_193944_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_193944_generos_prueba.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_194746_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_194746_gen_prueba.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_194747_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_194747_gen_prueba.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_195330_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_195330_gen_prueba.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_202058_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_202058_gen_prueba.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_202930_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_202930_gen_prueba.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_204228_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_204228_gen_prueba.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_204405_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_204405_gen_prueba.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_204821_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_204821_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_205002_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_205002_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_221832_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_221832_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_221906_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_221906_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_221920_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_221920_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_222647_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_222647_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_222703_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_222703_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_224936_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_224936_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_231708_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_231708_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_232119_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_232119_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_232244_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_232244_genre_import_valid.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_233352_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250605_233352_gen.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250606_000217_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250606_000217_proofalse.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250606_000440_Errores.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Archives/20250606_000440_proofalse.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Entities/Artist.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Entities/Artist.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Migrations/20250608202242_AddMissingArtistEntities.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Migrations/20250608202242_AddMissingArtistEntities.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Migrations/20250608202242_AddMissingArtistEntities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Migrations/20250608202242_AddMissingArtistEntities.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Migrations/AppDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Migrations/AppDbContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Repositories/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/AppDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/musictree_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/musictree_db.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -231,6 +172,7 @@
       <workItem from="1749243360117" duration="4198000" />
       <workItem from="1749247803451" duration="3660000" />
       <workItem from="1749412914443" duration="2010000" />
+      <workItem from="1750764818109" duration="13864000" />
     </task>
     <servers />
   </component>
