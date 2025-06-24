@@ -1,0 +1,25 @@
+{
+  "count": 1,
+  "genres": [
+    {
+      "id": "G-K9HFZXR2GQGO",
+      "name": "House",
+      "description": "House music genre",
+      "isSubgenre": false,
+      "parentGenreName": null,
+      "clusterName": "Electronic Music",
+      "isActive": true,
+      "createdAt": "2025-05-20T11:17:14.144779",
+      "musicalAttributes": {
+        "bpmRange": {
+          "lower": 120,
+          "upper": 130
+        },
+        "typicalMode": 0.8,
+        "volume": -20,
+        "compasMetric": 4,
+        "averageDuration": 300
+      }
+    }
+  ]
+}

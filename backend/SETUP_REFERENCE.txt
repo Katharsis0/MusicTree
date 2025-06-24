@@ -1,0 +1,20 @@
+MusicTree Development Environment - Quick Reference
+==================================================
+
+Database Connection:
+- Host: localhost:5432
+- Database: musictree_db
+- User: musictree_admin
+- Password: musictree
+
+Commands:
+- Start application: dotnet run
+- Connect to DB: psql -h localhost -p 5432 -U musictree_admin -d musictree_db  
+- Rebuild schema: psql -h localhost -p 5432 -U musictree_admin -d musictree_db -f musictree_init.sql
+
+Files:
+- Database schema: musictree_init.sql
+- App configuration: appsettings.Development.json
+- Setup script: setup_musictree.sh
+
+Setup completed: Sun Jun  1 07:37:29 AM CST 2025
