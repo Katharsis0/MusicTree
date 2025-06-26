@@ -29,12 +29,11 @@ jobs:
         run: |
           sudo apt install -y postgresql-common
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
-          continue-on-error: true
+        continue-on-error: true
           
       - name: Install dependencies npm
-        run: |
-          sudo npm install
-          continue-on-error: true
+        run: sudo npm install
+        continue-on-error: true
           
   tests:
     needs: build
