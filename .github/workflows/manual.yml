@@ -42,7 +42,7 @@ jobs:
       - name: Initialition Backend
         working-directory: backend/
         run: |
-          ./setup_musictree.sh
+          setup_musictree.sh
           y
           .
           dotnet run
