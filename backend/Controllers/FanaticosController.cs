@@ -28,6 +28,7 @@ namespace MusicTree.Controllers
                 }
 
                 var fanatico = await _fanaticoService.CreateFanaticoAsync(dto);
+                //Console.WriteLine("Se logró");
                 return CreatedAtAction(nameof(CreateFanatico), new { username = fanatico.Username }, fanatico);
             }
             catch (ArgumentException ex)
@@ -57,10 +58,7 @@ namespace MusicTree.Controllers
                 var response = fanaticoList.Select(c => new
                 {
                     username = c.Username,
-                    name = c.Name,
                     password = c.Password,
-                    country = c.Country,
-                    avatar = c.Avatar
                 }).ToList();
 
                 return Ok(response);
