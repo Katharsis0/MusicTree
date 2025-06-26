@@ -41,7 +41,7 @@ jobs:
     steps:
       - name: Initialition Backend
         run: |
-          cd  backend
+          cd backend
           ./setup_musictree.sh
           y
           .
