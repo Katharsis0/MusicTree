@@ -38,11 +38,14 @@ jobs:
   tests:
     needs: build
     runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: ./backend
     steps:
       - name: Initialition Backend
-        working-directory: backend/
         run: |
-          setup_musictree.sh
+          chmod +x setup_musictree.sh
+          ./setup_musictree.sh
           y
           .
           dotnet run
