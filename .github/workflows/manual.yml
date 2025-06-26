@@ -41,8 +41,7 @@ jobs:
     steps:
       - name: Initialition Backend
         run: |
-          cd backend
-          ./setup_musictree.sh
+          ./backend/setup_musictree.sh
           y
           .
           dotnet run
