@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import countryList from 'react-select-country-list';
 
+const api = import.meta.env.VITE_API_URL;
 
 const RegistroFanaticos = () => {
   const [values, setValues] = useState({
-    nickname: '',
+    username: '',
     password: '',
-    nombre: '',
+    name: '',
     generosFavoritos: [],
     pais: '',
     avatar: ''
@@ -23,17 +25,15 @@ const RegistroFanaticos = () => {
     "/avatars/4.webp",
     "/avatars/5.webp",
     "/avatars/6.webp"
-
   ]);
 
-  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Obtener géneros musicales desde API
-    axios.get('http://localhost:5197/api/Genero')
-      .then(res => setGeneros(res.data))
-      .catch(err => console.error("Error al cargar géneros", err));
+    axios.get(`${api}/api/Genres`)
+      .then(res => setGeneros(res.data.genres || []))
+      .catch(err => console.error(err));
   }, []);
 
   const validarContrasena = (pwd) => {
@@ -43,30 +43,34 @@ const RegistroFanaticos = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
-    const { nickname, password, nombre, generosFavoritos, pais, avatar } = values;
+    const { username, password, name, pais, avatar, generosFavoritos } = values;
 
-    // Validaciones
-    if (!nickname || !password || !nombre || generosFavoritos.length === 0 || !pais || !avatar) {
-      setError('Debe completar todos los campos obligatorios.');
+    if (!username || !password || !name || generosFavoritos.length === 0 || !pais || !avatar) {
+      Swal.fire('Campos incompletos', 'Debe completar todos los campos obligatorios.', 'warning');
       return;
     }
 
     if (!validarContrasena(password)) {
-      setError('La contraseña debe tener entre 8 y 12 caracteres e incluir mayúsculas, minúsculas y números.');
+      Swal.fire(
+        'Contraseña inválida',
+        'Debe tener entre 8 y 12 caracteres, incluir mayúsculas, minúsculas y números.',
+        'warning'
+      );
       return;
     }
 
     try {
-      await axios.post('http://localhost:5197/api/Fanatico/registrar', values);
-      alert('Registro exitoso. Ahora puede iniciar sesión.');
-      navigate('/login');
+      await axios.post(`${api}/api/Fanaticos`, values);
+      Swal.fire('Registro exitoso', 'Ahora puede iniciar sesión.', 'success').then(() => {
+        navigate('/loginfanaticos');
+      });
     } catch (err) {
+      console.error(err);
       if (err.response?.status === 409) {
-        setError('El nombre de usuario ya existe. Intente con otro.');
+        Swal.fire('Usuario existente', 'El nombre de usuario ya existe. Intente con otro.', 'error');
       } else {
-        setError('Error en el registro. Intente más tarde.');
+        Swal.fire('Error', 'Ocurrió un error durante el registro. Intente más tarde.', 'error');
       }
     }
   };
@@ -84,40 +88,72 @@ const RegistroFanaticos = () => {
     });
   };
 
-
   const countries = countryList().getData();
-
 
   return (
     <div className="container mt-5">
       <div className="card shadow p-4">
         <h2 className="mb-4">Registrar Fanático</h2>
 
-        {error && <div className="alert alert-danger">{error}</div>}
-
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label>Nombre de Usuario (Nickname)</label>
-            <input name="nickname" maxLength={30} onChange={handleChange} className="form-control" />
+            <input
+              name="username"
+              maxLength={30}
+              value={values.username}
+              onChange={handleChange}
+              className="form-control"
+            />
           </div>
 
           <div className="mb-3">
             <label>Contraseña</label>
-            <input type="password" name="password" onChange={handleChange} className="form-control" />
+            <div className="input-group">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                className="form-control"
+                value={values.password}
+                onChange={handleChange}
+              />
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowPassword(prev => !prev)}
+                tabIndex={-1}
+              >
+                <i className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+              </button>
+            </div>
           </div>
 
           <div className="mb-3">
             <label>Nombre</label>
-            <input name="nombre" maxLength={100} onChange={handleChange} className="form-control" />
+            <input
+              name="name"
+              maxLength={100}
+              value={values.name}
+              onChange={handleChange}
+              className="form-control"
+            />
           </div>
 
           <div className="mb-3">
-            <label>Géneros Musicales Favoritos</label>
-            <div className="d-flex flex-wrap gap-2">
-              {generos.map(g => (
-                <div key={g.id}>
-                  <input type="checkbox" id={`gen-${g.id}`} onChange={() => toggleGenero(g.id)} />
-                  <label htmlFor={`gen-${g.id}`}> {g.nombre} </label>
+            <label className="form-label">Géneros Musicales Favoritos</label>
+            <div className="form-check-group d-flex flex-column gap-1">
+              {generos.filter(g => !g.isSubgenre).map(g => (
+                <div key={g.id} className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id={`gen-${g.id}`}
+                    checked={values.generosFavoritos.includes(g.id)}
+                    onChange={() => toggleGenero(g.id)}
+                  />
+                  <label className="form-check-label" htmlFor={`gen-${g.id}`}>
+                    {g.name}
+                  </label>
                 </div>
               ))}
             </div>
@@ -125,8 +161,11 @@ const RegistroFanaticos = () => {
 
           <div className='mb-2'>
             <label>País</label>
-            <select className='form-select' value={values.pais}
-              onChange={e => setValues({ ...values, pais: e.target.value })}>
+            <select
+              className='form-select'
+              value={values.pais}
+              onChange={e => setValues({ ...values, pais: e.target.value })}
+            >
               <option value=''>Seleccione un país</option>
               {countries.map((country, index) => (
                 <option key={index} value={country.label}>{country.label}</option>

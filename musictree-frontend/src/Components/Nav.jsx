@@ -10,7 +10,7 @@ const Nav = () => {
   const logout = async() =>{
     localStorage.removeItem('data-paciente');
     localStorage.removeItem('userPaciente');
-    go('/logincurador');
+    go('');
   
     
   }
