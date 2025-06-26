@@ -8,15 +8,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies
+      - name: Install dependencies dotnet
         run: |
           wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
           sudo dpkg -i packages-microsoft-prod.deb
           sudo apt-get update
           sudo apt-get update && \
           sudo apt-get install -y dotnet-sdk-9.0
+      - name: Install dependencies postgresql
+        run: |
           sudo apt install -y postgresql-common
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+      - name: Install dependencies npm
+        run: |
           sudo npm install
       - name: Backend
         run: |
