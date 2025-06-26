@@ -35,26 +35,34 @@ jobs:
         run: sudo npm install
         continue-on-error: true
           
-  tests:
+  tests_backend:
     needs: build
     runs-on: ubuntu-latest
     defaults: 
       run:
         working-directory: ./backend
     steps:
-      - name: Checn
+      - name: Check
         uses: actions/checkout@v4  
-      - name: Initialition Backend
+      - name: Allow Backend
         run: chmod +x setup_musictree.sh
       - name: Initialition Backend
         run: |
           ./setup_musictree.sh
           y
           .
+        continue-on-error: true
+      - name: Test Backend
           dotnet run
           
-      - name: Initialition Frontend
+  tests_frontend:
+    needs: tests_backend
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
         working-directory: musictree-frontend/
+    steps:
+      - name: Initialition Frontend
         run: |
           npm install
           npm run dev
