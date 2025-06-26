@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialition Backend
-        working-directory: backend
+        working-directory: backend/
         run: |
           ./setup_musictree.sh
           y
@@ -48,10 +48,8 @@ jobs:
           dotnet run
           
       - name: Initialition Frontend
-        working-directory: musictree-frontend
+        working-directory: musictree-frontend/
         run: |
-          cd
-          cd musictree-frontend
           npm install
           npm run dev
           
