@@ -42,9 +42,12 @@ jobs:
       run:
         working-directory: ./backend
     steps:
+      - name: Checn
+        uses: actions/checkout@v4  
+      - name: Initialition Backend
+        run: chmod +x setup_musictree.sh
       - name: Initialition Backend
         run: |
-          chmod +x setup_musictree.sh
           ./setup_musictree.sh
           y
           .
