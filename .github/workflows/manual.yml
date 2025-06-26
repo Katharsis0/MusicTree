@@ -29,12 +29,18 @@ jobs:
         run: |
           sudo apt install -y postgresql-common
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+          continue-on-error: true
           
       - name: Install dependencies npm
         run: |
           sudo npm install
+          continue-on-error: true
           
-      - name: Backend
+  tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialition Backend
         run: |
           cd  backend
           ./setup_musictree.sh
@@ -42,7 +48,7 @@ jobs:
           .
           dotnet run
           
-      - name: Frontend
+      - name: Initialition Frontend
         run: |
           cd
           cd musictree-frontend
