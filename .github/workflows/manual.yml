@@ -23,6 +23,7 @@ jobs:
           .
           dotnet run
       - name: Frontend
+        run: |
           cd
           cd musictree-frontend
           npm install
