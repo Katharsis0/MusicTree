@@ -8,23 +8,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Install dependencies
-      run: |
-        sudo apt-get update && \
-        sudo apt-get install -y dotnet-sdk-9.0
-        sudo apt install -y postgresql-common
-        sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
-        sudo npm install
-    - name: Backend
-      run: |
-        cd  backend
-        ./setup_musictree.sh
-        y
-        .
-        dotnet run
-    - name: Frontend
-        cd
-        cd musictree-frontend
-        npm install
-        npm run dev
-        
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && \
+          sudo apt-get install -y dotnet-sdk-9.0
+          sudo apt install -y postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+          sudo npm install
+      - name: Backend
+        run: |
+          cd  backend
+          ./setup_musictree.sh
+          y
+          .
+          dotnet run
+      - name: Frontend
+          cd
+          cd musictree-frontend
+          npm install
+          npm run dev
+          
