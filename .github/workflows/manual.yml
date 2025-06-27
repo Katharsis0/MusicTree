@@ -5,39 +5,11 @@ on:
   pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.107
-          
-      - name: Install dependencies postgresql
-        run: |
-          sudo apt install -y postgresql-common
-          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
-        continue-on-error: true
-          
-      - name: Install dependencies npm
-        run: sudo npm install
-        continue-on-error: true
-
-      - name: Update
-        run: sudo apt-get update
-
-      - name: Verify
-        run: dotnet --version
-
-      - name: Show
-        run: dotnet --list-sdks
-
   tests_backend:
-    needs: build
     runs-on: ubuntu-latest
     defaults: 
       run:
-        working-directory: backend/
+        working-directory: ./backend
     steps:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
@@ -46,6 +18,7 @@ jobs:
       - name: Allow Backend
         run: chmod +x setup_musictree.sh
         continue-on-error: true
+        
       - name: Initialition Backend
         run: |
           ./setup_musictree.sh
