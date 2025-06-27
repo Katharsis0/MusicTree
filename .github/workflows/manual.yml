@@ -8,9 +8,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies
+      - name: Add dependencies
         run: |
           sudo add-apt-repository ppa:dotnet/backports
+
+      - name: Install dependencies execute instants
+        run: |
+          sudo apt-get update && \
+          sudo apt-get install -y dotnet-runtime-9.0
           
       - name: Install dependencies dotnet
         run: |
@@ -18,11 +23,6 @@ jobs:
           wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
           chmod +x dotnet-install.sh
           ./dotnet-install.sh --install-dir /usr/share/dotnet --version 9.0.105
-          
-      - name: Install dependencies execute instants
-        run: |
-          sudo apt-get update && \
-          sudo apt-get install -y dotnet-runtime-9.0
           
       - name: Install dependencies postgresql
         run: |
