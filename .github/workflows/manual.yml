@@ -11,13 +11,10 @@ jobs:
       - name: Add dependencies
         run: |
           sudo add-apt-repository ppa:dotnet/backports
-
-      - name: Install dependencies execute instants
-        run: |
-          sudo apt-get install -y dotnet-runtime-9.0
           
       - name: Install dependencies dotnet
         run: |
+          sudo rm -rf /usr/share/dotnet
           wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
           chmod +x dotnet-install.sh
           ./dotnet-install.sh --install-dir /usr/share/dotnet/ --version 9.0.105
