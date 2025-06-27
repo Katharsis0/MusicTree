@@ -8,15 +8,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Add dependencies
-        run: |
-          sudo add-apt-repository ppa:dotnet/backports
-          
       - name: Install dependencies dotnet
         run: |
-          sudo add-apt-repository ppa:dotnet/backports
           sudo apt update
-          sudo apt install dotnet-sdk-9.0=9.0.105-0ubuntu1~24.10.1
+          sudo apt install dotnet-sdk-9.0
+        continue-on-error: true
           
       - name: Install dependencies postgresql
         run: |
