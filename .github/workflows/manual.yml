@@ -12,15 +12,29 @@ jobs:
         run: |
           sudo add-apt-repository ppa:dotnet/backports
           
-      - name: Install dependencies dotnet
+      - name: Install dependencies dotnet: Part1
         run: |
           sudo rm -rf /usr/share/dotnet
+      - name: Part2
+        run: |
           wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
+      - name: Part3
+        run: |
           chmod +x dotnet-install.sh
-          ./dotnet-install.sh --version 9.0.105 --install-dir /usr/lib/dotnet --architecture x64
+      - name: Part4
+        run: |
+          ./dotnet-install.sh --install-dir /usr/share/dotnet --version 9.0.105
+      - name: Part5
+        run: |
           export DOTNET_ROOT=/usr/lib/dotnet
+      - name: Part6
+        run: |
           export PATH=$DOTNET_ROOT:$PATH
+      - name: Part7
+        run: |
           source ~/.bashrc
+      - name: Part8
+        run: |
           dotnet --list-sdks
           
       - name: Install dependencies postgresql
@@ -36,7 +50,6 @@ jobs:
       - name: Verify
         run: |
           sudo apt-get update
-          which dotnet
-          dotnet --version
+          dotnet --list-sdks
         continue-on-error: true
           
