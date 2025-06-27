@@ -9,7 +9,6 @@ jobs:
     defaults: 
       run:
         working-directory: ./backend
-        continue-on-error: true
     steps:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
