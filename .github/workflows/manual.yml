@@ -8,6 +8,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.107
+    
       - name: Install dependencies dotnet
         run: |
           sudo add-apt-repository ppa:dotnet/backports
@@ -41,8 +46,6 @@ jobs:
       run:
         working-directory: ./backend
     steps:
-      - name: Check
-        uses: actions/checkout@v4  
       - name: Allow Backend
         run: chmod +x setup_musictree.sh
       - name: Initialition Backend
