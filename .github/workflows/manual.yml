@@ -44,10 +44,11 @@ jobs:
     runs-on: ubuntu-latest
     defaults: 
       run:
-        working-directory: ./backend
+        working-directory: backend
     steps:
       - name: Allow Backend
         run: chmod +x setup_musictree.sh
+        continue-on-error: true
       - name: Initialition Backend
         run: |
           ./setup_musictree.sh
