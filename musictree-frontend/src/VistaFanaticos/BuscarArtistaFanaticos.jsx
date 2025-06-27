@@ -117,6 +117,7 @@ const BuscarArtistaFanaticos = () => {
                 <th>Cantidad de Discos</th>
                 <th>Género</th>
                 <th>Subgéneros</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -126,6 +127,11 @@ const BuscarArtistaFanaticos = () => {
                   <td>{artista.albumCount}</td>
                   <td>{artista.genre?.name || 'N/A'}</td>
                   <td>{artista.subgenres?.map(s => s.name).join(', ') || 'Ninguno'}</td>
+                  <td>
+                    <Link to={`/fanaticos/perfilartista/${artista.id}`} className="btn btn-sm btn-info">
+                      Ver Perfil
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -36,10 +36,10 @@ const LoginFanaticos = () => {
 
       if (usuarioValido) {
         Swal.fire('Éxito', 'Inicio de sesión exitoso.', 'success');
-        // Podés guardar el usuario en localStorage si querés mantener sesión
-        // localStorage.setItem('fanatico', JSON.stringify(usuarioValido));
-        navigate('/fanaticos/menufanaticos'); // redirigí a donde corresponda
-      } else {
+        localStorage.setItem('fanaticoUsername', usuarioValido.username); // GUARDADO AQUÍ
+        navigate('/fanaticos/menufanaticos');
+
+      }else {
         Swal.fire('Error', 'Usuario o contraseña incorrectos.', 'error');
       }
     } catch (err) {
