@@ -20,7 +20,7 @@ jobs:
         run: |
           wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
           chmod +x dotnet-install.sh
-          ./dotnet-install.sh --install-dir /usr/share/dotnet --version 9.0.105
+          ./dotnet-install.sh --install-dir /usr/share/dotnet/sdk/ --version 9.0.105
           
       - name: Install dependencies postgresql
         run: |
