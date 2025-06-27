@@ -12,7 +12,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:dotnet/backports
           
-      - name: Install dependencies dotnet: Part1
+      - name: Install dependencies dotnet Part1
         run: |
           sudo rm -rf /usr/share/dotnet
       - name: Part2
