@@ -17,8 +17,8 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
           chmod +x dotnet-install.sh
-          ./dotnet-install.sh --version 9.0.105 --install-dir /usr/share/dotnet --architecture x64
-          export DOTNET_ROOT=/usr/share/dotnet
+          ./dotnet-install.sh --version 9.0.105 --install-dir /usr/lib/dotnet --architecture x64
+          export DOTNET_ROOT=/usr/lib/dotnet
           export PATH=$DOTNET_ROOT:$PATH
           source ~/.bashrc
           dotnet --list-sdks
