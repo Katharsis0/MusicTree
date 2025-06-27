@@ -13,7 +13,7 @@ jobs:
         with:
           dotnet-version: 9.0.107
       - name: Verificar backend existe
-        run: ls -la
+        run: ls
         continue-on-error: true
   
       - name: Allow Backend
