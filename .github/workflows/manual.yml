@@ -25,10 +25,14 @@ jobs:
         run: sudo npm install
         continue-on-error: true
 
+      - name: Update
+        run: sudo apt-get update
+
       - name: Verify
-        run: |
-          sudo apt-get update
-          dotnet --version
+        run: dotnet --version
+
+      - name: Show
+        run: dotnet --list-sdks
 
   tests_backend:
     needs: build
