@@ -17,7 +17,7 @@ jobs:
           sudo apt-get update && \
           sudo apt-get install -y dotnet-sdk-9.0
           
-      - name: Install dependencies instancia ejecucion
+      - name: Install dependencies execute instants
         run: |
           sudo apt-get update && \
           sudo apt-get install -y dotnet-runtime-9.0
@@ -30,6 +30,10 @@ jobs:
           
       - name: Install dependencies npm
         run: sudo npm install
+        continue-on-error: true
+
+      - name: Verify
+        run: dotnet --info
         continue-on-error: true
           
   tests_backend:
