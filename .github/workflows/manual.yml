@@ -10,6 +10,7 @@ jobs:
     steps:
       - name: Install dependencies dotnet
         run: |
+          sudo add-apt-repository ppa:dotnet/backports
           sudo apt update
           sudo apt install dotnet-sdk-9.0
         continue-on-error: true
