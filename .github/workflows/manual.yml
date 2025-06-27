@@ -12,13 +12,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.107
+      - name: Verificar backend existe
+        run: ls -la ./backend
+  
       - name: Allow Backend
-        working-directory: ./backend
         run: chmod +x setup_musictree.sh
         continue-on-error: true
         
       - name: Initialition Backend
-        working-directory: ./backend
         run: |
           ./setup_musictree.sh
           y
@@ -26,6 +27,5 @@ jobs:
         continue-on-error: true
         
       - name: Test Backend
-        working-directory: ./backend
         run: dotnet run
         continue-on-error: true
