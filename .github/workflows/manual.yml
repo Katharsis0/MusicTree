@@ -10,13 +10,13 @@ jobs:
       run:
         working-directory: ./backend
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+    
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.107
-      - name: Verificar backend existe
-        run: ls
-        continue-on-error: true
   
       - name: Allow Backend
         run: chmod +x setup_musictree.sh
