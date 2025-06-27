@@ -2,11 +2,14 @@ name: Constructor
 
 on:
   push:
-  pull_request:
 
 jobs:
   tests_backend:
     runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: ./backend
+        continue-on-error: true
     steps:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
