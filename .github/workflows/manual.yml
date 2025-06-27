@@ -29,9 +29,24 @@ jobs:
         run: |
           sudo apt-get update
           dotnet --version
-      - name: Verify2
+
+  tests_backend:
+    needs: build
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Check
+        uses: actions/checkout@v4  
+      - name: Allow Backend
+        run: chmod +x setup_musictree.sh
+      - name: Initialition Backend
         run: |
-          sudo apt-get update
-          dotnet --list-sdks
+          ./setup_musictree.sh
+          y
+          .
         continue-on-error: true
-          
+      - name: Test Backend
+        run: dotnet run
+        continue-on-error: true
