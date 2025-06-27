@@ -12,13 +12,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.107
-    
-      - name: Install dependencies dotnet
-        run: |
-          sudo add-apt-repository ppa:dotnet/backports
-          sudo apt update
-          sudo apt install dotnet-sdk-9.0
-        continue-on-error: true
           
       - name: Install dependencies postgresql
         run: |
@@ -44,8 +37,12 @@ jobs:
     runs-on: ubuntu-latest
     defaults: 
       run:
-        working-directory: backend
+        working-directory: backend/
     steps:
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.107
       - name: Allow Backend
         run: chmod +x setup_musictree.sh
         continue-on-error: true
