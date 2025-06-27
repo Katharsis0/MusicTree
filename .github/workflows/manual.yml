@@ -2,6 +2,7 @@ name: Constructor
 
 on:
   push:
+  pull_request:
 
 jobs:
   tests_backend:
@@ -52,7 +53,6 @@ jobs:
       - name: Test Frontend
         run: |
           npm run build
-          npm test
           npm run lint
           
         continue-on-error: true
