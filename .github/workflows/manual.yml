@@ -51,7 +51,9 @@ jobs:
 
       - name: Test Frontend
         run: |
-          npm run dev
-          q
+          npm run build
+          npm test
+          npm run lint
+          
         continue-on-error: true
           
