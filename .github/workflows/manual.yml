@@ -52,5 +52,6 @@ jobs:
       - name: Test Frontend
         run: |
           npm run dev
+          q
         continue-on-error: true
           
