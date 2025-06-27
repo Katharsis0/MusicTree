@@ -7,24 +7,25 @@ on:
 jobs:
   tests_backend:
     runs-on: ubuntu-latest
-    defaults: 
-      run:
-        working-directory: ./backend
     steps:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.107
       - name: Allow Backend
+        working-directory: ./backend
         run: chmod +x setup_musictree.sh
         continue-on-error: true
         
       - name: Initialition Backend
+        working-directory: ./backend
         run: |
           ./setup_musictree.sh
           y
           .
         continue-on-error: true
+        
       - name: Test Backend
+        working-directory: ./backend
         run: dotnet run
         continue-on-error: true
