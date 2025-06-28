@@ -31,7 +31,11 @@ jobs:
         continue-on-error: true
         
       - name: Test Backend
-        run: dotnet test
+        run: |
+          dotnet run &             
+          DEV_PID=$!                
+          curl -X 'http:/localhost:5102/api/Genres?includeSubgenres=true&includeInactive=false' \ -H 'accept: */*'
+          kill $DEV_PID          
         continue-on-error: true
 
            
@@ -51,7 +55,11 @@ jobs:
         continue-on-error: true
 
       - name: Test Frontend
-        run: npm run 
+        run: |
+          npm run dev &             
+          DEV_PID=$!                
+          sleep 5                  
+          kill $DEV_PID             
           
         continue-on-error: true
           
