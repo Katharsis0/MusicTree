@@ -13,9 +13,4 @@ public class FanaticoController : ControllerBase
         _fanaticoService = fanaticoService;
     }
 
-    [HttpPost("registrar")]
-    public async Task<IActionResult> Registrar([FromBody] FanUserRegisterDto dto)
-    {
-        return 0;
-    }
 }
