@@ -16,6 +16,6 @@ public class FanaticoController : ControllerBase
     [HttpPost("registrar")]
     public async Task<IActionResult> Registrar([FromBody] FanUserRegisterDto dto)
     {
-
+        return 0;
     }
 }
