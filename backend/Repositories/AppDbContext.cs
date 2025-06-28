@@ -275,20 +275,6 @@ namespace MusicTree.Repositories
             });
 
             // Configure FanUserGenero (many-to-many between FanUser and Genre)
-            modelBuilder.Entity<FanUserGenero>(entity =>
-            {
-                entity.HasKey(fg => new { fg.FanUserId, fg.GeneroId });
-
-                entity.HasOne(fg => fg.FanUser)
-                    .WithMany(f => f.GenerosFavoritos)
-                    .HasForeignKey(fg => fg.FanUserId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(fg => fg.Genero)
-                    .WithMany()
-                    .HasForeignKey(fg => fg.GeneroId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
 
 
         }
