@@ -16,34 +16,4 @@ public class FanaticoService : IFanaticoService
         _hasher = hasher;
     }
 
-    public async Task<OperationResult> RegistrarFanaticoAsync(FanUserRegisterDto dto)
-    {
-        if (_context.Fanaticos.Any(f => f.Nickname == dto.Nickname))
-        {
-            return new OperationResult
-            {
-                Success = false,
-                Message = "El nombre de usuario ya existe."
-            };
-        }
-
-        var fan = new FanUser
-        {
-            Nickname = dto.Nickname,
-            Nombre = dto.Nombre,
-            Pais = dto.Pais,
-            Avatar = dto.Avatar,
-            PasswordHash = _hasher.HashPassword(null, dto.Password),
-            GenerosFavoritos = dto.GenerosFavoritos.Select(id => new FanUserGenero { GeneroId = id }).ToList()
-        };
-
-        _context.Fanaticos.Add(fan);
-        await _context.SaveChangesAsync();
-
-        return new OperationResult
-        {
-            Success = true,
-            Message = "Fanático registrado exitosamente"
-        };
-    }
 }
