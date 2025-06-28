@@ -33,7 +33,8 @@ jobs:
       - name: Test Backend
         run: |
           dotnet run &             
-          DEV_PID=$!                
+          DEV_PID=$!     
+          sleep 5
           curl -X 'GET' 'http://localhost:5102/api/Clusters?includeInactive=false' -H 'accept: /'
           kill $DEV_PID          
         continue-on-error: true
