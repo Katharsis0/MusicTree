@@ -5,6 +5,5 @@ public class FanUserGenero
     public Guid FanUserId { get; set; }
     public FanUser FanUser { get; set; }
 
-    public int GeneroId { get; set; }
-    public Genero Genero { get; set; }
+    public int GeneroId { get; set; 
 }
