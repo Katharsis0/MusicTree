@@ -16,20 +16,6 @@ public class FanaticoController : ControllerBase
     [HttpPost("registrar")]
     public async Task<IActionResult> Registrar([FromBody] FanUserRegisterDto dto)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-            {
-            }
 
-            if (!result.Success)
-                return Conflict(result);
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error en registro de fanático: {ex}");
-        }
     }
 }
