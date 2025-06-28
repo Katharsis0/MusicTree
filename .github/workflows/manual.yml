@@ -34,7 +34,7 @@ jobs:
         run: |
           dotnet run &             
           DEV_PID=$!                
-          curl -X 'GET' \ 'http://localhost:5102/api/Genres?includeSubgenres=true&includeInactive=false' \ -H 'accept: */*'
+          curl -X 'GET' 'http://localhost:5102/api/Genres?includeSubgenres=true&includeInactive=false' -H 'accept: /'
           kill $DEV_PID          
         continue-on-error: true
 
