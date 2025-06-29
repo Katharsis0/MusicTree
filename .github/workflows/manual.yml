@@ -1,0 +1,62 @@
+name: Constructor
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests_backend:
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+    
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.107
+  
+      - name: Allow Backend
+        run: chmod +x setup_musictree.sh
+        continue-on-error: true
+        
+      - name: Initialition Backend
+        run: |
+          ./setup_musictree.sh
+          y
+          .
+        continue-on-error: true
+        
+      - name: Test Backend
+        run: |
+          dotnet run &             
+          DEV_PID=$!     
+          sleep 15
+          kill $DEV_PID          
+        continue-on-error: true
+           
+  tests_frontend:
+    needs: tests_backend
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: musictree-frontend/
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+    
+      - name: Initialition Frontend
+        run: npm install
+        continue-on-error: true
+
+      - name: Test Frontend
+        run: |
+          npm run dev &             
+          DEV_PID=$!                
+          sleep 15                  
+          kill $DEV_PID             
+        continue-on-error: true
+          

@@ -18,6 +18,8 @@ namespace MusicTree.Repositories
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<FanUser> Fanaticos { get; set; }
+        public DbSet<FanUserGenero> FanUserGeneros { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,12 +40,12 @@ namespace MusicTree.Repositories
                 entity.Property(g => g.Name).HasMaxLength(30).IsRequired();
                 entity.Property(g => g.Description).HasMaxLength(1000);
                 entity.Property(g => g.GenreOriginCountry).HasMaxLength(100);
-                
+
                 // RGB Color configuration
                 entity.Property(g => g.ColorR).HasColumnName("ColorR");
                 entity.Property(g => g.ColorG).HasColumnName("ColorG");
                 entity.Property(g => g.ColorB).HasColumnName("ColorB");
-                
+
                 // Set default values
                 entity.Property(g => g.IsActive).HasDefaultValue(true);
                 entity.Property(g => g.TimeStamp).HasDefaultValueSql("NOW()");
@@ -51,7 +53,7 @@ namespace MusicTree.Repositories
                 entity.Property(g => g.Volume).HasDefaultValue(-20);
                 entity.Property(g => g.CompasMetric).HasDefaultValue(4);
                 entity.Property(g => g.Bpm).HasDefaultValue(120);
-                
+
                 // Configure relationships
                 entity.HasOne(g => g.ParentGenre)
                     .WithMany()
@@ -67,9 +69,9 @@ namespace MusicTree.Repositories
                 entity.HasCheckConstraint("CK_Genres_ColorR", "[ColorR] IS NULL OR ([ColorR] >= 0 AND [ColorR] <= 255)");
                 entity.HasCheckConstraint("CK_Genres_ColorG", "[ColorG] IS NULL OR ([ColorG] >= 0 AND [ColorG] <= 255)");
                 entity.HasCheckConstraint("CK_Genres_ColorB", "[ColorB] IS NULL OR ([ColorB] >= 0 AND [ColorB] <= 255)");
-                
+
                 // Ensure all RGB components are provided together or none at all
-                entity.HasCheckConstraint("CK_Genres_RGB_AllOrNone", 
+                entity.HasCheckConstraint("CK_Genres_RGB_AllOrNone",
                     "([ColorR] IS NULL AND [ColorG] IS NULL AND [ColorB] IS NULL) OR ([ColorR] IS NOT NULL AND [ColorG] IS NOT NULL AND [ColorB] IS NOT NULL)");
 
                 // Exclude computed properties from database mapping
@@ -82,12 +84,12 @@ namespace MusicTree.Repositories
             modelBuilder.Entity<GenreRelation>(entity =>
             {
                 entity.HasKey(gr => new { gr.GenreId, gr.RelatedGenreId });
-                
+
                 entity.Property(gr => gr.GenreId).HasMaxLength(128);
                 entity.Property(gr => gr.RelatedGenreId).HasMaxLength(128);
                 entity.Property(gr => gr.Influence).HasDefaultValue(5);
                 entity.Property(gr => gr.MGPC).HasDefaultValue(0.0f);
-                
+
                 entity.HasOne(gr => gr.Genre)
                     .WithMany(g => g.RelatedGenresAsSource)
                     .HasForeignKey(gr => gr.GenreId)
@@ -139,7 +141,7 @@ namespace MusicTree.Repositories
                     .OnDelete(DeleteBehavior.Restrict);
 
                 // Ensure genre is not a subgenre
-                entity.HasCheckConstraint("CK_ArtistGenre_NotSubgenre", 
+                entity.HasCheckConstraint("CK_ArtistGenre_NotSubgenre",
                     "NOT EXISTS (SELECT 1 FROM \"Genres\" WHERE \"Id\" = \"GenreId\" AND \"IsSubgenre\" = true)");
             });
 
@@ -162,7 +164,7 @@ namespace MusicTree.Repositories
                     .OnDelete(DeleteBehavior.Restrict);
 
                 // Ensure genre is a subgenre
-                entity.HasCheckConstraint("CK_ArtistSubgenre_IsSubgenre", 
+                entity.HasCheckConstraint("CK_ArtistSubgenre_IsSubgenre",
                     "EXISTS (SELECT 1 FROM \"Genres\" WHERE \"Id\" = \"GenreId\" AND \"IsSubgenre\" = true)");
             });
 
@@ -256,6 +258,25 @@ namespace MusicTree.Repositories
                 entity.HasIndex(e => e.ArtistId);
                 entity.HasIndex(e => e.EventDate);
             });
+
+            // Configure FanUser
+            modelBuilder.Entity<FanUser>(entity =>
+            {
+                entity.HasKey(f => f.Id);
+                entity.Property(f => f.Id).HasMaxLength(128).HasDefaultValueSql("gen_random_uuid()");
+                
+                entity.Property(f => f.Nickname).HasMaxLength(50).IsRequired();
+                entity.Property(f => f.Password).HasMaxLength(200).IsRequired();
+                entity.Property(f => f.Nombre).HasMaxLength(100).IsRequired();
+                entity.Property(f => f.Pais).HasMaxLength(100).IsRequired();
+                entity.Property(f => f.Avatar).HasMaxLength(300);
+                
+                entity.Property(f => f.FechaCreacion).HasDefaultValueSql("NOW()");
+            });
+
+            // Configure FanUserGenero (many-to-many between FanUser and Genre)
+
+
         }
 
         // Override SaveChanges to add additional validation
