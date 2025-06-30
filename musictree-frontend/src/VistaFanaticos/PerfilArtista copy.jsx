@@ -12,12 +12,10 @@ const PerfilArtista = () => {
   const [error, setError] = useState(null);
   const [tab, setTab] = useState('discografia');
   const [calificacion, setCalificacion] = useState(0);
-  const [calificaciones, setCalificaciones] = useState([]); // <- nuevo estado para calificaciones
   const [comentario, setComentario] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Carga perfil artista
     axios.get(`${api}/api/Artists/${id}`)
       .then(res => setArtista(res.data))
       .catch(err => {
@@ -25,30 +23,15 @@ const PerfilArtista = () => {
         Swal.fire('Error', 'No se pudo cargar el perfil. Intente más tarde.', 'error');
         setError('Error al cargar el perfil');
       });
-
-    // Carga calificaciones desde /api/Fanaticos/calificar/{artistId}
-    axios.get(`${api}/api/Fanaticos/calificar/${id}`)
-      .then(res => {
-        setCalificaciones(res.data);
-      })
-      .catch(err => {
-        console.error('Error al cargar calificaciones:', err);
-        setCalificaciones([]); // O vacío si falla
-      });
   }, [id]);
 
   const handleRating = (valor) => {
     setCalificacion(valor);
   };
-
-  const enviarCalificacion = async () => {
+  const enviarCalificacion = async (event) => {
     const username = localStorage.getItem('fanaticoUsername');
-    if (calificacion === 0) {
-      Swal.fire('Error', 'Por favor selecciona una calificación.', 'error');
-      return;
-    }
-
-    try {
+    
+      try {
         await axios.post(`${api}/api/Fanaticos/calificar`, {
         username: username,
         artistID: id,
@@ -57,18 +40,10 @@ const PerfilArtista = () => {
 
       Swal.fire({
         icon: 'success',
-        title: 'Calificación enviada',
-        text: 'Se calificó correctamente.',
+        title: 'Calificación creado',
+        text: 'Se la calificación correctamente.',
         confirmButtonColor: '#28a745'
-      });
-
-      // Actualizar lista de calificaciones para reflejar el cambio
-      const res = await axios.get(`${api}/api/Fanaticos/calificar/${id}`);
-      setCalificaciones(res.data);
-
-      // Reset calificación para nuevo input si quieres
-      setCalificacion(0);
-
+      })
     } catch (err) {
       console.error('Error al calificar:', err);
       Swal.fire({
@@ -80,26 +55,11 @@ const PerfilArtista = () => {
     }
   };
 
-  // Función para mostrar estrellas (con relleno y vacío)
-  const mostrarEstrellas = (valor) => {
-    const totalEstrellas = 5;
-    return (
-      <>
-        {[...Array(totalEstrellas)].map((_, i) => (
-          <span key={i} style={{ color: i < valor ? 'gold' : 'lightgray', fontSize: '1.2rem' }}>
-            ★
-          </span>
-        ))}
-      </>
-    );
-  };
-
   if (error) return null;
   if (!artista) return <p>Cargando...</p>;
 
   return (
     <div className="container mt-4">
-      {/* Información artista (sin cambios) */}
       <div className="d-flex mb-3">
         <img src={artista.coverImageUrl} alt="Portada" className="rounded me-3" width={120} height={120} />
         <div>
@@ -117,7 +77,6 @@ const PerfilArtista = () => {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="tabs-bar">
         {['discografia', 'miembros', 'calificaciones', 'comentarios', 'eventos', 'fotos'].map((t) => (
           <span
@@ -130,7 +89,6 @@ const PerfilArtista = () => {
         ))}
       </div>
 
-      {/* Contenido de tabs */}
       {tab === 'discografia' && (
         <div className="tab-content">
           {artista.albums?.length > 0 ? (
@@ -171,17 +129,14 @@ const PerfilArtista = () => {
           ) : <p>No hay miembros registrados.</p>}
         </div>
       )}
-
       {tab === 'calificaciones' && (
         <div className="tab-content">
-          {/* Selector para enviar nueva calificación */}
           <div className="d-flex mb-3">
             {[1, 2, 3, 4, 5].map(n => (
               <span
                 key={n}
                 style={{ cursor: 'pointer', color: n <= calificacion ? 'gold' : 'gray', fontSize: '1.5rem' }}
                 onClick={() => handleRating(n)}
-                title={`${n} estrella${n > 1 ? 's' : ''}`}
               >★</span>
             ))}
           </div>
@@ -190,11 +145,11 @@ const PerfilArtista = () => {
           </button>
 
           <h6>Calificaciones anteriores</h6>
-          {calificaciones.length > 0 ? (
-            <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-              {calificaciones.map((r, i) => (
-                <li key={i} style={{ marginBottom: '0.5rem' }}>
-                  <strong>{r.username}</strong>: {mostrarEstrellas(r.calificacion)}
+          {artista.ratings?.length > 0 ? (
+            <ul>
+              {artista.ratings.map((r, i) => (
+                <li key={i}>
+                  <strong>{r.userName}</strong>: {'★'.repeat(r.value)}{'☆'.repeat(5 - r.value)}
                 </li>
               ))}
             </ul>
@@ -233,6 +188,7 @@ const PerfilArtista = () => {
         </div>
       )}
 
+
       {tab === 'eventos' && (
         <div className="tab-content">
           {artista.events?.length > 0 ? (
@@ -269,8 +225,8 @@ const PerfilArtista = () => {
       )}
 
       <div className="mt-3">
-        <Link to="/fanaticos/buscarartistafanaticos" className="btn btn-primary">Volver</Link>
-      </div>
+          <Link to="/fanaticos/buscarartistafanaticos" className="btn btn-primary">Volver</Link>
+        </div>
     </div>
   );
 };
