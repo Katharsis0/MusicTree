@@ -28,15 +28,31 @@ const PerfilArtista = () => {
   const handleRating = (valor) => {
     setCalificacion(valor);
   };
-
-  const enviarCalificacion = () => {
-    axios.post(`${api}/api/Artists/${id}/rate`, { rating: calificacion, comment: comentario })
-      .then(() => {
-        Swal.fire('¡Gracias!', 'Tu calificación ha sido enviada.', 'success');
-      })
-      .catch(() => {
-        Swal.fire('Error', 'No se pudo enviar la calificación. Intenta más tarde.', 'error');
+  const enviarCalificacion = async (event) => {
+    const username = localStorage.getItem('fanaticoUsername');
+    
+      try {
+        await axios.post(`${api}/api/Fanaticos/calificar`, {
+        username: username,
+        artistID: id,
+        calificacion: calificacion
       });
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Calificación creado',
+        text: 'Se calificó correctamente.',
+        confirmButtonColor: '#28a745'
+      })
+    } catch (err) {
+      console.error('Error al calificar:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo enviar la calificación. Intenta más tarde.',
+        confirmButtonColor: '#dc3545'
+      });
+    }
   };
 
   if (error) return null;
@@ -124,11 +140,7 @@ const PerfilArtista = () => {
               >★</span>
             ))}
           </div>
-          <button className="btn btn-primary mb-4" onClick={() => {
-            axios.post(`${api}/api/Artists/${id}/rate`, { rating: calificacion })
-              .then(() => Swal.fire('¡Gracias!', 'Tu calificación ha sido enviada.', 'success'))
-              .catch(() => Swal.fire('Error', 'No se pudo enviar la calificación. Intenta más tarde.', 'error'));
-          }}>
+          <button className="btn btn-primary mb-4" onClick={enviarCalificacion}>
             Enviar Calificación
           </button>
 

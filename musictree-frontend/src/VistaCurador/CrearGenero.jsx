@@ -14,7 +14,7 @@ const CrearGenero = () => {
     nombre: '',
     desc: '',
     activo: true,
-    color: '',
+    color: '#ff0000',
     año: '',
     pais: '',
     cluster: '',
@@ -121,23 +121,6 @@ const handleSubmit = async (event) => {
   }
 
   try {
-
-    let mgpc = null;
-
-    if (values.esSubgenero) {
-      const padre = generos.find(g => g.id === values.padre);
-      const duracionPadre = padre?.musicalAttributes?.averageDuration;
-
-      const bpmSuperior = parseInt(values.bpmMax);
-      const duracionSubgenero = parseInt(values.duracion);
-
-      if (!isNaN(bpmSuperior) && !isNaN(duracionSubgenero) && duracionPadre > 0) {
-        mgpc = ((bpmSuperior * duracionSubgenero) / duracionPadre).toFixed(2);
-        console.log(`MGPC calculado correctamente: (${bpmSuperior} * ${duracionSubgenero}) / ${duracionPadre} = ${mgpc}`);
-      } else {
-        console.warn(" No se pudo calcular MGPC: datos inválidos o género padre no encontrado.");
-      }
-    }
 
     const payload = {
       Name: values.nombre,
