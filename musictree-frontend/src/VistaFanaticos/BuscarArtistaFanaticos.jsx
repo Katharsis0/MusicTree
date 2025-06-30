@@ -29,13 +29,8 @@ const BuscarArtistaFanaticos = () => {
       });
 
     axios.get(`${api}/api/Genres`)
-      .then(res => {
-        setGeneros(res.data || []);
-      })
-      .catch(err => {
-        console.error(err);
-        Swal.fire('Error', 'No se pudieron cargar los géneros.', 'error');
-      });
+      .then(res => setGeneros(res.data.genres || []))
+      .catch(err => console.error(err));
   }, []);
 
   useEffect(() => {
@@ -122,6 +117,7 @@ const BuscarArtistaFanaticos = () => {
                 <th>Cantidad de Discos</th>
                 <th>Género</th>
                 <th>Subgéneros</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -131,6 +127,11 @@ const BuscarArtistaFanaticos = () => {
                   <td>{artista.albumCount}</td>
                   <td>{artista.genre?.name || 'N/A'}</td>
                   <td>{artista.subgenres?.map(s => s.name).join(', ') || 'Ninguno'}</td>
+                  <td>
+                    <Link to={`/fanaticos/perfilartista/${artista.id}`} className="btn btn-sm btn-info">
+                      Ver Perfil
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -139,7 +140,7 @@ const BuscarArtistaFanaticos = () => {
       )}
 
       <div className="mt-3">
-        <Link to="/curador/menucurador" className="btn btn-primary">Volver</Link>
+        <Link to="/fanaticos/menufanaticos" className="btn btn-primary">Volver</Link>
       </div>
     </div>
   );

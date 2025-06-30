@@ -141,7 +141,7 @@ const CrearArtista = () => {
         console.log("Detalles del error:", error.response.data);
       }
 
-      Swal.fire("Error", "No se pudo crear el artista.", "error");
+      Swal.fire("Error", "No se pudo crear el artista.", error.response.data);
     }
   };
 
@@ -191,25 +191,59 @@ const CrearArtista = () => {
               onChange={e => setValues({ ...values, añosActividad: e.target.value })} />
           </div>
 
-          <div className='mb-2'>
-            <label>Géneros</label>
-            <select multiple className='form-select' value={values.generos}
-              onChange={e => setValues({ ...values, generos: Array.from(e.target.selectedOptions, opt => opt.value) })}>
+          <div className='mb-3'>
+            <label className='form-label'>Géneros</label>
+            <div className='form-check'>
               {generos.filter(g => !g.isSubgenre).map(g => (
-                <option key={g.id} value={g.id}>{g.name}</option>
+                <div key={g.id} className='form-check'>
+                  <input
+                    className='form-check-input'
+                    type='checkbox'
+                    id={`genre-${g.id}`}
+                    value={g.id}
+                    checked={values.generos.includes(g.id)}
+                    onChange={(e) => {
+                      const newGeneros = e.target.checked
+                        ? [...values.generos, g.id]
+                        : values.generos.filter(id => id !== g.id);
+                      setValues({ ...values, generos: newGeneros });
+                    }}
+                  />
+                  <label className='form-check-label' htmlFor={`genre-${g.id}`}>
+                    {g.name}
+                  </label>
+                </div>
               ))}
-            </select>
+            </div>
           </div>
 
-          <div className='mb-2'>
-            <label>Subgéneros</label>
-            <select multiple className='form-select' value={values.subgeneros}
-              onChange={e => setValues({ ...values, subgeneros: Array.from(e.target.selectedOptions, opt => opt.value) })}>
+
+          <div className='mb-3'>
+            <label className='form-label'>Subgéneros</label>
+            <div className='form-check'>
               {generos.filter(g => g.isSubgenre).map(g => (
-                <option key={g.id} value={g.id}>{g.name}</option>
+                <div key={g.id} className='form-check'>
+                  <input
+                    className='form-check-input'
+                    type='checkbox'
+                    id={`subgenre-${g.id}`}
+                    value={g.id}
+                    checked={values.subgeneros.includes(g.id)}
+                    onChange={(e) => {
+                      const newSubgeneros = e.target.checked
+                        ? [...values.subgeneros, g.id]
+                        : values.subgeneros.filter(id => id !== g.id);
+                      setValues({ ...values, subgeneros: newSubgeneros });
+                    }}
+                  />
+                  <label className='form-check-label' htmlFor={`subgenre-${g.id}`}>
+                    {g.name}
+                  </label>
+                </div>
               ))}
-            </select>
+            </div>
           </div>
+
 
           <div className='mb-3'>
             <label>Miembros</label>
