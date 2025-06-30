@@ -7,5 +7,8 @@ namespace MusicTree.Services.Interfaces
     {
         Task<Fanatico> CreateFanaticoAsync(FanaticoCreateDto dto);
         Task<IEnumerable<Fanatico>> GetAllFanaticosAsync();
+        Task CreateCalificacionAsync(FanaticoCalificarDto dto);
+        Task<IEnumerable<FanaticoCalificacion>> GetAllFanaticosPorArtistaAsync(string artistId);
+        
     }
 }

@@ -25,5 +25,14 @@ namespace MusicTree.Models.Entities
         public Artist Artist { get; set; } = null!;
         public Genre Genre { get; set; } = null!;
     }
+    
+    public class FanaticoCalificacion
+    {
+        [Key] 
+        public string Username { get; set; } = string.Empty;
+        public string ArtistId { get; set; } = string.Empty;
+        public int CalificacionId { get; set; }
+    }
+    
 
 }

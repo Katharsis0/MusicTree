@@ -305,6 +305,18 @@ namespace MusicTree.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+            migrationBuilder.CreateTable(
+                name: "FanaticosCalificacion",
+                columns: table => new
+                {
+                    Username = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    ArtistID = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Calificacion = table.Column<int>(type: "integer", nullable: false, defaultValue: 5)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fanaticos", x => x.Username);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Albums_ArtistId",
@@ -454,6 +466,8 @@ namespace MusicTree.Migrations
                 name: "Clusters");
             migrationBuilder.DropTable(
                 name: "Fanaticos");
+            migrationBuilder.DropTable(
+                name: "FanaticosCalificacion");
         }
     }
 }

@@ -278,6 +278,26 @@ namespace MusicTree.Migrations
 
                 b.ToTable("Fanaticos");
             });
+            
+            modelBuilder.Entity("MusicTree.Models.Entities.FanaticoCalificacion", b =>
+            {
+                b.Property<string>("Username")
+                    .HasMaxLength(128)
+                    .HasColumnType("character varying(128)");
+
+                b.Property<string>("ArtistId")
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)");
+                
+                b.Property<int>("CalificacionId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer")
+                    .HasDefaultValue(120);
+
+                b.HasKey("Username");
+
+                b.ToTable("FanaticosCalificacion");
+            });
 
             modelBuilder.Entity("MusicTree.Models.Entities.Comment", b =>
                 {
@@ -703,6 +723,11 @@ namespace MusicTree.Migrations
 
                     b.Navigation("PhotoGallery");
                 });
+            modelBuilder.Entity("MusicTree.Models.Entities.Fanatico", b =>
+            {
+                b.Navigation("FanaticoCalificacion");
+                
+            });
 
             modelBuilder.Entity("MusicTree.Models.Entities.Cluster", b =>
                 {

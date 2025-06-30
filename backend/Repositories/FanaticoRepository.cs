@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MusicTree.Models.DTOs;
 using MusicTree.Models;
+using MusicTree.Models.Responses;
 
 namespace MusicTree.Repositories
 {
@@ -46,7 +47,6 @@ namespace MusicTree.Repositories
                 Password = dto.Password,
                 Username = dto.Username,
                 Country = dto.Country,
-                //Genres = dto.FanaticoRelatedGenres,
                 Avatar = dto.Avatar,
                 
             };
@@ -58,6 +58,30 @@ namespace MusicTree.Repositories
         {
             var query = _context.Fanaticos.AsQueryable();
             return await query.OrderByDescending(c => c.Username).ToListAsync();
+        }
+        public async Task CreateCalificacionAsync(string Username, string ArtistID, int Calificacion )
+        {
+            var fanaticocalificar = new FanaticoCalificacion
+            {
+                Username = Username,
+                ArtistId = ArtistID,
+                CalificacionId = Calificacion
+            };
+            
+            await _context.Set<FanaticoCalificacion>().AddAsync(fanaticocalificar);
+            await _context.SaveChangesAsync();
+
+        }
+        public async Task<IEnumerable<FanaticoCalificacion>> GetCalificacionesPorArtistaAsync(string artistId)
+        {
+            return await _context.FanaticosCalificacion
+                .Where(c => c.ArtistId == artistId)
+                .Select(c => new FanaticoCalificacion()
+                {
+                    Username = c.Username,
+                    CalificacionId = c.CalificacionId
+                })
+                .ToListAsync();
         }
 
     }

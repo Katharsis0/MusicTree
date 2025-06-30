@@ -37,10 +37,29 @@ namespace MusicTree.Services
             await _fanaticoRepo.AddAsync(fanatico);
             return fanatico;
         }
+        
+        public async Task CreateCalificacionAsync(FanaticoCalificarDto dto)
+        {
+            try
+            {
+                await _fanaticoRepo.CreateCalificacionAsync(dto.Username, dto.ArtistID, dto.Calificacion);
+            }catch (Exception ex)
+            {
+                throw new ArgumentException("Fanatico no puede crear calificacion.");
+
+            }
+            
+        }
 
         public async Task<IEnumerable<Fanatico>> GetAllFanaticosAsync()
         {
             return await _fanaticoRepo.GetAllAsync();
         }
+        
+        public async Task<IEnumerable<FanaticoCalificacion>> GetAllFanaticosPorArtistaAsync(string ArtistId)
+        {
+            return await _fanaticoRepo.GetCalificacionesPorArtistaAsync(ArtistId);
+        }
+
     }
 }

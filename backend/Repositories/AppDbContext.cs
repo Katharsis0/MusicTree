@@ -19,6 +19,8 @@ namespace MusicTree.Repositories
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Fanatico> Fanaticos { get; set; }
+        public DbSet<FanaticoCalificacion> FanaticosCalificacion { get; set; }
+
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -130,7 +132,14 @@ namespace MusicTree.Repositories
                 entity.HasIndex(a => a.OriginCountry);
                 entity.HasIndex(a => a.IsActive);
             });
-
+            
+            modelBuilder.Entity<FanaticoCalificacion>(entity =>
+            {
+                entity.Property(fc => fc.Username).IsRequired();
+                entity.Property(fc => fc.ArtistId).IsRequired();
+                entity.Property(fc => fc.CalificacionId).IsRequired();
+            });
+            
             // Configure ArtistGenre junction table
             modelBuilder.Entity<ArtistGenre>(entity =>
             {
