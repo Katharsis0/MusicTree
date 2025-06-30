@@ -9,22 +9,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b71533bc-7416-48ed-8407-d45372d86c01" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Controllers/FanaticosController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/DTOs/FanaticoCreateDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/DTOs/FanaticoLoginDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/DTOs/FanaticoRegisterDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Entities/Fanatico.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/FanaticoRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/FanaticoService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/Interfaces/IFanaticoService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/dataSources/6c8d148e-c29f-44fb-878d-37164290c298.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MusicTree/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20250608202242_AddMissingArtistEntities.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Migrations/20250608202242_AddMissingArtistEntities.Designer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/20250608202242_AddMissingArtistEntities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Migrations/20250608202242_AddMissingArtistEntities.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Migrations/AppDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Migrations/AppDbContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/AppDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/ArtistController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/ArtistController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/DTOs/ArtistSearchParams.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/ArtistSearchParams.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/ArtistRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/ArtistRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/ArtistService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/ArtistService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Interfaces/IArtistService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/IArtistService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,6 +163,7 @@
       <workItem from="1749247803451" duration="3660000" />
       <workItem from="1749412914443" duration="2010000" />
       <workItem from="1750764818109" duration="13864000" />
+      <workItem from="1751317715743" duration="1717000" />
     </task>
     <servers />
   </component>

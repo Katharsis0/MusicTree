@@ -12,17 +12,20 @@ namespace MusicTree.Services
     {
         private readonly ArtistRepository _artistRepo;
         private readonly GenreRepository _genreRepo;
+        private readonly ClusterRepository _clusterRepo;
         private readonly ILogger<ArtistService> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public ArtistService(
             ArtistRepository artistRepo, 
             GenreRepository genreRepo,
+            ClusterRepository clusterRepo,
             ILogger<ArtistService> logger,
             IWebHostEnvironment webHostEnvironment)
         {
             _artistRepo = artistRepo;
             _genreRepo = genreRepo;
+            _clusterRepo = clusterRepo;
             _logger = logger;
             _webHostEnvironment = webHostEnvironment;
         }
@@ -383,15 +386,38 @@ namespace MusicTree.Services
         {
             Expression<Func<Artist, bool>> expression = a => true;
 
+            // Basic filters
             if (!searchParams.IncludeInactive)
             {
                 expression = expression.And(a => a.IsActive);
             }
 
+            // Text filtering
             if (!string.IsNullOrWhiteSpace(searchParams.Name))
             {
-                var searchTerm = searchParams.Name.ToLower();
-                expression = expression.And(a => a.Name.ToLower().Contains(searchTerm));
+                if (searchParams.ExactNameMatch)
+                {
+                    if (searchParams.CaseSensitive)
+                    {
+                        expression = expression.And(a => a.Name == searchParams.Name);
+                    }
+                    else
+                    {
+                        expression = expression.And(a => a.Name.ToLower() == searchParams.Name.ToLower());
+                    }
+                }
+                else
+                {
+                    var searchTerm = searchParams.CaseSensitive ? searchParams.Name : searchParams.Name.ToLower();
+                    if (searchParams.CaseSensitive)
+                    {
+                        expression = expression.And(a => a.Name.Contains(searchTerm));
+                    }
+                    else
+                    {
+                        expression = expression.And(a => a.Name.ToLower().Contains(searchTerm));
+                    }
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(searchParams.OriginCountry))
@@ -406,30 +432,236 @@ namespace MusicTree.Services
                 expression = expression.And(a => a.ActivityYears.ToLower().Contains(activityYears));
             }
 
+            // Single genre/subgenre filtering (legacy support)
+            if (!string.IsNullOrWhiteSpace(searchParams.GenreId))
+            {
+                expression = expression.And(a => a.ArtistGenres.Any(ag => ag.GenreId == searchParams.GenreId));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchParams.SubgenreId))
+            {
+                expression = expression.And(a => a.ArtistSubgenres.Any(asg => asg.GenreId == searchParams.SubgenreId));
+            }
+
+            // Multiple genre filtering
+            if (searchParams.GenreIds?.Any() == true)
+            {
+                if (searchParams.GenreLogic.Equals("AND", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Artist must have ALL specified genres
+                    foreach (var genreId in searchParams.GenreIds)
+                    {
+                        expression = expression.And(a => a.ArtistGenres.Any(ag => ag.GenreId == genreId));
+                    }
+                }
+                else
+                {
+                    // Artist must have ANY of the specified genres (OR logic)
+                    expression = expression.And(a => a.ArtistGenres.Any(ag => searchParams.GenreIds.Contains(ag.GenreId)));
+                }
+            }
+
+            // Multiple subgenre filtering
+            if (searchParams.SubgenreIds?.Any() == true)
+            {
+                if (searchParams.GenreLogic.Equals("AND", StringComparison.OrdinalIgnoreCase))
+                {
+                    foreach (var subgenreId in searchParams.SubgenreIds)
+                    {
+                        expression = expression.And(a => a.ArtistSubgenres.Any(asg => asg.GenreId == subgenreId));
+                    }
+                }
+                else
+                {
+                    expression = expression.And(a => a.ArtistSubgenres.Any(asg => searchParams.SubgenreIds.Contains(asg.GenreId)));
+                }
+            }
+
+            // Cluster filtering (through genres)
+            if (!string.IsNullOrWhiteSpace(searchParams.ClusterId))
+            {
+                expression = expression.And(a => 
+                    a.ArtistGenres.Any(ag => ag.Genre.ClusterId == searchParams.ClusterId) ||
+                    a.ArtistSubgenres.Any(asg => asg.Genre.ParentGenre != null && asg.Genre.ParentGenre.ClusterId == searchParams.ClusterId));
+            }
+
+            // Album filtering
             if (searchParams.HasAlbums.HasValue)
             {
                 if (searchParams.HasAlbums.Value)
                 {
-                    expression = expression.And(a => a.Albums.Any());
+                    expression = expression.And(a => a.Albums.Any(album => album.IsActive));
                 }
                 else
                 {
-                    expression = expression.And(a => !a.Albums.Any());
+                    expression = expression.And(a => !a.Albums.Any(album => album.IsActive));
                 }
             }
 
             if (searchParams.MinAlbumCount.HasValue)
             {
-                expression = expression.And(a => a.Albums.Count >= searchParams.MinAlbumCount.Value);
+                expression = expression.And(a => a.Albums.Count(album => album.IsActive) >= searchParams.MinAlbumCount.Value);
             }
 
             if (searchParams.MaxAlbumCount.HasValue)
             {
-                expression = expression.And(a => a.Albums.Count <= searchParams.MaxAlbumCount.Value);
+                expression = expression.And(a => a.Albums.Count(album => album.IsActive) <= searchParams.MaxAlbumCount.Value);
+            }
+
+            // Member filtering
+            if (searchParams.MinMemberCount.HasValue)
+            {
+                expression = expression.And(a => a.Members.Count >= searchParams.MinMemberCount.Value);
+            }
+
+            if (searchParams.MaxMemberCount.HasValue)
+            {
+                expression = expression.And(a => a.Members.Count <= searchParams.MaxMemberCount.Value);
+            }
+
+            if (searchParams.HasActiveMembers.HasValue)
+            {
+                if (searchParams.HasActiveMembers.Value)
+                {
+                    expression = expression.And(a => a.Members.Any(m => m.IsActive));
+                }
+                else
+                {
+                    expression = expression.And(a => !a.Members.Any(m => m.IsActive));
+                }
+            }
+
+            // Date filtering
+            if (searchParams.CreatedAfter.HasValue)
+            {
+                expression = expression.And(a => a.TimeStamp >= searchParams.CreatedAfter.Value);
+            }
+
+            if (searchParams.CreatedBefore.HasValue)
+            {
+                expression = expression.And(a => a.TimeStamp <= searchParams.CreatedBefore.Value);
+            }
+
+            // Activity year filtering
+            if (searchParams.ActiveFromYear.HasValue || searchParams.ActiveToYear.HasValue || searchParams.CurrentlyActive.HasValue)
+            {
+                expression = expression.And(a => FilterByActivityYears(a.ActivityYears, searchParams));
+            }
+
+            // Genre/Statistics count filtering
+            if (searchParams.MinGenreCount.HasValue)
+            {
+                expression = expression.And(a => (a.ArtistGenres.Count + a.ArtistSubgenres.Count) >= searchParams.MinGenreCount.Value);
+            }
+
+            if (searchParams.MaxGenreCount.HasValue)
+            {
+                expression = expression.And(a => (a.ArtistGenres.Count + a.ArtistSubgenres.Count) <= searchParams.MaxGenreCount.Value);
+            }
+
+            if (searchParams.MinCommentCount.HasValue)
+            {
+                expression = expression.And(a => a.Comments.Count(c => c.IsActive) >= searchParams.MinCommentCount.Value);
+            }
+
+            if (searchParams.MinPhotoCount.HasValue)
+            {
+                expression = expression.And(a => a.PhotoGallery.Count(p => p.IsActive) >= searchParams.MinPhotoCount.Value);
+            }
+
+            if (searchParams.MinEventCount.HasValue)
+            {
+                expression = expression.And(a => a.Events.Count(e => e.IsActive && e.EventDate >= DateTime.UtcNow) >= searchParams.MinEventCount.Value);
             }
 
             return expression;
         }
+
+    // Helper method for activity years filtering
+    private static bool FilterByActivityYears(string activityYears, ArtistSearchParams searchParams)
+        {
+            if (string.IsNullOrWhiteSpace(activityYears))
+                return false;
+
+            var years = ParseActivityYears(activityYears);
+            
+            if (searchParams.CurrentlyActive.HasValue)
+            {
+                var isCurrentlyActive = activityYears.ToLower().Contains("presente") || 
+                                       activityYears.ToLower().Contains("present") ||
+                                       years.Any(y => y >= DateTime.Now.Year - 1);
+                
+                if (searchParams.CurrentlyActive.Value != isCurrentlyActive)
+                    return false;
+            }
+
+            if (searchParams.ActiveFromYear.HasValue)
+            {
+                if (!years.Any(y => y >= searchParams.ActiveFromYear.Value))
+                    return false;
+            }
+
+            if (searchParams.ActiveToYear.HasValue)
+            {
+                if (!years.Any(y => y <= searchParams.ActiveToYear.Value))
+                    return false;
+            }
+
+            return true;
+        }
+
+    // Helper method to parse activity years (already exists in your ArtistRepository)
+    private static List<int> ParseActivityYears(string activityYears)
+    {
+        var years = new List<int>();
+        if (string.IsNullOrWhiteSpace(activityYears)) return years;
+
+        var parts = activityYears.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        
+        foreach (var part in parts)
+        {
+            var trimmed = part.Trim();
+            
+            // Handle single year
+            if (int.TryParse(trimmed, out int singleYear))
+            {
+                years.Add(singleYear);
+                continue;
+            }
+
+            // Handle range
+            if (trimmed.Contains('–'))
+            {
+                var rangeParts = trimmed.Split('–');
+                if (rangeParts.Length == 2)
+                {
+                    var startStr = rangeParts[0].Trim();
+                    var endStr = rangeParts[1].Trim();
+
+                    if (int.TryParse(startStr, out int startYear))
+                    {
+                        int endYear;
+                        if (endStr.Equals("presente", StringComparison.OrdinalIgnoreCase) ||
+                            endStr.Equals("present", StringComparison.OrdinalIgnoreCase))
+                        {
+                            endYear = DateTime.Now.Year;
+                        }
+                        else if (!int.TryParse(endStr, out endYear))
+                        {
+                            continue;
+                        }
+
+                        for (int year = startYear; year <= endYear; year++)
+                        {
+                            years.Add(year);
+                        }
+                    }
+                }
+            }
+        }
+
+        return years.Distinct().ToList();
+    }
 
         private static Expression<Func<Artist, object>> GetSortExpression(string sortBy)
         {
@@ -506,6 +738,121 @@ namespace MusicTree.Services
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
+        public async Task<IEnumerable<Artist>> GetArtistsByMultipleGenresAsync(
+    List<string> genreIds, 
+    bool useAndLogic = false, 
+    bool includeInactive = false)
+{
+    _logger.LogDebug("Retrieving artists by multiple genres: {GenreIds}, Logic: {Logic}", 
+        string.Join(",", genreIds), useAndLogic ? "AND" : "OR");
+
+    try
+    {
+        if (!genreIds?.Any() == true)
+        {
+            throw new ArgumentException("At least one genre ID is required", nameof(genreIds));
+        }
+
+        // Validate that all genre IDs exist
+        foreach (var genreId in genreIds)
+        {
+            var genre = await _genreRepo.GetByIdAsync(genreId);
+            if (genre == null)
+            {
+                throw new ArgumentException($"Genre with ID '{genreId}' not found");
+            }
+        }
+
+        var artists = await _artistRepo.GetArtistsByMultipleGenresAsync(genreIds, useAndLogic, includeInactive);
+        var artistList = artists.ToList();
+
+        _logger.LogDebug("Retrieved {Count} artists by multiple genres", artistList.Count);
+        return artistList;
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error retrieving artists by multiple genres");
+        throw;
+    }
+}
+
+public async Task<IEnumerable<Artist>> GetArtistsByClusterAsync(string clusterId, bool includeInactive = false)
+{
+    _logger.LogDebug("Retrieving artists by cluster: {ClusterId}", clusterId);
+
+    try
+    {
+        if (string.IsNullOrWhiteSpace(clusterId))
+        {
+            throw new ArgumentException("Cluster ID cannot be null or empty", nameof(clusterId));
+        }
+
+        // Validate cluster exists
+        var cluster = await _clusterRepo.GetByIdAsync(clusterId);
+        if (cluster == null)
+        {
+            throw new ArgumentException($"Cluster with ID '{clusterId}' not found");
+        }
+
+        var artists = await _artistRepo.GetArtistsByClusterAsync(clusterId, includeInactive);
+        var artistList = artists.ToList();
+
+        _logger.LogDebug("Retrieved {Count} artists by cluster {ClusterId}", artistList.Count, clusterId);
+        return artistList;
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error retrieving artists by cluster: {ClusterId}", clusterId);
+        throw;
+    }
+}
+
+public async Task<IEnumerable<Artist>> GetArtistsWithStatisticsAsync(
+    int? minGenreCount = null,
+    int? maxGenreCount = null,
+    int? minAlbumCount = null,
+    int? maxAlbumCount = null,
+    int? minMemberCount = null,
+    int? maxMemberCount = null,
+    bool includeInactive = false)
+{
+    _logger.LogDebug("Retrieving artists with statistics filters");
+
+    try
+    {
+        // Validate ranges
+        if (minGenreCount.HasValue && maxGenreCount.HasValue && minGenreCount > maxGenreCount)
+        {
+            throw new ArgumentException("Minimum genre count cannot be greater than maximum genre count");
+        }
+
+        if (minAlbumCount.HasValue && maxAlbumCount.HasValue && minAlbumCount > maxAlbumCount)
+        {
+            throw new ArgumentException("Minimum album count cannot be greater than maximum album count");
+        }
+
+        if (minMemberCount.HasValue && maxMemberCount.HasValue && minMemberCount > maxMemberCount)
+        {
+            throw new ArgumentException("Minimum member count cannot be greater than maximum member count");
+        }
+
+        var artists = await _artistRepo.GetArtistsWithStatisticsAsync(
+            minGenreCount, maxGenreCount,
+            minAlbumCount, maxAlbumCount,
+            minMemberCount, maxMemberCount,
+            includeInactive);
+
+        var artistList = artists.ToList();
+
+        _logger.LogDebug("Retrieved {Count} artists with statistics filters", artistList.Count);
+        return artistList;
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error retrieving artists with statistics filters");
+        throw;
+    }
+}
         #endregion
 
         #region Genre Relationship Methods (Missing implementations)

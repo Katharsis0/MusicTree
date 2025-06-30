@@ -362,6 +362,133 @@ namespace MusicTree.Repositories
             album.IsActive = false;
             return await UpdateAlbumAsync(album);
         }
+        
+        /// <summary>
+        /// Get artists by multiple genres with AND/OR logic
+        /// </summary>
+        public async Task<IEnumerable<Artist>> GetArtistsByMultipleGenresAsync(
+            List<string> genreIds, 
+            bool useAndLogic = false,
+            bool includeInactive = false)
+        {
+            var query = _context.Artists.AsQueryable();
+
+            if (!includeInactive)
+            {
+                query = query.Where(a => a.IsActive);
+            }
+
+            if (useAndLogic)
+            {
+                // Artist must have ALL genres
+                foreach (var genreId in genreIds)
+                {
+                    query = query.Where(a => 
+                        a.ArtistGenres.Any(ag => ag.GenreId == genreId) ||
+                        a.ArtistSubgenres.Any(asg => asg.GenreId == genreId));
+                }
+            }
+            else
+            {
+                // Artist must have ANY of the genres
+                query = query.Where(a => 
+                    a.ArtistGenres.Any(ag => genreIds.Contains(ag.GenreId)) ||
+                    a.ArtistSubgenres.Any(asg => genreIds.Contains(asg.GenreId)));
+            }
+
+            return await query
+                .Include(a => a.ArtistGenres)
+                .Include(a => a.ArtistSubgenres)
+                .Include(a => a.Members)
+                .Include(a => a.Albums)
+                .OrderBy(a => a.Name)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Get artists by cluster (through their genres)
+        /// </summary>
+        public async Task<IEnumerable<Artist>> GetArtistsByClusterAsync(string clusterId, bool includeInactive = false)
+        {
+            var query = _context.Artists.AsQueryable();
+
+            if (!includeInactive)
+            {
+                query = query.Where(a => a.IsActive);
+            }
+
+            query = query.Where(a => 
+                a.ArtistGenres.Any(ag => ag.Genre.ClusterId == clusterId) ||
+                a.ArtistSubgenres.Any(asg => asg.Genre.ParentGenre != null && asg.Genre.ParentGenre.ClusterId == clusterId));
+
+            return await query
+                .Include(a => a.ArtistGenres)
+                    .ThenInclude(ag => ag.Genre)
+                .Include(a => a.ArtistSubgenres)
+                    .ThenInclude(asg => asg.Genre)
+                        .ThenInclude(g => g.ParentGenre)
+                .Include(a => a.Members)
+                .Include(a => a.Albums)
+                .OrderBy(a => a.Name)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Get artists with advanced statistics filtering
+        /// </summary>
+        public async Task<IEnumerable<Artist>> GetArtistsWithStatisticsAsync(
+            int? minGenreCount = null,
+            int? maxGenreCount = null,
+            int? minAlbumCount = null,
+            int? maxAlbumCount = null,
+            int? minMemberCount = null,
+            int? maxMemberCount = null,
+            bool includeInactive = false)
+        {
+            var query = _context.Artists
+                .Include(a => a.ArtistGenres)
+                .Include(a => a.ArtistSubgenres)
+                .Include(a => a.Members)
+                .Include(a => a.Albums)
+                .AsQueryable();
+
+            if (!includeInactive)
+            {
+                query = query.Where(a => a.IsActive);
+            }
+
+            if (minGenreCount.HasValue)
+            {
+                query = query.Where(a => (a.ArtistGenres.Count + a.ArtistSubgenres.Count) >= minGenreCount.Value);
+            }
+
+            if (maxGenreCount.HasValue)
+            {
+                query = query.Where(a => (a.ArtistGenres.Count + a.ArtistSubgenres.Count) <= maxGenreCount.Value);
+            }
+
+            if (minAlbumCount.HasValue)
+            {
+                query = query.Where(a => a.Albums.Count(album => album.IsActive) >= minAlbumCount.Value);
+            }
+
+            if (maxAlbumCount.HasValue)
+            {
+                query = query.Where(a => a.Albums.Count(album => album.IsActive) <= maxAlbumCount.Value);
+            }
+
+            if (minMemberCount.HasValue)
+            {
+                query = query.Where(a => a.Members.Count(m => m.IsActive) >= minMemberCount.Value);
+            }
+
+            if (maxMemberCount.HasValue)
+            {
+                query = query.Where(a => a.Members.Count(m => m.IsActive) <= maxMemberCount.Value);
+            }
+
+            return await query.OrderBy(a => a.Name).ToListAsync();
+        }
 
         #endregion
 

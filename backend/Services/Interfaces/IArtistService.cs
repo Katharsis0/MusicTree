@@ -24,5 +24,13 @@ namespace MusicTree.Services.Interfaces
         // Statistics methods
         Task<double> CalculateArtistDiversityScoreAsync(string artistId);
         Task<Dictionary<string, int>> GetArtistCountByCountryAsync();
+        
+        Task<IEnumerable<Artist>> GetArtistsByMultipleGenresAsync(List<string> genreIds, bool useAndLogic = false, bool includeInactive = false);
+        Task<IEnumerable<Artist>> GetArtistsByClusterAsync(string clusterId, bool includeInactive = false);
+        Task<IEnumerable<Artist>> GetArtistsWithStatisticsAsync(
+            int? minGenreCount = null, int? maxGenreCount = null,
+            int? minAlbumCount = null, int? maxAlbumCount = null,
+            int? minMemberCount = null, int? maxMemberCount = null,
+            bool includeInactive = false);
     }
-}
+    }

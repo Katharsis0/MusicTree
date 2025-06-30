@@ -319,5 +319,286 @@ namespace MusicTree.Controllers
                 });
             }
         }
+        
+        [HttpGet("by-genres")]
+        public async Task<IActionResult> GetArtistsByMultipleGenres(
+        [FromQuery] string genreIds,
+        [FromQuery] string logic = "OR",
+        [FromQuery] bool includeInactive = false)
+        {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(genreIds))
+            {
+                return BadRequest(new { error = "At least one genre ID is required" });
+            }
+
+            var genreIdList = genreIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                     .Select(id => id.Trim())
+                                     .ToList();
+
+            if (!genreIdList.Any())
+            {
+                return BadRequest(new { error = "Invalid genre IDs format" });
+            }
+
+            var useAndLogic = logic.Equals("AND", StringComparison.OrdinalIgnoreCase);
+            var artists = await _artistService.GetArtistsByMultipleGenresAsync(genreIdList, useAndLogic, includeInactive);
+
+            var response = artists.Select(a => new
+            {
+                id = a.Id,
+                name = a.Name,
+                originCountry = a.OriginCountry,
+                activityYears = a.ActivityYears,
+                isActive = a.IsActive,
+                genreCount = a.GenreCount,
+                albumCount = a.AlbumCount,
+                memberCount = a.ActiveMemberCount,
+                genres = a.ArtistGenres.Select(ag => new { id = ag.GenreId, name = ag.Genre.Name }),
+                subgenres = a.ArtistSubgenres.Select(asg => new { id = asg.GenreId, name = asg.Genre.Name })
+            }).ToList();
+
+            return Ok(new
+            {
+                logic = logic.ToUpper(),
+                genreIds = genreIdList,
+                count = response.Count,
+                artists = response
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in GetArtistsByMultipleGenres: {ex}");
+            return StatusCode(500, new { error = "Error occurred while processing the request" });
+        }
+        }
+
+        /// <summary>
+        /// Get artists by cluster
+        /// </summary>
+        /// <param name="clusterId">Cluster ID</param>
+        /// <param name="includeInactive">Include inactive artists</param>
+        /// <returns>Artists associated with the cluster through their genres</returns>
+        [HttpGet("by-cluster/{clusterId}")]
+        public async Task<IActionResult> GetArtistsByCluster(string clusterId, [FromQuery] bool includeInactive = false)
+        {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(clusterId))
+            {
+                return BadRequest(new { error = "Cluster ID is required" });
+            }
+
+            var artists = await _artistService.GetArtistsByClusterAsync(clusterId, includeInactive);
+            var artistList = artists.ToList();
+
+            var response = artistList.Select(a => new
+            {
+                id = a.Id,
+                name = a.Name,
+                originCountry = a.OriginCountry,
+                activityYears = a.ActivityYears,
+                isActive = a.IsActive,
+                genreCount = a.GenreCount,
+                albumCount = a.AlbumCount,
+                memberCount = a.ActiveMemberCount,
+                clusterGenres = a.ArtistGenres
+                    .Where(ag => ag.Genre.ClusterId == clusterId)
+                    .Select(ag => new { id = ag.GenreId, name = ag.Genre.Name })
+            }).ToList();
+
+            return Ok(new
+            {
+                clusterId = clusterId,
+                count = response.Count,
+                artists = response
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in GetArtistsByCluster: {ex}");
+            return StatusCode(500, new { error = "Error occurred while processing the request" });
+        }
+        }
+
+        /// <summary>
+        /// Get artists with advanced statistics filtering
+        /// </summary>
+        [HttpGet("statistics")]
+        public async Task<IActionResult> GetArtistsWithStatistics(
+        [FromQuery] int? minGenreCount = null,
+        [FromQuery] int? maxGenreCount = null,
+        [FromQuery] int? minAlbumCount = null,
+        [FromQuery] int? maxAlbumCount = null,
+        [FromQuery] int? minMemberCount = null,
+        [FromQuery] int? maxMemberCount = null,
+        [FromQuery] bool includeInactive = false)
+        {
+        try
+        {
+            var artists = await _artistService.GetArtistsWithStatisticsAsync(
+                minGenreCount, maxGenreCount,
+                minAlbumCount, maxAlbumCount,
+                minMemberCount, maxMemberCount,
+                includeInactive);
+
+            var artistList = artists.ToList();
+
+            var response = artistList.Select(a => new
+            {
+                id = a.Id,
+                name = a.Name,
+                originCountry = a.OriginCountry,
+                activityYears = a.ActivityYears,
+                isActive = a.IsActive,
+                statistics = new
+                {
+                    genreCount = a.GenreCount,
+                    albumCount = a.AlbumCount,
+                    memberCount = a.ActiveMemberCount,
+                    commentCount = a.Comments.Count(c => c.IsActive),
+                    photoCount = a.PhotoGallery.Count(p => p.IsActive),
+                    eventCount = a.Events.Count(e => e.IsActive && e.EventDate >= DateTime.UtcNow)
+                }
+            }).ToList();
+
+            return Ok(new
+            {
+                filters = new
+                {
+                    minGenreCount,
+                    maxGenreCount,
+                    minAlbumCount,
+                    maxAlbumCount,
+                    minMemberCount,
+                    maxMemberCount,
+                    includeInactive
+                },
+                count = response.Count,
+                artists = response
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in GetArtistsWithStatistics: {ex}");
+            return StatusCode(500, new { error = "Error occurred while processing the request" });
+        }
+        }
+
+        /// <summary>
+        /// Search artists with full-text search capabilities
+        /// </summary>
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchArtists(
+        [FromQuery] string searchTerm,
+        [FromQuery] string searchFields = "name,biography,originCountry",
+        [FromQuery] bool exactMatch = false,
+        [FromQuery] bool caseSensitive = false,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20)
+        {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return BadRequest(new { error = "Search term is required" });
+            }
+
+            var searchParams = new ArtistSearchParams
+            {
+                Name = searchFields.Contains("name") ? searchTerm : null,
+                OriginCountry = searchFields.Contains("originCountry") ? searchTerm : null,
+                ExactNameMatch = exactMatch,
+                CaseSensitive = caseSensitive,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            // If biography search is needed, you'll need to extend the filtering logic
+            var result = await _artistService.GetAllArtistsAsync(searchParams);
+
+            var response = new
+            {
+                searchTerm,
+                searchFields = searchFields.Split(','),
+                options = new { exactMatch, caseSensitive },
+                pagination = new
+                {
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages,
+                    totalCount = result.TotalCount
+                },
+                artists = result.Items.Select(a => new
+                {
+                    id = a.Id,
+                    name = a.Name,
+                    biography = a.Biography,
+                    originCountry = a.OriginCountry,
+                    activityYears = a.ActivityYears,
+                    isActive = a.IsActive,
+                    genreCount = a.GenreCount,
+                    albumCount = a.AlbumCount,
+                    memberCount = a.ActiveMemberCount
+                }).ToList()
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in SearchArtists: {ex}");
+            return StatusCode(500, new { error = "Error occurred while processing the request" });
+        }
+        }
+
+        /// <summary>
+        /// Get artists by activity status
+        /// </summary>
+        [HttpGet("by-activity-status")]
+        public async Task<IActionResult> GetArtistsByActivityStatus(
+        [FromQuery] bool currentlyActive,
+        [FromQuery] int? activeFromYear = null,
+        [FromQuery] int? activeToYear = null)
+        {
+        try
+        {
+            var searchParams = new ArtistSearchParams
+            {
+                CurrentlyActive = currentlyActive,
+                ActiveFromYear = activeFromYear,
+                ActiveToYear = activeToYear,
+                PageSize = 100 // Get more results for this type of query
+            };
+
+            var result = await _artistService.GetAllArtistsAsync(searchParams);
+
+            var response = result.Items.Select(a => new
+            {
+                id = a.Id,
+                name = a.Name,
+                originCountry = a.OriginCountry,
+                activityYears = a.ActivityYears,
+                isCurrentlyActive = a.ActivityYears.ToLower().Contains("presente") || 
+                                   a.ActivityYears.ToLower().Contains("present"),
+                genreCount = a.GenreCount,
+                albumCount = a.AlbumCount
+            }).ToList();
+
+            return Ok(new
+            {
+                filters = new { currentlyActive, activeFromYear, activeToYear },
+                count = response.Count,
+                totalCount = result.TotalCount,
+                artists = response
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in GetArtistsByActivityStatus: {ex}");
+            return StatusCode(500, new { error = "Error occurred while processing the request" });
+        }
+        }
     }
 }
