@@ -15,54 +15,48 @@ const BuscarArtistaFanaticos = () => {
   const [nombreBusqueda, setNombreBusqueda] = useState('');
   const [error, setError] = useState(null);
 
+  // Cargar géneros una sola vez
   useEffect(() => {
-    axios.get(`${api}/api/Artists`)
+    axios.get(`${api}/api/Genres`)
+      .then(res => setGeneros(res.data.genres || []))
+      .catch(err => console.error(err));
+  }, []);
+
+  // Cargar subgéneros cuando cambia el género seleccionado
+  useEffect(() => {
+    if (generoSeleccionado) {
+      axios.get(`${api}/api/Genres/${generoSeleccionado}/subgenres`)
+        .then(res => setSubgeneros(res.data || []))
+        .catch(() => setSubgeneros([]));
+    } else {
+      setSubgeneros([]);
+    }
+  }, [generoSeleccionado]);
+
+  // Buscar artistas cuando cambia el nombre de búsqueda
+  useEffect(() => {
+    const term = encodeURIComponent(nombreBusqueda);
+    axios.get(`${api}/api/Artists/search?searchTerm=${term}&searchFields=name%2Cbiography%2CoriginCountry&exactMatch=false&caseSensitive=false&pageNumber=1&pageSize=50`)
       .then(res => {
-        const data = res.data?.items || [];
+        const data = res.data?.artists || [];
         setArtistas(data);
-        setFiltrados(data);
         setError(null);
       })
       .catch(err => {
         console.error(err);
         setError('Ocurrió un error al cargar los artistas. Intente más tarde.');
       });
+  }, [nombreBusqueda]);
 
-    axios.get(`${api}/api/Genres`)
-      .then(res => setGeneros(res.data.genres || []))
-      .catch(err => console.error(err));
-  }, []);
-
+  // Filtrar localmente por género y subgénero
   useEffect(() => {
-    if (generoSeleccionado) {
-      axios.get(`${api}/api/Genres/${generoSeleccionado}/subgenres`)
-        .then(res => {
-          setSubgeneros(res.data || []);
-        })
-        .catch(err => {
-          console.error(err);
-          setSubgeneros([]);
-        });
-    } else {
-      setSubgeneros([]);
-    }
-  }, [generoSeleccionado]);
-
-  useEffect(() => {
-    filtrarArtistas();
-  }, [generoSeleccionado, subgeneroSeleccionado, nombreBusqueda]);
-
-  const filtrarArtistas = () => {
-    const filtro = artistas.filter((artista) => {
-      const nombre = artista.name?.toLowerCase() || '';
-      const nombreCoincide = nombre.includes(nombreBusqueda.toLowerCase());
+    const filtro = artistas.filter(artista => {
       const generoCoincide = !generoSeleccionado || artista.genreId === generoSeleccionado;
-      const subgeneroCoincide = !subgeneroSeleccionado || (artista.subgenres?.some(sub => sub.id === subgeneroSeleccionado));
-      return nombreCoincide && generoCoincide && subgeneroCoincide;
+      const subgeneroCoincide = !subgeneroSeleccionado || (artista.subgenres?.some(s => s.id === subgeneroSeleccionado));
+      return generoCoincide && subgeneroCoincide;
     });
-
     setFiltrados(filtro);
-  };
+  }, [artistas, generoSeleccionado, subgeneroSeleccionado]);
 
   return (
     <div className="container py-4">
@@ -125,8 +119,8 @@ const BuscarArtistaFanaticos = () => {
                 <tr key={artista.id}>
                   <td>{artista.name}</td>
                   <td>{artista.albumCount}</td>
-                  <td>{artista.genre?.name || 'N/A'}</td>
-                  <td>{artista.subgenres?.map(s => s.name).join(', ') || 'Ninguno'}</td>
+                  <td>{/* Género no disponible en la respuesta */}N/A</td>
+                  <td>{/* Subgéneros no disponibles en la respuesta */}Ninguno</td>
                   <td>
                     <Link to={`/fanaticos/perfilartista/${artista.id}`} className="btn btn-sm btn-info">
                       Ver Perfil
