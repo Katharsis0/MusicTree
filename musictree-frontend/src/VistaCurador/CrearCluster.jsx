@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
 const api = import.meta.env.VITE_API_URL;
 
 const CrearCluster = () => {
@@ -17,22 +19,38 @@ const CrearCluster = () => {
 
     // Validación local
     if (!values.nombre || values.nombre.length < 3 || values.nombre.length > 30) {
-      alert('El nombre debe tener entre 3 y 30 caracteres.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Nombre inválido',
+        text: 'El nombre debe tener entre 3 y 30 caracteres.',
+        confirmButtonColor: '#3085d6'
+      });
       return;
     }
 
     try {
-      // Enviar solo lo que espera el backend
       await axios.post(`${api}/api/Clusters`, {
         Name: values.nombre,
-        Description: values.desc
+        Description: values.desc,
+        IsActive: values.activo
       });
 
-      console.log('Se creó el clúster correctamente');
-      navigate('/curador/menucurador');
+      Swal.fire({
+        icon: 'success',
+        title: 'Clúster creado',
+        text: 'Se creó el clúster correctamente.',
+        confirmButtonColor: '#28a745'
+      }).then(() => {
+        navigate('/curador/menucurador');
+      });
     } catch (err) {
       console.error('Error al crear el clúster:', err);
-      alert('No se pudo crear el clúster. Verifica los campos e intenta de nuevo.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo crear el clúster. Verifica los campos e intenta de nuevo.',
+        confirmButtonColor: '#dc3545'
+      });
     }
   };
 

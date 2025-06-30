@@ -235,7 +235,8 @@ const handleSubmit = async (event) => {
           {!values.esSubgenero && (
             <div className='mb-2'>
               <label>Color</label>
-              <input type='text' className='form-control' value={values.color}
+              <input type='color' className='form-control form-control-color'
+                value={values.color || '#ff5733'} // valor por defecto si está vacío
                 onChange={e => setValues({ ...values, color: e.target.value })} />
             </div>
           )}
@@ -283,7 +284,7 @@ const handleSubmit = async (event) => {
           </div>
 
           <div className='mb-2'>
-            <label>Rango de BPM</label>
+            <label>Rango de BPM (0 a 250)</label>
             <div className='d-flex gap-2'>
               <input type='number' placeholder='Mín' min='0' max='250' className='form-control'
                 value={values.bpmMin} onChange={e => setValues({ ...values, bpmMin: e.target.value })} />

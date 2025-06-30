@@ -137,12 +137,18 @@ const CrearArtista = () => {
     } catch (error) {
       console.error("Error al crear artista:", error);
 
-      if (error.response && error.response.data) {
-        console.log("Detalles del error:", error.response.data);
-      }
+      if (error.response && error.response.data?.errors) {
+        const errores = error.response.data.errors;
+        const listaErrores = Object.entries(errores)
+          .map(([campo, mensajes]) => `${campo}: ${mensajes.join(', ')}`)
+          .join('\n');
 
-      Swal.fire("Error", "No se pudo crear el artista.", error.response.data);
+        Swal.fire("Errores de validación", listaErrores, "error");
+      } else {
+        Swal.fire("Error", "No se pudo crear el artista. Intente más tarde.", "error");
+      }
     }
+
   };
 
   return (
