@@ -95,7 +95,8 @@ namespace MusicTree.Services
             // Set RGB color if provided (only for main genres)
             if (!dto.IsSubgenre)
             {
-                genre.SetRgbColor(dto.ColorR, dto.ColorG, dto.ColorB);
+                var (r, g, b) = ParseRgbColor(dto.rgb);
+                genre.SetRgbColor(r, g, b);
             }
 
             // Ensure ID is set
@@ -171,6 +172,29 @@ namespace MusicTree.Services
             {
                 Console.WriteLine($"Error in GetGenreByIdAsync: {ex}");
                 throw new InvalidOperationException($"Failed to retrieve genre: {ex.Message}", ex);
+            }
+        }
+        
+        
+        private static (int r, int g, int b) ParseRgbColor(string hexColor)
+        {
+            if (string.IsNullOrWhiteSpace(hexColor))
+                throw new ArgumentException("Color string is null or empty");
+
+            // Validar que empieza con #
+            if (!hexColor.StartsWith("#") || (hexColor.Length != 7))
+                throw new ArgumentException($"Invalid hex color format: {hexColor}");
+
+            try
+            {
+                int r = Convert.ToInt32(hexColor.Substring(1, 2), 16);
+                int g = Convert.ToInt32(hexColor.Substring(3, 2), 16);
+                int b = Convert.ToInt32(hexColor.Substring(5, 2), 16);
+                return (r, g, b);
+            }
+            catch
+            {
+                throw new ArgumentException($"Invalid hex color format: {hexColor}");
             }
         }
 

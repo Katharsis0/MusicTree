@@ -1,5 +1,6 @@
 //Models/DTOs/GenreCreateDto.cs
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 //Objeto de data exchange en el API  
 namespace MusicTree.Models.DTOs
@@ -49,15 +50,8 @@ namespace MusicTree.Models.DTOs
         [Range(0, 250)] 
         public int BpmUpper { get; set; }
         
-        //RGB Color fields 
-        [Range(0, 255)]
-        public int? ColorR { get; set; }  // Red component (0-255)
-        
-        [Range(0, 255)]
-        public int? ColorG { get; set; }  // Green component (0-255)
-        
-        [Range(0, 255)]
-        public int? ColorB { get; set; }  // Blue component (0-255)
+        [JsonPropertyName("color")]
+        public string? rgb { get; set; }
         
         // Optional fields
         public int? GenreCreationYear { get; set; }
@@ -90,23 +84,6 @@ namespace MusicTree.Models.DTOs
                 yield return new ValidationResult(
                     "Subgenres cannot be associated with clusters directly",
                     new[] { nameof(ClusterId) });
-            }
-
-            //Subgenre cannot have color
-            if (IsSubgenre && (ColorR.HasValue || ColorG.HasValue || ColorB.HasValue))
-            {
-                yield return new ValidationResult(
-                    "Subgenres cannot have a color assigned",
-                    new[] { nameof(ColorR), nameof(ColorG), nameof(ColorB) });
-            }
-
-            //RGB color validation - all components must be provided together
-            var colorComponentsProvided = new[] { ColorR.HasValue, ColorG.HasValue, ColorB.HasValue };
-            if (colorComponentsProvided.Any(x => x) && !colorComponentsProvided.All(x => x))
-            {
-                yield return new ValidationResult(
-                    "If color is specified, all RGB components (R, G, B) must be provided",
-                    new[] { nameof(ColorR), nameof(ColorG), nameof(ColorB) });
             }
         }
     }
