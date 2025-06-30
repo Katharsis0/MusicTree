@@ -107,10 +107,10 @@ const PerfilArtista = () => {
           <p><strong>⭐ {artista.ratingAverage || 'N/A'}</strong> ({artista.ratingCount || 0} calificaciones)</p>
           <div className="d-flex flex-wrap gap-3">
             <span><strong>ID:</strong> {artista.id}</span>
-            <span><strong>Género:</strong> {artista.genre?.name}</span>
-            <span><strong>Subgéneros:</strong> {artista.subgenres?.map(s => s.name).join(', ') || 'No disponible'}</span>
-            <span><strong>País:</strong> {artista.country}</span>
-            <span><strong>Actividad:</strong> {artista.yearsActive}</span>
+            <span><strong>Géneros:</strong> {artista.associatedGenres?.map(g => g.name).join(', ') || 'No disponible'}</span>
+            <span><strong>Subgéneros:</strong> {artista.associatedSubgenres?.map(s => s.name).join(', ') || 'No disponible'}</span>
+            <span><strong>País:</strong> {artista.originCountry || 'No disponible'}</span>
+            <span><strong>Actividad:</strong> {artista.activityYears || 'No disponible'}</span>
             <span><strong>Fecha de creación:</strong> {new Date(artista.createdAt).toLocaleDateString()}</span>
           </div>
           <p><strong>Biografía:</strong> {artista.biography || 'No disponible'}</p>
