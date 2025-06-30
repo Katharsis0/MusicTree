@@ -1,5 +1,7 @@
 // Models/DTOs/GenreImportDto.cs
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 
 namespace MusicTree.Models.DTOs
 {
@@ -7,57 +9,52 @@ namespace MusicTree.Models.DTOs
     {
         [Required]
         [StringLength(30, MinimumLength = 3)]
+        [JsonPropertyName("nombre")]
         public string name { get; set; } = string.Empty;
 
         [StringLength(1000)]
+        [JsonPropertyName("descripcion")]
         public string? description { get; set; }
-
+        [JsonPropertyName("activo")]
         public bool active { get; set; } = true;
 
-        // Color as hex string (for JSON compatibility)
+        [JsonPropertyName("color")]
         public string? rgb { get; set; }
-
+        [JsonPropertyName("anio_creacion")]
         public int? creation_year { get; set; }
-
+        [JsonPropertyName("pais_origen")]
         public string? origin_country { get; set; }
-
+        [JsonPropertyName("modo")]
         [Required]
         [Range(0, 1)]
         public float mode { get; set; }
-
+        [JsonPropertyName("bpm")]
         [Required]
         public BpmRangeDto bpm { get; set; } = new();
-
+        [JsonPropertyName("tono_dominante")]
         [Range(-1, 11)]
         public int tipical_mode { get; set; } = -1;
-
+        [JsonPropertyName("volumen_tipico_db")]
         [Required]
         [Range(-60, 0)]
         public int volume { get; set; }
-
+        [JsonPropertyName("compas")]
         [Required]
         [Range(0, 8)]
         public int compas { get; set; }
-
+        [JsonPropertyName("duracion_promedio_segundos")]
         [Required]
         [Range(0, 3600)]
         public int avrg_duration { get; set; }
-
+        [JsonPropertyName("es_subgenero")]
         public bool is_subgenre { get; set; } = false;
-
+        [JsonPropertyName("genero_padre")]
         public string? parent_genre { get; set; }
-
+        [JsonPropertyName("generos_relacionados")]
         public List<GenreRelationImportDto>? related_genre { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            // Validate RGB color format if provided
-            if (!string.IsNullOrEmpty(rgb) && !IsValidRgbColor(rgb))
-            {
-                yield return new ValidationResult(
-                    "Color must be in valid RGB format (rgb(r,g,b)) where r,g,b are 0-255",
-                    new[] { nameof(rgb) });
-            }
 
             // Subgenre validation
             if (is_subgenre && string.IsNullOrEmpty(parent_genre))
@@ -124,10 +121,12 @@ namespace MusicTree.Models.DTOs
     public class GenreRelationImportDto
     {
         [Required]
+        [JsonPropertyName("nombre")]
         public string name { get; set; } = string.Empty;
 
         [Required]
         [Range(1, 10)]
+        [JsonPropertyName("influencia")]
         public int influence { get; set; } = 5;
     }
 }

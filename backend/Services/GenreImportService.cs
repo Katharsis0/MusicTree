@@ -255,29 +255,28 @@ namespace MusicTree.Services
             return genre;
         }
 
-        private static (int r, int g, int b) ParseRgbColor(string rgbColor)
+        private static (int r, int g, int b) ParseRgbColor(string hexColor)
         {
-            // Parse rgb(r,g,b) format
-            if (!rgbColor.StartsWith("rgb(") || !rgbColor.EndsWith(")"))
-                throw new ArgumentException($"Invalid RGB color format: {rgbColor}");
+            if (string.IsNullOrWhiteSpace(hexColor))
+                throw new ArgumentException("Color string is null or empty");
 
-            var rgbContent = rgbColor[4..^1]; // Remove "rgb(" and ")"
-            var parts = rgbContent.Split(',');
+            // Validar que empieza con #
+            if (!hexColor.StartsWith("#") || (hexColor.Length != 7))
+                throw new ArgumentException($"Invalid hex color format: {hexColor}");
 
-            if (parts.Length != 3)
-                throw new ArgumentException($"Invalid RGB color format: {rgbColor}");
-
-            if (!int.TryParse(parts[0].Trim(), out int r) || r < 0 || r > 255)
-                throw new ArgumentException($"Invalid red component in RGB color: {parts[0]}");
-
-            if (!int.TryParse(parts[1].Trim(), out int g) || g < 0 || g > 255)
-                throw new ArgumentException($"Invalid green component in RGB color: {parts[1]}");
-
-            if (!int.TryParse(parts[2].Trim(), out int b) || b < 0 || b > 255)
-                throw new ArgumentException($"Invalid blue component in RGB color: {parts[2]}");
-
-            return (r, g, b);
+            try
+            {
+                int r = Convert.ToInt32(hexColor.Substring(1, 2), 16);
+                int g = Convert.ToInt32(hexColor.Substring(3, 2), 16);
+                int b = Convert.ToInt32(hexColor.Substring(5, 2), 16);
+                return (r, g, b);
+            }
+            catch
+            {
+                throw new ArgumentException($"Invalid hex color format: {hexColor}");
+            }
         }
+
 
         private async Task ProcessGenreRelationshipsAsync(List<Genre> processedGenres, List<GenreImportDto> importData)
         {
