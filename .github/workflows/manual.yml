@@ -1,0 +1,1914 @@
+name: Constructor
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  Tests_frontend:
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: musictree-frontend/
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+    
+      - name: Initialition Frontend
+        run: |
+          npm install
+
+      - name: Test Frontend
+        run: |
+          npm run dev &             
+          DEV_PID=$!                
+          sleep 5                  
+          kill $DEV_PID             
+
+  Tests_backend:
+    needs: Tests_frontend
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+    
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.107
+
+      - name: Allow Backend (OPTIONAL)
+        run: chmod +x setup_musictree.sh
+        continue-on-error: true
+        
+      - name: Initialition Backend (OPTIONAL)
+        run: |
+          ./setup_musictree.sh
+          y
+          .
+        continue-on-error: true
+
+      - name: Test Backend
+        run: |
+          dotnet run &             
+          DEV_PID=$!     
+          sleep 20
+          kill $DEV_PID   
+
+  Tests:
+    needs: Tests_backend
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+    
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.107
+
+      - name: Backend
+        run: |
+          chmod +x setup_musictree.sh          
+          ./setup_musictree.sh
+          y
+          .
+        continue-on-error: true
+        
+      - name: Initialition Backend
+        run: |
+          dotnet run &             
+          DEV_PID=$!     
+          sleep 20
+          echo "number=1" > mynumber.env
+          echo "VAR1=0" > myflag.env
+          echo "LVAR1=0" > mylocation.env
+          
+      - name: Pruebas
+        run: |
+          source mynumber.env
+          source myflag.env
+          source mylocation.env
+
+          echo " -------------------------- CLUSTERS --------------------------" >> Output.txt
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(curl -s -w "%{http_code}" 'http://localhost:5102/api/Clusters?includeInactive=false')
+          http_code="${response: -3}"
+          body="${response::-3}"
+
+          echo "Prueba $number: GET" > Output.txt
+          echo "HTTP Code: $http_code" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$http_code" -eq 400 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$http_code" -eq 201 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$http_code" -eq 200 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{ 
+                    "name": "Lo", 
+                    "description": "string", 
+                    "isActive": true 
+                  }' \
+              http://localhost:5102/api/Clusters
+          )
+          
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Nombre 2 caracteres" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{ 
+                    "name": "Lorem ipsum dolor sit amet, con", 
+                    "description": "string", 
+                    "isActive": true 
+                  }' \
+              http://localhost:5102/api/Clusters
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Nombre 31 caracteres" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{ 
+                    "name": "Lorem", 
+                    "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec p", 
+                    "isActive": true 
+                  }' \
+              http://localhost:5102/api/Clusters
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+
+          echo "Prueba $number: Descripcion 301 caracteres" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          echo " -------------------------- GENEROS --------------------------" >> Output.txt
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(curl -s -w "%{http_code}" 'http://localhost:5102/api/Genres?includeSubgenres=true&includeInactive=false')
+          http_code="${response: -3}"
+          body="${response::-3}"
+
+          echo "Prueba $number: GET" >> Output.txt
+          echo "HTTP Code: $http_code" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$response" -eq 400 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$response" -eq 201 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$response" -eq 200 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lo",
+                    "description": "string",
+                    "ClusterId": "string",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 1,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 250,
+                    "bpmUpper": 250,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Nombre 2 caracteres" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum dolor sit amet, con",
+                    "description": "string",
+                    "ClusterId": "string",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 1,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 250,
+                    "bpmUpper": 250,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Nombre 31 caracteres" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem",
+                    "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Na",
+                    "ClusterId": "string",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 1,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 250,
+                    "bpmUpper": 250,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Descripcion 1001 caracteres" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem",
+                    "description": "Lorem ",
+                    "ClusterId": "string",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 1,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 250,
+                    "bpmUpper": 250,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Cluster desconocido" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 1.01,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 250,
+                    "bpmUpper": 250,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Modo promedio 1.01" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 500 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": -1,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 250,
+                    "bpmUpper": 250,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Modo promedio Negativo" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 1,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": -1,
+                    "bpmUpper": -1,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number:BPM Negativo" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 1,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 120,
+                    "bpmUpper": 110,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number:BPM Upper menor al Lower" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 1,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": A,
+                    "bpmUpper": H,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number:BPM Caracter" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": ,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Sin Elemento Fundamental" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": -2,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Tono musical negativa (no -1)" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 12,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Tono musical alto" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": A,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Tono musical caracter" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": "11",
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Tono musical con comillas" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 200 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 400 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": -61,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Volumen menor limite" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 1,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Volumen mayor limite" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": A,
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Volumen Caracter" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": "0",
+                    "compasMetric": 8,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Volumen con comillas" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": -2,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Compas negativo" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 9,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Compas alto" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": A,
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Compas caracter" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": "8",
+                    "avrgDuration": 3600,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Compas con comillas" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": -1,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Duracion negativa" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": 3601,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Duracion mas limite" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": A,
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Duracion Caracter" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": "3600",
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": []
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Duracion con comillas" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": "3600",
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": [
+                      {
+                        "genreId": "G-CLASSICAL001"
+                        "influenceStrenght": 11
+                      }
+                    ]
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Influencia Genero Relacionado muy alto" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+          #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+          response=$(
+            curl -s -w "HTTPSTATUS:%{http_code}" \
+              -H "accept: */*" \
+              -H "Content-Type: application/json" \
+              -d '{
+                    "name": "Lorem ipsum",
+                    "description": "Lorem ",
+                    "ClusterId": "C-WORLD0000001",
+                    "isSubrenge": false,
+                    "parentGenreId": "string",
+                    "genreTipicalMode": 0,
+                    "Volume": 0,
+                    "compasMetric": 8,
+                    "avrgDuration": "3600",
+                    "Key": 11,
+                    "bpmLower": 0,
+                    "bpmUpper": 0,
+                    "colorR": 255,
+                    "colorG": 255,
+                    "colorB": 255,
+                    "genreCreationYear": 0,
+                    "genreOriginCountry": "string",
+                    "relatedGenres": [
+                      {
+                        "genreId": "G-CLASSICAL001"
+                        "influenceStrenght": -5
+                      }
+                    ]
+                  }' \
+              http://localhost:5102/api/Genres
+          )
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          
+          echo "Prueba $number: Influencia Genero Relacionado Negativo" >> Output.txt
+          echo "HTTP Code: $status" >> Output.txt
+          echo "Response:" >> Output.txt
+          echo "$body" >> Output.txt
+
+          if [ "$status" -eq 400 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 409 ]; then
+            echo "PASADA" >> Output.txt
+          fi
+          if [ "$status" -eq 201 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          if [ "$status" -eq 200 ]; then
+            echo "ERROR" >> Output.txt
+            LVAR1=$number
+            echo "VAR1=1" > myflag.env
+            echo "LVAR1=$LVAR1" > mylocation.env
+          fi
+          echo "" >> Output.txt
+
+          number=$((number + 1))
+          echo "number=$number" > mynumber.env
+
+      - name: Confirmar cambios en Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add Output.txt
+          git commit -m "Guardado de pruebas automática" || echo "No hay cambios que commitear"
+          git push
+        continue-on-error: true
+
+      - name: Review
+        run: |
+          source mynumber.env
+          source myflag.env
+          source mylocation.env
+          if [ "$VAR1" -eq 1 ]; then
+            echo "UNO O MAS ERRORES DETECTADOS"
+            echo "ULIMO ERROR DETECTADO EN PRUEBA NUMERO $LVAR1"
+            echo "REVISAR ARCHIVO 'Output.txt' EN './Backend'"
+            echo "UNO O MAS ERRORES DETECTADOS" >> Output.txt
+            echo "ULIMO ERROR DETECTADO EN PRUEBA NUMERO $LVAR1" >> Output.txt
+            exit 1
+          fi
+
+      - name: Kill
+        run: |
+          sleep 5
+          kill $DEV_PID   
+          sleep 5
+        continue-on-error: true
